@@ -2510,3 +2510,6 @@
 "Pace sign" = "เครื่องหมายอัตราการใช้งาน";
 "Ahead of pace is +" = "ใช้เร็วกว่าที่ควรเป็นคือ +";
 "Reserve is +" = "โควตาสำรองคือ +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "คีย์ที่มีสิทธิ์อ่านข้อมูลการเรียกเก็บเงิน (พรีเซ็ต BILLING หรือ READONLY) หรือตั้งค่า FAL_KEY";

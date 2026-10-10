@@ -2,6 +2,10 @@
 
 ## 0.74.1 — Unreleased
 
+### Added
+
+- Providers: add fal account credit balance through a bundled plugin, using an API key with billing read access.
+
 ### Changed
 
 - Usage & Spend: show cached-input reuse and first-token/cache sample coverage in the session performance strip, keeping missing cache records distinct from measured zero reuse (#4413). Thanks @Yuxin-Qiao!

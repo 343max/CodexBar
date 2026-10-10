@@ -2505,3 +2505,6 @@
 "Pace sign" = "Signo do ritmo";
 "Ahead of pace is +" = "Por riba do ritmo é +";
 "Reserve is +" = "A reserva é +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Chave con acceso de lectura á facturación (predefinición BILLING ou READONLY). Ou define FAL_KEY.";

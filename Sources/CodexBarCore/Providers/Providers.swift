@@ -119,6 +119,7 @@ public enum UsageProvider: String, CaseIterable, Sendable, Codable {
     case aerostack
     case sailresearch
     case sofya
+    case fal
 }
 
 // swiftformat:enable sortDeclarations

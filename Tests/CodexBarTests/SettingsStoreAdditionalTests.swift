@@ -251,6 +251,7 @@ struct SettingsStoreAdditionalTests {
             .aerostack: [.automatic, .primary],
             .sailresearch: [.automatic],
             .sofya: [.automatic],
+            .fal: [.automatic],
             .aixy: [.automatic],
             .typesafe: [.automatic],
             .hyper: [.automatic],
