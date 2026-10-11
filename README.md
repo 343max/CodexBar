@@ -308,6 +308,7 @@ CLI install:
 
 ## Desk display
 - [AI Monitor](https://github.com/tobymarks/esp32-ai-monitor) — ESP32 desk display (Cheap Yellow Display) plus a macOS companion app that shows Claude, ChatGPT, Gemini, Copilot, Cursor and Antigravity limits as rings or bars, fed over USB by the bundled CLI. No Wi-Fi on the device, 3D-printable case.
+- [TokenTV](https://github.com/click6067-ship-it/token-tv) — ~$5 AliExpress Wi-Fi desk clock (240×240, GeekMagic SmallTV style) that shows Claude and Codex 5-hour and weekly limits from the bundled CLI or `codexbar serve`. No firmware flashing: a small Python host uploads the rendered screen to the clock's stock photo album.
 
 ## Status bar & terminal integration
 - [showy-quota](https://github.com/enieuwy/showy-quota) — always-on AI plan quota strips for SketchyBar, tmux, and Zellij (standalone WASM plugin), built on `codexbar serve` / the bundled CLI.
