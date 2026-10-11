@@ -20,7 +20,7 @@
 - Menu bar: stop the blank Settings placeholder window from appearing on launch (regression in 0.74.0) (#4415). Thanks @tcurdt, @ChuJiannn11 and @kcharlan!
 - Claude: show prepaid Usage credits in custom menu bar Balance layouts and USD balance conditionals while preserving quota text and the optional credits setting (#4422). Thanks @lg!
 - Packaging: preserve the selected macOS SDK in app and helper binaries so newer macOS versions use current native UI metrics, while retaining macOS 14 support (#4403). Thanks @Yuxin-Qiao!
-- TypeSafe: Automatic mode only read Chrome cookies, so console sessions in Dia, Arc, Safari, Firefox and other browsers needed a manual Cookie header. It now imports from every supported browser. Thanks @lg!
+- TypeSafe: Automatic mode only read Chrome cookies, so console sessions in Dia, Arc, Safari, Firefox and other browsers needed a manual Cookie header. It now imports from every supported browser (#4442). Thanks @lg!
 - Replicate: use the official provider glyph across the app, website, and HTTP dashboard; refresh the dashboard’s bundled provider icons (#4411). Thanks @giuseppebisemi!
 
 ## 0.74.0 — 2026-10-10
