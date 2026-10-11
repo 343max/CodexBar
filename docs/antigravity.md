@@ -45,6 +45,11 @@ or later before using print mode; [Google introduced non-interactive usage repor
 It requires a successful `usage` command report with known,
 enabled quota buckets, bounds the command to 90 seconds and its output to 1 MiB, and terminates the command
 on cancellation. It runs in a private empty directory and does not send a model prompt or parse TUI output.
+When silent sign-in fails (a token refresh network error, a slow Keychain read, or termination interrupting
+that read), `agy` print mode execs `open` or `xdg-open` from `PATH` to start Google OAuth. `agy` 1.3.3 has no
+flag to disable that, and `SSH_TTY` would also switch it to file token storage, so each print probe puts private
+failing `open` and `xdg-open` stubs first on `PATH`. The probe then fails with a sign-in or timeout error instead
+of opening a browser. Successful reports never call either command.
 Each print probe receives a fresh `CODEXBAR_PROBE_OWNER` environment marker. On completion, timeout, or
 cancellation, CodexBar stops its process group and reaps same-user processes that still carry that exact marker,
 including detached MCP servers. Ownership and process start identity are checked again before each signal;

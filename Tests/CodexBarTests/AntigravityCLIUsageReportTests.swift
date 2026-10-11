@@ -191,6 +191,36 @@ extension AntigravityCLIHTTPSFetchStrategyTests {
         }
     }
 
+    @Test
+    func `print usage cannot launch the system browser`() async throws {
+        // Mirrors agy 1.3.3 print mode after silent auth fails: it execs `open` from PATH,
+        // ignores the result, waits for OAuth, then exits 1. Only CodexBar's stub is ever
+        // run, so a regression cannot launch a browser during the test.
+        let fixture = try Self.printExecutable("""
+        open_bin=$(command -v open || true)
+        echo "$open_bin" > "$HOME/open-path"
+        case "$open_bin" in
+          */codexbar-agy-no-browser-*/open) ;;
+          *) exit 30 ;;
+        esac
+        "$open_bin" "https://accounts.google.com/o/oauth2/auth" && exit 31
+        echo "Authentication required. Please visit the URL to log in:" >&2
+        echo "error: authentication failed or timed out" >&2
+        exit 1
+        """)
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        await #expect(throws: AntigravityStatusProbeError.authenticationRequired) {
+            try await AntigravityCLIHTTPSFetchStrategy().fetchPrintUsage(
+                binary: fixture.binary.path, environment: fixture.environment)
+        }
+        let openPath = try String(
+            contentsOf: fixture.directory.appendingPathComponent("open-path"), encoding: .utf8)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        #expect(openPath.contains("codexbar-agy-no-browser-"))
+        #expect(openPath.hasSuffix("/open"))
+        #expect(!FileManager.default.fileExists(atPath: openPath))
+    }
+
     @Test(arguments: ["1.1.11", "1.2.2", "2.0.0"])
     func `print subprocess uses the pinned executable and supported command`(version: String) async throws {
         let report = try Self.reportJSON()

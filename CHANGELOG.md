@@ -16,6 +16,7 @@
 
 ### Fixed
 
+- Antigravity: stop `agy` usage probes from opening Google sign-in in the browser when `agy` cannot refresh its saved login silently, for example during a network outage or after wake (#4441).
 - Usage & Spend: stop Codex status and activity read caches from retaining per-file request ledgers, reducing memory on large histories while preserving report turn performance (#4421, #4424). Thanks @harjothkhara and @Edenspiekermann-Chris!
 - Command Code: support Go v1’s $10 monthly grant and preserve API usage and the plan label for unknown subscriptions (#4405). Thanks @dalisoft!
 - OpenCode Go: mark estimated menu-bar percentages with `~` and clarify that local cost ratios do not establish account quota (#4410). Thanks @djbclark!

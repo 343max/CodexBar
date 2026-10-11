@@ -632,6 +632,14 @@ struct AntigravityCLIHTTPSFetchStrategy: ProviderFetchStrategy {
         versionResolver: AgyVersionResolver = AgyVersionResolver()) async throws -> AntigravityStatusSnapshot
     {
         try Task.checkCancellation()
+        let guarded: (environment: [String: String], directory: URL)
+        do {
+            guarded = try AntigravityBrowserLaunchGuard.install(into: environment)
+        } catch {
+            throw AntigravityStatusProbeError.cliReportFailed(.launchFailed)
+        }
+        defer { try? FileManager.default.removeItem(at: guarded.directory) }
+        let probeEnvironment = guarded.environment
         let result: SubprocessResult
         do {
             let version = try await Self.agyVersion(
@@ -647,7 +655,7 @@ struct AntigravityCLIHTTPSFetchStrategy: ProviderFetchStrategy {
             result = try await SubprocessRunner.run(
                 binary: binary,
                 arguments: ["-p", "/usage", "--output-format", "json", "--print-timeout", "90s"],
-                environment: environment,
+                environment: probeEnvironment,
                 timeout: timeout,
                 maxOutputBytes: 1_048_576,
                 standardInput: FileHandle.nullDevice,
