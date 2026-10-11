@@ -31,6 +31,16 @@ struct CLICookieRefreshTests {
     }
 
     @Test
+    func `catalog order providers remain cookie refresh targets`() throws {
+        let all = try CodexBarCLI.cookieRefreshTargets(rawProvider: nil, refreshAll: true)
+        let typesafe = try CodexBarCLI.cookieRefreshTargets(rawProvider: "typesafe", refreshAll: false)
+
+        #expect(all.contains(where: { $0.id == .typesafe }))
+        #expect(typesafe.map(\.id) == [.typesafe])
+        #expect(typesafe.first?.metadata.browserCookieOrder == ProviderBrowserCookieDefaults.defaultImportOrder)
+    }
+
+    @Test
     func `prompt capable refresh is gated before provider work`() async {
         var operationCalled = false
         let descriptor = ProviderDescriptorRegistry.descriptor(for: .opencode)

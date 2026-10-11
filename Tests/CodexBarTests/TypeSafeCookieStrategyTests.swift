@@ -60,7 +60,7 @@ struct TypeSafeCookieStrategyTests {
         if case .exact = query.domainMatch {} else { Issue.record("expected exact domain matching") }
         #expect(!query.includeExpired)
         #expect(query.referenceDate == now)
-        #expect(ProviderDefaults.metadata[.typesafe]?.browserCookieOrder == nil)
+        #expect(ProviderDefaults.metadata[.typesafe]?.browserCookieOrder == Browser.defaultImportOrder)
         #expect(TypeSafeCookieImporter.resolvedImportOrder(nil) == Browser.defaultImportOrder)
         #expect(TypeSafeCookieImporter.resolvedImportOrder([]) == Browser.defaultImportOrder)
         #expect(TypeSafeCookieImporter.resolvedImportOrder([.safari]) == [.safari])
