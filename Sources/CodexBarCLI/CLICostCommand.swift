@@ -8,6 +8,14 @@ extension CodexBarCLI {
 
     static func runCost(_ values: ParsedValues) async {
         let output = CLIOutputPreferences.from(values: values)
+        if Self.isCodexIdentifiedUsageRequested(values) {
+            await Self.runCodexIdentifiedUsage(values, output: output)
+        } else {
+            await Self.runStandardCost(values, output: output)
+        }
+    }
+
+    private static func runStandardCost(_ values: ParsedValues, output: CLIOutputPreferences) async {
         let config = CodexBarCLI.loadConfig(output: output)
         let selection = CodexBarCLI.decodeProvider(from: values, config: config)
         let providers = Self.costProviders(from: selection)
@@ -970,6 +978,15 @@ struct CostOptions: CommanderParsable {
 
     @Flag(name: .long("summary-only"), help: "Versioned native Codex JSON totals without account or session details")
     var summaryOnly: Bool = false
+
+    @Flag(name: .long("identified-only"), help: "Native Codex identified-request subtotal JSON; prices unavailable")
+    var identifiedOnly: Bool = false
+
+    @Option(name: .long("identified-end"), help: "Identified subtotal window end, inclusive Unix milliseconds (UTC)")
+    var identifiedEnd: Int64?
+
+    @Option(name: .long("combine-remote"), help: "Deduplicate identified Codex requests with one explicit SSH host")
+    var combineRemote: String?
 }
 
 struct CostPayload: Encodable, Sendable {
