@@ -4,6 +4,7 @@
 
 ### Added
 
+- Codex: show saved conversation titles in the Cost menu, retain session IDs in tooltips, and respect Hide personal information (#4429). Thanks @obrizan!
 - xAI: show an optional live remaining credit estimate from the current invoice preview alongside the posted prepaid balance (#4406). Thanks @lilbreadxiaomianbao!
 
 ### Changed
