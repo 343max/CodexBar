@@ -4,6 +4,7 @@
 
 ### Added
 
+- Codex: show saved conversation titles in the Cost menu, retain session IDs in tooltips, and respect Hide personal information (#4429). Thanks @obrizan!
 - xAI: show an optional live remaining credit estimate from the current invoice preview alongside the posted prepaid balance (#4406). Thanks @lilbreadxiaomianbao!
 - Menu: add a default-on “Highlight menu cards on hover” toggle to preserve card colors when disabled, while keeping keyboard selection visible (#4414). Thanks @cynicalight!
 
@@ -13,6 +14,7 @@
 
 ### Fixed
 
+- Usage & Spend: stop Codex status and activity read caches from retaining per-file request ledgers, reducing memory on large histories while preserving report turn performance (#4421, #4424). Thanks @harjothkhara and @Edenspiekermann-Chris!
 - Command Code: support Go v1’s $10 monthly grant and preserve API usage and the plan label for unknown subscriptions (#4405). Thanks @dalisoft!
 - OpenCode Go: mark estimated menu-bar percentages with `~` and clarify that local cost ratios do not establish account quota (#4410). Thanks @djbclark!
 - Menu bar: stop the blank Settings placeholder window from appearing on launch (regression in 0.74.0) (#4415). Thanks @tcurdt, @ChuJiannn11 and @kcharlan!
