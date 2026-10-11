@@ -362,6 +362,62 @@ struct OpenCodeGoWebOverlayTests {
         }
     }
 
+    @Test
+    func `auto source discovers browser cookie and overlays authoritative console quotas`() async throws {
+        let observedCookies = Recorder<String>()
+        let strategy = OpenCodeGoLocalUsageFetchStrategy(
+            localSnapshotLoader: { _ in Self.localEstimate() },
+            webUsageOverlayFetcher: { _, cookieHeader in
+                observedCookies.append(cookieHeader)
+                return Self.webUsage(zenBalanceUSD: 42.5)
+            },
+            cookieHeaderResolver: { _, _ in "auth=discovered" })
+
+        let result = try await strategy.fetch(self.makeContext())
+
+        #expect(result.sourceLabel == "local+web")
+        #expect(observedCookies.values == ["auth=discovered"])
+        #expect(result.usage.tertiary?.usedPercent == 64)
+        #expect(result.usage.secondary?.usedPercent == 52)
+        #expect(result.usage.opencodegoUsage?.daily.count == 1)
+        #expect(result.usage.providerCost?.used == 42.5)
+        #expect(result.usage.dataConfidence != .estimated)
+    }
+
+    @Test
+    func `auto source falls back to local estimate when browser discovery finds no cookies`() async throws {
+        let webCalls = Recorder<String>()
+        let strategy = OpenCodeGoLocalUsageFetchStrategy(
+            localSnapshotLoader: { _ in Self.localEstimate() },
+            webUsageOverlayFetcher: { _, cookieHeader in
+                webCalls.append(cookieHeader)
+                return Self.webUsage()
+            },
+            cookieHeaderResolver: { _, _ in throw OpenCodeGoSettingsError.missingCookie })
+
+        let result = try await strategy.fetch(self.makeContext(includeOptionalUsage: false))
+
+        #expect(webCalls.values.isEmpty)
+        #expect(result.sourceLabel == "local")
+        #expect(result.usage.secondary?.usedPercent == 49.4)
+        #expect(result.usage.tertiary?.usedPercent == 100)
+        #expect(result.usage.dataConfidence == .estimated)
+    }
+
+    @Test
+    func `auto source falls back to local estimate when browser discovery finds invalid credentials`() async throws {
+        let strategy = OpenCodeGoLocalUsageFetchStrategy(
+            localSnapshotLoader: { _ in Self.localEstimate() },
+            webUsageOverlayFetcher: { _, _ in throw OpenCodeGoUsageError.invalidCredentials },
+            cookieHeaderResolver: { _, _ in "auth=expired-browser" })
+
+        let result = try await strategy.fetch(self.makeContext(includeOptionalUsage: false))
+
+        #expect(result.sourceLabel == "local")
+        #expect(result.usage.tertiary?.usedPercent == 100)
+        #expect(result.usage.dataConfidence == .estimated)
+    }
+
     #if os(macOS)
     @Test
     func `empty cookie cache marks local quota windows estimated`() async throws {
@@ -372,7 +428,8 @@ struct OpenCodeGoWebOverlayTests {
                 webUsageOverlayFetcher: { _, cookieHeader in
                     webCalls.append(cookieHeader)
                     return Self.webUsage()
-                })
+                },
+                cookieHeaderResolver: { _, _ in throw OpenCodeGoSettingsError.missingCookie })
 
             let result = try await strategy.fetch(self.makeContext(includeOptionalUsage: false))
 

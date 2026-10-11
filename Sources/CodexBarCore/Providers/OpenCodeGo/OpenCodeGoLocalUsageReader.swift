@@ -46,6 +46,14 @@ public struct OpenCodeGoLocalUsageReader: Sendable {
         self.databaseURL = databaseURL
     }
 
+    #if DEBUG
+    @TaskLocal public static var scanObserverForTesting: (@Sendable () -> Void)?
+    #endif
+
+    public static func clearCacheForTesting() {
+        self.cache.clear()
+    }
+
     public func fetch(now: Date = Date(), historyDays: Int = 30) throws -> OpenCodeGoUsageSnapshot {
         let hasAuth = Self.hasAuthKey(at: self.authURL)
         guard FileManager.default.fileExists(atPath: self.databaseURL.path) else {
@@ -55,7 +63,7 @@ public struct OpenCodeGoLocalUsageReader: Sendable {
             throw OpenCodeGoLocalUsageError.notDetected
         }
 
-        let rows = try self.readRows()
+        let rows = try self.readRowsCached()
         guard hasAuth || !rows.isEmpty else {
             throw OpenCodeGoLocalUsageError.notDetected
         }
@@ -63,6 +71,24 @@ public struct OpenCodeGoLocalUsageReader: Sendable {
             throw OpenCodeGoLocalUsageError.historyUnavailable("no local usage rows")
         }
         return Self.snapshot(rows: rows, now: now, historyDays: historyDays)
+    }
+
+    private func readRowsCached() throws -> [UsageRow] {
+        if let fingerprint = DatabaseFingerprint.current(for: self.databaseURL),
+           let cached = Self.cache.cachedRows(for: fingerprint)
+        {
+            return cached
+        }
+
+        #if DEBUG
+        Self.scanObserverForTesting?()
+        #endif
+
+        let rows = try self.readRows()
+        if let fingerprint = DatabaseFingerprint.current(for: self.databaseURL) {
+            Self.cache.store(rows: rows, for: fingerprint)
+        }
+        return rows
     }
 
     private func readRows() throws -> [UsageRow] {
@@ -211,7 +237,62 @@ public struct OpenCodeGoLocalUsageReader: Sendable {
           )
     """
 
-    private struct UsageRow {
+    private struct DatabaseFingerprint: Hashable, Sendable {
+        let path: String
+        let size: UInt64
+        let modificationDate: Date
+        let walSize: UInt64?
+        let walModificationDate: Date?
+
+        static func current(for url: URL, fileManager: FileManager = .default) -> DatabaseFingerprint? {
+            guard let attrs = try? fileManager.attributesOfItem(atPath: url.path),
+                  let size = attrs[.size] as? UInt64,
+                  let mtime = attrs[.modificationDate] as? Date
+            else {
+                return nil
+            }
+            let walPath = url.path + "-wal"
+            let walAttrs = try? fileManager.attributesOfItem(atPath: walPath)
+            let walSize = walAttrs?[.size] as? UInt64
+            let walMtime = walAttrs?[.modificationDate] as? Date
+            return DatabaseFingerprint(
+                path: url.path,
+                size: size,
+                modificationDate: mtime,
+                walSize: walSize,
+                walModificationDate: walMtime)
+        }
+    }
+
+    private final class CacheBox: @unchecked Sendable {
+        private let lock = NSLock()
+        private var entries: [String: (fingerprint: DatabaseFingerprint, rows: [UsageRow])] = [:]
+
+        func cachedRows(for fingerprint: DatabaseFingerprint) -> [UsageRow]? {
+            self.lock.lock()
+            defer { self.lock.unlock() }
+            guard let entry = self.entries[fingerprint.path], entry.fingerprint == fingerprint else {
+                return nil
+            }
+            return entry.rows
+        }
+
+        func store(rows: [UsageRow], for fingerprint: DatabaseFingerprint) {
+            self.lock.lock()
+            defer { self.lock.unlock() }
+            self.entries[fingerprint.path] = (fingerprint, rows)
+        }
+
+        func clear() {
+            self.lock.lock()
+            defer { self.lock.unlock() }
+            self.entries.removeAll()
+        }
+    }
+
+    private static let cache = CacheBox()
+
+    private struct UsageRow: Sendable, Equatable {
         let createdMs: Int64
         let cost: Double
         /// The underlying model behind the `opencode-go` Zen proxy; empty when unattributed.
@@ -219,8 +300,8 @@ public struct OpenCodeGoLocalUsageReader: Sendable {
         let tokens: TokenCounts?
     }
 
-    private struct TokenCounts: Decodable {
-        struct Cache: Decodable {
+    private struct TokenCounts: Decodable, Sendable, Equatable {
+        struct Cache: Decodable, Sendable, Equatable {
             let read: Int?
             let write: Int?
         }
