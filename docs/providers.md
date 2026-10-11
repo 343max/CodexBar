@@ -107,7 +107,7 @@ complete when the available scan window covers fewer days.
 | [Muse (muse.ai)](museai.md) | Browser cookies for `muse.ai` or a manual Cookie header → bundled plugin for the muse.ai weekly Free/Power/Maximum allowance (`web`). |
 | [CodeRabbit](coderabbit.md) | One bounded local CLI usage report for review counts and billing state (`cli`); no quota or balance is inferred. |
 | [Replicate](replicate.md) | Native Chrome cookie candidates or a manual header → bundled plugin for monthly spend and optional prepaid credits (`web`). |
-| [TypeSafe](typesafe.md) | Chrome cookies or a manual header → bundled plugin for billing spend and credit balance (`web`). |
+| [TypeSafe](typesafe.md) | Browser cookies or a manual header → bundled plugin for billing spend and credit balance (`web`). |
 | [Hugging Face](huggingface.md) | Access token from settings/env/CLI → bundled plugin for Inference Providers charges, optional ZeroGPU quota, and token-scoped identity (`api`). |
 | [Raycast](raycast.md) | Chrome cookies for `www.raycast.com` or a manual Cookie header → bundled plugin for monthly AI credits (`web`). |
 | [v0](v0.md) | API key and optional project scope from settings/env → bundled plugin for Platform API billing and rate limits (`api`). |

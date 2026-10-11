@@ -35,8 +35,6 @@ public enum TypeSafeProviderDescriptor {
                 widgetSelectable: false,
                 isPrimaryProvider: false,
                 usesAccountFallback: false,
-                browserCookieOrder: BrowserCookieImportSupport.chromeOnly(
-                    reason: "Other browsers use Manual to avoid extra permission prompts"),
                 dashboardURL: "https://console.typesafe.ai/usage",
                 statusPageURL: nil),
             branding: ProviderBranding(

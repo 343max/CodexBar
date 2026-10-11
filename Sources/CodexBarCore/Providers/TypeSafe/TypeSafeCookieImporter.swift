@@ -42,7 +42,9 @@ enum TypeSafeCookieImporter {
     private static let cookieClient = BrowserCookieClient()
 
     static func resolvedImportOrder(_ preferredBrowsers: [Browser]?) -> [Browser] {
-        guard let preferredBrowsers, !preferredBrowsers.isEmpty else { return [.chrome] }
+        guard let preferredBrowsers, !preferredBrowsers.isEmpty else {
+            return BrowserCookieImportSupport.importOrder(for: .typesafe)
+        }
         return preferredBrowsers
     }
 
