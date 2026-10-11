@@ -135,6 +135,25 @@ struct HyperPluginTests {
         } catch { Issue.record("Unexpected error: \(error)") }
     }
 
+    @Test(arguments: [
+        (ProviderCookieSource.manual, "Paste a fresh Cookie header in Settings"),
+        (ProviderCookieSource.auto, "Sign in again at hyper.charm.land"),
+    ], Self.engines)
+    func `expired session guidance matches the cookie source`(
+        expected: (ProviderCookieSource, String),
+        engine: ProviderPluginEngineKind) async
+    {
+        do {
+            _ = try await Self.fetch(
+                engine: engine, key: "", cookie: "session=fixture-expired", cookieSource: expected.0,
+                sessionStatus: 200, sessionBody: Self.landingHTML, sessionURL: Self.landingURL)
+            Issue.record("Expected expired session")
+        } catch let error as ProviderFetchClassifiedError {
+            #expect(error.kind == .authenticationExpired)
+            #expect(error.message.contains(expected.1))
+        } catch { Issue.record("Unexpected error: \(error)") }
+    }
+
     @Test(arguments: Self.engines)
     func `dashboard without a balance card fails closed instead of guessing`(engine: ProviderPluginEngineKind) async {
         let body = """

@@ -23,7 +23,9 @@ A successful browser refresh is reported as `web` and saves the imported session
 Missing guidance names the actual blocker instead of a generic sign-in request: Off says the cookie source is
 turned off, Manual asks for a pasted Cookie header, and an Automatic source that finds no cookie says no
 signed-in session was found. A session that does not reach the dashboard (HTTP 401/403, a sign-in redirect, or a
-marketing page) is rejected before the API-key fallback.
+marketing page) is rejected before the API-key fallback. An expired manual session then asks for a fresh pasted Cookie
+header, since signing in through a browser does not replace the stored header; an expired automatic session asks the
+user to sign in again.
 
 Add an API key in the provider settings or set `HYPER_API_KEY` in the environment that launches CodexBar.
 Saved API keys and manual Cookie headers use the CodexBar config file. Multiple API-key token accounts

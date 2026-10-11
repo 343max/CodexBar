@@ -161,6 +161,11 @@ defineProvider({
           }
           ctx.browser.rejectCookie(domain);
           if (!canUseKey) {
+            if (cookiePolicy === "manual") {
+              throw ctx.fail.authenticationExpired(
+                "Charm Hyper session expired. Paste a fresh Cookie header in Settings.",
+              );
+            }
             throw ctx.fail.authenticationExpired("Charm Hyper session expired. Sign in again at hyper.charm.land.");
           }
         }
