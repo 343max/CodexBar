@@ -2506,3 +2506,9 @@
 "Pace sign" = "Знак темпу витрат";
 "Ahead of pace is +" = "Випередження темпу — +";
 "Reserve is +" = "Запас — +";
+
+/* FLORA provider credentials */
+"Needs billing permission on the workspace. Or set FLORA_API_KEY." = "Потрібен дозвіл на білінг у робочому просторі. Або задайте FLORA_API_KEY.";
+"Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Обов’язково. ID ws_… робочого простору, до білінгу якого має доступ ключ. Або задайте FLORA_WORKSPACE_ID.";
+"ak_…" = "ak_…";
+"ws_…" = "ws_…";

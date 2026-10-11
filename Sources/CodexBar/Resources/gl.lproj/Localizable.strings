@@ -2505,3 +2505,9 @@
 "Pace sign" = "Signo do ritmo";
 "Ahead of pace is +" = "Por riba do ritmo é +";
 "Reserve is +" = "A reserva é +";
+
+/* FLORA provider credentials */
+"Needs billing permission on the workspace. Or set FLORA_API_KEY." = "Precisa permiso de facturación no espazo de traballo. Ou define FLORA_API_KEY.";
+"Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Obrigatorio. O ID ws_… do espazo de traballo que a chave pode facturar. Ou define FLORA_WORKSPACE_ID.";
+"ak_…" = "ak_…";
+"ws_…" = "ws_…";

@@ -105,5 +105,6 @@ public enum ProviderManifest {
         AerostackProviderDescriptor.descriptor,
         SailResearchProviderDescriptor.descriptor,
         SofyaProviderDescriptor.descriptor,
+        FloraProviderDescriptor.descriptor,
     ]
 }

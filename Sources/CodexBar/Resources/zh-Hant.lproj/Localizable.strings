@@ -2484,3 +2484,9 @@
 "Pace sign" = "使用節奏符號";
 "Ahead of pace is +" = "超出節奏為 +";
 "Reserve is +" = "餘量為 +";
+
+/* FLORA provider credentials */
+"Needs billing permission on the workspace. Or set FLORA_API_KEY." = "需要工作區的帳單權限。或設定 FLORA_API_KEY。";
+"Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "必填。金鑰可計費的工作區 ws_… ID。或設定 FLORA_WORKSPACE_ID。";
+"ak_…" = "ak_…";
+"ws_…" = "ws_…";

@@ -2499,3 +2499,9 @@
 "Pace sign" = "使用节奏符号";
 "Ahead of pace is +" = "超出节奏为 +";
 "Reserve is +" = "余量为 +";
+
+/* FLORA provider credentials */
+"Needs billing permission on the workspace. Or set FLORA_API_KEY." = "需要工作区的账单权限。或设置 FLORA_API_KEY。";
+"Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "必填。密钥可计费的工作区的 ws_… ID。或设置 FLORA_WORKSPACE_ID。";
+"ak_…" = "ak_…";
+"ws_…" = "ws_…";

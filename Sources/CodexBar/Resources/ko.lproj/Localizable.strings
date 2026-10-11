@@ -2474,3 +2474,9 @@
 "Pace sign" = "사용 속도 부호";
 "Ahead of pace is +" = "기준 속도 초과는 +";
 "Reserve is +" = "여유분은 +";
+
+/* FLORA provider credentials */
+"Needs billing permission on the workspace. Or set FLORA_API_KEY." = "워크스페이스의 결제 권한이 필요합니다. 또는 FLORA_API_KEY를 설정하세요.";
+"Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "필수. 키가 결제할 수 있는 워크스페이스의 ws_… ID. 또는 FLORA_WORKSPACE_ID를 설정하세요.";
+"ak_…" = "ak_…";
+"ws_…" = "ws_…";
