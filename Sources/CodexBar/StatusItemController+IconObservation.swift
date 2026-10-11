@@ -87,6 +87,7 @@ extension StatusItemController {
             "anim=\(self.shouldAnimate(provider: provider) ? "1" : "0")",
             "refreshing=\(self.store.refreshingProviders.contains(provider.instanceID) ? "1" : "0")",
             "text=\(displayText ?? "nil")",
+            "estimated=\(snapshot?.dataConfidence == .estimated)",
             "layoutCost=\(layoutCostSignature ?? "nil")",
             "layoutAccount=\(layoutAccountSignature ?? "nil")",
             "layoutPace=\(layoutPaceSignature ?? "nil")",
@@ -103,7 +104,7 @@ extension StatusItemController {
         let selections = Set(resolution.layout
             .flattenedTokens(conditionals: self.settings.menuBarLayoutConditionals).compactMap(\.resetWindow))
         guard !selections.isEmpty else { return nil }
-        let windows = self.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: Date())
+        let windows = self.store.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: Date())
         var hasher = Hasher()
         for selection in PercentWindow.allCases where selections.contains(selection) {
             let window = windows.resetWindow(selection, snapshot: snapshot)
@@ -221,7 +222,7 @@ extension StatusItemController {
         guard !paceWindows.isEmpty || needsRunsOut else { return nil }
 
         let now = Date()
-        let windows = self.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: now)
+        let windows = self.store.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: now)
         var components = PercentWindow.allCases
             .filter(paceWindows.contains)
             .map { percentWindow in
@@ -275,7 +276,7 @@ extension StatusItemController {
         let extras = MenuBarLayoutRenderExtra.signature(tokens: tokens, provider: provider, snapshot: snapshot)
         guard !lanes.isEmpty || extras != nil else { return nil }
 
-        let windows = self.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: Date())
+        let windows = self.store.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: Date())
         let showUsed = self.settings.usageBarsShowUsed
         return MenuBarLayoutLane.allCases
             .filter(lanes.contains)
@@ -306,7 +307,7 @@ extension StatusItemController {
             .filter(\.readsRateWindow)
         guard !metrics.isEmpty else { return nil }
 
-        let windows = self.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: Date())
+        let windows = self.store.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: Date())
         let scopedWeekly = MenuBarLayoutSemanticWindowResolver
             .scopedWeeklyNamedWindow(snapshot: snapshot)?.window
         return MenuBarConditionalMetric.allCases

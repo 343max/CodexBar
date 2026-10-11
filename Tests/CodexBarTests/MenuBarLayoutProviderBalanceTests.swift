@@ -239,6 +239,27 @@ struct MenuBarLayoutProviderBalanceTests {
             providerCost: prepaid,
             updatedAt: self.now)
         let data = self.data(provider: .claude, snapshot: snapshot)
+        if let path = ProcessInfo.processInfo.environment["CODEXBAR_CLAUDE_BALANCE_PROOF"] {
+            let output = self.render(
+                layout: MenuBarLayout(lines: [[.percent(window: .automatic), .separatorDot, .balance]]), data: data)
+            let image = NSImage(size: NSSize(width: 360, height: 90))
+            image.lockFocus()
+            NSColor.white.setFill()
+            NSRect(x: 0, y: 0, width: 360, height: 90).fill()
+            ("Claude · Auto % + Balance · synthetic" as NSString).draw(
+                at: NSPoint(x: 16, y: 60),
+                withAttributes: [.font: NSFont.systemFont(ofSize: 13), .foregroundColor: NSColor.black])
+            let title = NSMutableAttributedString(attributedString: output.attributedTitle)
+            title.addAttribute(
+                .foregroundColor,
+                value: NSColor.black,
+                range: NSRange(location: 0, length: title.length))
+            title.draw(at: NSPoint(x: 16, y: 24))
+            image.unlockFocus()
+            let tiff = try #require(image.tiffRepresentation)
+            let bitmap = try #require(NSBitmapImageRep(data: tiff))
+            try #require(bitmap.representation(using: .png, properties: [:])).write(to: URL(fileURLWithPath: path))
+        }
         #expect(data.balance == "$76.65")
         #expect(data.automaticText == nil)
         #expect(self.render(layout: MenuBarLayout(lines: [[.balance]]), data: data).attributedTitle.string == "$76.65")
@@ -261,6 +282,8 @@ struct MenuBarLayoutProviderBalanceTests {
                 accountOrganization: nil,
                 loginMethod: nil))
         #expect(MenuBarLayoutBalanceResolver.balance(provider: .claude, snapshot: otherProvider) == nil)
+        #expect(MenuBarLayoutBalanceResolver.balanceAmountsUSD(provider: .claude, snapshot: otherProvider).remaining
+            == nil)
 
         let withoutBalance = UsageSnapshot(
             primary: nil,
@@ -285,6 +308,51 @@ struct MenuBarLayoutProviderBalanceTests {
             updatedAt: self.now)
         #expect(MenuBarLayoutBalanceResolver.balanceAmountsUSD(provider: .claude, snapshot: snapshot).remaining
             == 76.65)
+    }
+
+    @Test
+    func `non USD prepaid balance renders without feeding dollar conditionals`() {
+        let snapshot = UsageSnapshot(
+            primary: nil,
+            secondary: nil,
+            providerCost: ProviderCostSnapshot(
+                used: 12, limit: 50, currencyCode: "GBP", balance: 76.65, updatedAt: self.now),
+            updatedAt: self.now)
+        #expect(MenuBarLayoutBalanceResolver.balance(provider: .claude, snapshot: snapshot) == "£76.65")
+        let amounts = MenuBarLayoutBalanceResolver.balanceAmountsUSD(provider: .claude, snapshot: snapshot)
+        #expect(amounts.remaining == nil)
+        #expect(amounts.used == nil)
+    }
+
+    @Test(arguments: [
+        (UsageProvider.grok, "–"), (.opencode, "–"), (.huggingface, "–"), (.replicate, "–"),
+        (.typesafe, "$4.98"), (.xapi, "$4.98"), (.openrouter, "$12.34"),
+    ])
+    func `existing provider balance output ignores unrelated prepaid cost`(provider: UsageProvider, expected: String)
+        throws
+    {
+        let snapshot = try UsageSnapshot(
+            primary: nil,
+            secondary: nil,
+            providerCost: ProviderCostSnapshot(
+                used: 0, limit: 0, currencyCode: "USD", balance: 76.65, updatedAt: self.now),
+            details: [ProviderDetailSection(rows: [
+                .init(label: "Balance", value: "$4.98"),
+                .init(label: "Remaining", value: "$12.34"),
+                .init(label: "Used", value: "$7.66"),
+            ])],
+            updatedAt: self.now,
+            identity: ProviderIdentitySnapshot(
+                providerID: provider.instanceID,
+                accountEmail: nil,
+                accountOrganization: nil,
+                loginMethod: "Balance: $4.98"))
+        let output = self.render(layout: MenuBarLayout(lines: [[.balance]]), data: self.data(
+            provider: provider, snapshot: snapshot)).attributedTitle.string
+        #expect(Array(output.utf8) == Array(expected.utf8))
+        let amounts = MenuBarLayoutBalanceResolver.balanceAmountsUSD(provider: provider, snapshot: snapshot)
+        #expect(amounts.remaining == (provider == .openrouter ? 12.34 : nil))
+        #expect(amounts.used == (provider == .openrouter ? 7.66 : nil))
     }
 
     @Test(arguments: [UsageProvider.grok, .opencode, .codex])

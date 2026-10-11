@@ -193,102 +193,15 @@ extension StatusItemController {
         provider: UsageProvider,
         snapshot: UsageSnapshot?,
         warningFlash: Bool,
-        now: Date = .init())
-        -> MenuBarLayoutRenderData
+        now: Date = .init()) -> MenuBarLayoutRenderData
     {
-        let windows = self.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: now)
-        let scopedNamed = MenuBarLayoutSemanticWindowResolver.scopedWeeklyNamedWindow(snapshot: snapshot)
-        let paceWindow = windows.weekly ?? windows.automatic
-        // Bind the pace itself rather than only its label: `etaSeconds` is the numeric run-out that
-        // conditional predicates compare, and resolving it twice would score the window twice.
-        let pace = paceWindow.flatMap {
-            self.store.weeklyPace(
-                provider: provider,
-                window: $0,
-                dataConfidence: snapshot?.dataConfidence ?? .unknown,
-                now: now)
-        }
-        let runsOut = pace
-            .flatMap { UsagePaceText.weeklyDetail(provider: provider, pace: $0, now: now).rightLabel }
-        let costs = self.menuBarLayoutCosts(provider: provider, now: now)
-        let balanceAmounts = MenuBarLayoutBalanceResolver.balanceAmountsUSD(
+        self.store.menuBarLayoutRenderData(
             provider: provider,
             snapshot: snapshot,
-            showsOptionalCredits: self.settings.showOptionalCreditsAndExtraUsage)
-        let codexCredits = self.menuBarLayoutCodexCredits(
-            provider: provider,
-            snapshot: snapshot,
-            now: now)
-        let providerName = L(self.store.metadata(for: provider).displayName)
-        let accountLabel = self.menuBarLayoutAccountLabel(provider: provider, snapshot: snapshot)
-        let automatic = MenuBarLayoutRenderWindow(windows.automatic)
-
-        return MenuBarLayoutRenderData(
-            provider: provider,
             iconKey: "\(provider.rawValue):\(warningFlash ? "warning" : "normal")",
-            providerName: providerName,
-            accountLabel: accountLabel,
-            laneLabels: MenuBarLayoutLaneLabels(provider: provider, snapshot: snapshot),
-            primary: MenuBarLayoutRenderWindow(windows.primary),
-            secondary: MenuBarLayoutRenderWindow(windows.secondary),
-            tertiary: MenuBarLayoutRenderWindow(windows.tertiary),
-            extraRateWindows: (snapshot?.extraRateWindows ?? []).map(MenuBarLayoutRenderExtra.init),
-            session: MenuBarLayoutRenderWindow(windows.session),
-            weekly: MenuBarLayoutRenderWindow(windows.weekly),
-            scopedWeekly: MenuBarLayoutRenderWindow(scopedNamed?.window),
-            scopedWeeklyTitle: scopedNamed?.title,
-            automatic: automatic,
-            automaticText: Self.menuBarLayoutAutomaticText(
-                provider: provider,
-                snapshot: snapshot,
-                automatic: automatic,
-                showsOptionalCredits: self.settings.showOptionalCreditsAndExtraUsage),
-            sessionPace: self.store.menuBarLayoutPaceText(
-                provider: provider,
-                window: windows.session,
-                dataConfidence: snapshot?.dataConfidence ?? .unknown,
-                now: now),
-            weeklyPace: self.store.menuBarLayoutPaceText(
-                provider: provider,
-                window: windows.weekly,
-                dataConfidence: snapshot?.dataConfidence ?? .unknown,
-                now: now,
-                minimumElapsedPercent: 1),
-            automaticPace: self.store.menuBarLayoutPaceText(
-                provider: provider,
-                window: windows.automatic,
-                dataConfidence: snapshot?.dataConfidence ?? .unknown,
-                now: now),
-            runsOut: runsOut,
-            balance: MenuBarLayoutBalanceResolver.balance(
-                provider: provider,
-                snapshot: snapshot,
-                codexCredits: codexCredits,
-                showsOptionalCredits: self.settings.showOptionalCreditsAndExtraUsage),
-            costToday: costs.today,
-            cost30d: costs.last30Days,
-            metrics: MenuBarLayoutRenderMetrics(
-                sessionPaceDelta: self.store.menuBarLayoutPaceDelta(
-                    provider: provider,
-                    window: windows.session,
-                    dataConfidence: snapshot?.dataConfidence ?? .unknown,
-                    now: now),
-                weeklyPaceDelta: self.store.menuBarLayoutPaceDelta(
-                    provider: provider,
-                    window: windows.weekly,
-                    dataConfidence: snapshot?.dataConfidence ?? .unknown,
-                    now: now,
-                    minimumElapsedPercent: 1),
-                automaticPaceDelta: self.store.menuBarLayoutPaceDelta(
-                    provider: provider,
-                    window: windows.automatic,
-                    dataConfidence: snapshot?.dataConfidence ?? .unknown,
-                    now: now),
-                runsOutMinutes: pace?.etaSeconds.map { Int(($0 / 60).rounded()) },
-                balanceRemainingUSD: balanceAmounts.remaining,
-                balanceUsedUSD: balanceAmounts.used,
-                costTodayUSD: costs.todayUSD,
-                cost30dUSD: costs.last30DaysUSD))
+            accountLabel: self.menuBarLayoutAccountLabel(provider: provider, snapshot: snapshot),
+            costs: self.menuBarLayoutCosts(provider: provider, now: now),
+            now: now)
     }
 
     func menuBarLayoutCodexCredits(
@@ -345,57 +258,6 @@ extension StatusItemController {
             last30DaysUSD: last30DaysAmount.flatMap(toUSD))
     }
 
-    func menuBarLayoutWindows(
-        provider: UsageProvider,
-        snapshot: UsageSnapshot?,
-        now: Date)
-        -> MenuBarLayoutWindows
-    {
-        if provider == .codex,
-           let projection = self.store.codexConsumerProjectionIfNeeded(
-               for: provider,
-               surface: .menuBar,
-               snapshotOverride: snapshot,
-               now: now)
-        {
-            let session = projection.menuBarSelectableRateWindow(for: .session)
-            let weekly = projection.menuBarSelectableRateWindow(for: .weekly)
-            let automatic = projection.automaticMenuBarWindow()
-            return MenuBarLayoutWindows(
-                primary: session,
-                secondary: weekly,
-                tertiary: snapshot?.tertiary,
-                session: session,
-                weekly: weekly,
-                automatic: automatic)
-        }
-
-        let semanticWindows = MenuBarLayoutSemanticWindowResolver.windows(
-            provider: provider,
-            snapshot: snapshot)
-        // Provider-specific by design: Mistral's automatic lane can explicitly select its Monthly Plan window.
-        let automaticPreference = provider == .mistral
-            ? self.settings.menuBarMetricPreference(for: provider, snapshot: snapshot)
-            : .automatic
-        let automatic = MenuBarMetricWindowResolver.rateWindow(
-            preference: automaticPreference,
-            provider: provider,
-            snapshot: snapshot,
-            supportsAverage: self.settings.menuBarMetricSupportsAverage(for: provider),
-            antigravityPrioritizeExhaustedQuotas: self.settings.antigravityPrioritizeExhaustedQuotas,
-            now: now)
-        return MenuBarLayoutWindows(
-            primary: snapshot?.primary,
-            secondary: snapshot?.secondary,
-            tertiary: snapshot?.tertiary,
-            session: semanticWindows.session,
-            weekly: semanticWindows.weekly,
-            automatic: MenuBarLayoutAutomaticWindowDisplayNormalizer.normalized(
-                provider: provider,
-                snapshot: snapshot,
-                window: automatic))
-    }
-
     /// Select dates from the same semantic windows as reset display tokens. Keep styles separate:
     /// an absolute weekly clock must not cause minute-by-minute countdown wakeups.
     func menuBarLayoutResetDates(
@@ -404,7 +266,7 @@ extension StatusItemController {
         absolute: Bool? = nil) -> [Date]
     {
         let snapshot = self.store.menuBarSnapshot(for: provider.instanceID)
-        let windows = self.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: now)
+        let windows = self.store.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: now)
         let tokens = self.renderedMenuBarLayoutResolution(for: provider).layout
             .flattenedTokens(conditionals: self.settings.menuBarLayoutConditionals)
         let selections = Set(tokens.filter { absolute == nil || $0.resetIsAbsolute == absolute }
@@ -459,5 +321,163 @@ extension StatusItemController {
                 _ = self.applyIcon(for: provider, phase: nil)
             }
         }
+    }
+}
+
+/// Shared layout values keep the editor and status item on the same balance and quota projection.
+extension UsageStore {
+    func menuBarLayoutRenderData(
+        provider: UsageProvider,
+        snapshot: UsageSnapshot?,
+        iconKey: String,
+        accountLabel: String?,
+        costs: MenuBarLayoutCostValues,
+        now: Date = .init())
+        -> MenuBarLayoutRenderData
+    {
+        let windows = self.menuBarLayoutWindows(provider: provider, snapshot: snapshot, now: now)
+        let scopedNamed = MenuBarLayoutSemanticWindowResolver.scopedWeeklyNamedWindow(snapshot: snapshot)
+        let paceWindow = windows.weekly ?? windows.automatic
+        // Bind the pace itself rather than only its label: `etaSeconds` is the numeric run-out that
+        // conditional predicates compare, and resolving it twice would score the window twice.
+        let pace = paceWindow.flatMap {
+            self.weeklyPace(
+                provider: provider,
+                window: $0,
+                dataConfidence: snapshot?.dataConfidence ?? .unknown,
+                now: now)
+        }
+        let runsOut = pace
+            .flatMap { UsagePaceText.weeklyDetail(provider: provider, pace: $0, now: now).rightLabel }
+        let balanceAmounts = MenuBarLayoutBalanceResolver.balanceAmountsUSD(
+            provider: provider,
+            snapshot: snapshot,
+            showsOptionalCredits: self.settings.showOptionalCreditsAndExtraUsage)
+        let codexCredits = self.codexConsumerProjectionIfNeeded(
+            for: provider,
+            surface: .menuBar,
+            snapshotOverride: snapshot,
+            now: now)?.credits?.snapshot
+        let providerName = L(self.metadata(for: provider).displayName)
+        let automatic = MenuBarLayoutRenderWindow(windows.automatic)
+
+        return MenuBarLayoutRenderData(
+            provider: provider,
+            quotaIsEstimated: snapshot?.dataConfidence == .estimated,
+            iconKey: iconKey,
+            providerName: providerName,
+            accountLabel: accountLabel,
+            laneLabels: MenuBarLayoutLaneLabels(provider: provider, snapshot: snapshot),
+            primary: MenuBarLayoutRenderWindow(windows.primary),
+            secondary: MenuBarLayoutRenderWindow(windows.secondary),
+            tertiary: MenuBarLayoutRenderWindow(windows.tertiary),
+            extraRateWindows: (snapshot?.extraRateWindows ?? []).map(MenuBarLayoutRenderExtra.init),
+            session: MenuBarLayoutRenderWindow(windows.session),
+            weekly: MenuBarLayoutRenderWindow(windows.weekly),
+            scopedWeekly: MenuBarLayoutRenderWindow(scopedNamed?.window),
+            scopedWeeklyTitle: scopedNamed?.title,
+            automatic: automatic,
+            automaticText: StatusItemController.menuBarLayoutAutomaticText(
+                provider: provider,
+                snapshot: snapshot,
+                automatic: automatic,
+                showsOptionalCredits: self.settings.showOptionalCreditsAndExtraUsage),
+            sessionPace: self.menuBarLayoutPaceText(
+                provider: provider,
+                window: windows.session,
+                dataConfidence: snapshot?.dataConfidence ?? .unknown,
+                now: now),
+            weeklyPace: self.menuBarLayoutPaceText(
+                provider: provider,
+                window: windows.weekly,
+                dataConfidence: snapshot?.dataConfidence ?? .unknown,
+                now: now,
+                minimumElapsedPercent: 1),
+            automaticPace: self.menuBarLayoutPaceText(
+                provider: provider,
+                window: windows.automatic,
+                dataConfidence: snapshot?.dataConfidence ?? .unknown,
+                now: now),
+            runsOut: runsOut,
+            balance: MenuBarLayoutBalanceResolver.balance(
+                provider: provider,
+                snapshot: snapshot,
+                codexCredits: codexCredits,
+                showsOptionalCredits: self.settings.showOptionalCreditsAndExtraUsage),
+            costToday: costs.today,
+            cost30d: costs.last30Days,
+            metrics: MenuBarLayoutRenderMetrics(
+                sessionPaceDelta: self.menuBarLayoutPaceDelta(
+                    provider: provider,
+                    window: windows.session,
+                    dataConfidence: snapshot?.dataConfidence ?? .unknown,
+                    now: now),
+                weeklyPaceDelta: self.menuBarLayoutPaceDelta(
+                    provider: provider,
+                    window: windows.weekly,
+                    dataConfidence: snapshot?.dataConfidence ?? .unknown,
+                    now: now,
+                    minimumElapsedPercent: 1),
+                automaticPaceDelta: self.menuBarLayoutPaceDelta(
+                    provider: provider,
+                    window: windows.automatic,
+                    dataConfidence: snapshot?.dataConfidence ?? .unknown,
+                    now: now),
+                runsOutMinutes: pace?.etaSeconds.map { Int(($0 / 60).rounded()) },
+                balanceRemainingUSD: balanceAmounts.remaining,
+                balanceUsedUSD: balanceAmounts.used,
+                costTodayUSD: costs.todayUSD,
+                cost30dUSD: costs.last30DaysUSD))
+    }
+
+    func menuBarLayoutWindows(
+        provider: UsageProvider,
+        snapshot: UsageSnapshot?,
+        now: Date)
+        -> MenuBarLayoutWindows
+    {
+        if provider == .codex,
+           let projection = self.codexConsumerProjectionIfNeeded(
+               for: provider,
+               surface: .menuBar,
+               snapshotOverride: snapshot,
+               now: now)
+        {
+            let session = projection.menuBarSelectableRateWindow(for: .session)
+            let weekly = projection.menuBarSelectableRateWindow(for: .weekly)
+            let automatic = projection.automaticMenuBarWindow()
+            return MenuBarLayoutWindows(
+                primary: session,
+                secondary: weekly,
+                tertiary: snapshot?.tertiary,
+                session: session,
+                weekly: weekly,
+                automatic: automatic)
+        }
+
+        let semanticWindows = MenuBarLayoutSemanticWindowResolver.windows(
+            provider: provider,
+            snapshot: snapshot)
+        // Provider-specific by design: Mistral's automatic lane can explicitly select its Monthly Plan window.
+        let automaticPreference = provider == .mistral
+            ? self.settings.menuBarMetricPreference(for: provider, snapshot: snapshot)
+            : .automatic
+        let automatic = MenuBarMetricWindowResolver.rateWindow(
+            preference: automaticPreference,
+            provider: provider,
+            snapshot: snapshot,
+            supportsAverage: self.settings.menuBarMetricSupportsAverage(for: provider),
+            antigravityPrioritizeExhaustedQuotas: self.settings.antigravityPrioritizeExhaustedQuotas,
+            now: now)
+        return MenuBarLayoutWindows(
+            primary: snapshot?.primary,
+            secondary: snapshot?.secondary,
+            tertiary: snapshot?.tertiary,
+            session: semanticWindows.session,
+            weekly: semanticWindows.weekly,
+            automatic: MenuBarLayoutAutomaticWindowDisplayNormalizer.normalized(
+                provider: provider,
+                snapshot: snapshot,
+                window: automatic))
     }
 }

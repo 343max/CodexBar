@@ -661,10 +661,8 @@ enum MenuBarLayoutBalanceResolver {
         }
     }
 
-    /// Numeric USD amounts behind OpenRouter's "Credits" detail rows. The plugin formats both rows as
-    /// `$` + `toFixed(2)` (`Sources/CodexBarCore/Resources/Plugins/openrouter.js`), so the amounts are
-    /// USD with no grouping separators; the plugin never populates `providerCost`, so there is nothing
-    /// structured to read instead.
+    /// USD amounts for balance predicates. OpenRouter retains its displayed detail-row precision;
+    /// providers declaring prepaid cost balances use the reported amount without currency conversion.
     static func balanceAmountsUSD(
         provider: UsageProvider,
         snapshot: UsageSnapshot?,
