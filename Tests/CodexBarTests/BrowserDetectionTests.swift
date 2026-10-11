@@ -804,6 +804,27 @@ struct BrowserDetectionTests {
     }
 
     @Test
+    func `firefox developer edition default profile provides a cookie store`() throws {
+        let temp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temp) }
+
+        // Firefox Developer Edition creates its default profile as `<salt>.dev-edition-default`.
+        let profile = temp
+            .appendingPathComponent("Library")
+            .appendingPathComponent("Application Support")
+            .appendingPathComponent("Firefox")
+            .appendingPathComponent("Profiles")
+            .appendingPathComponent("abc.dev-edition-default")
+        try FileManager.default.createDirectory(at: profile, withIntermediateDirectories: true)
+        FileManager.default.createFile(atPath: profile.appendingPathComponent("cookies.sqlite").path, contents: Data())
+
+        let detection = self.detection(homeDirectory: temp.path, installedBrowsers: [.firefoxDeveloperEdition])
+        #expect(detection.isCookieSourceAvailable(.firefoxDeveloperEdition) == true)
+        #expect(detection.hasUsableProfileData(.firefoxDeveloperEdition) == true)
+    }
+
+    @Test
     func `zen accepts uppercase default profile dir`() throws {
         let temp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: temp, withIntermediateDirectories: true)

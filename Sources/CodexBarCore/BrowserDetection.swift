@@ -301,9 +301,11 @@ public final class BrowserDetection: Sendable {
             name == "Default" || name.hasPrefix("Profile ") || name.hasPrefix("user-")
         }
 
+        // Gecko default profiles end in `.default`, `.default-release`, or a channel form such as
+        // Developer Edition's `.dev-edition-default`.
         if browser.usesGeckoProfileStore {
             return contents.contains { name in
-                name.range(of: ".default", options: [.caseInsensitive]) != nil
+                name.range(of: "default", options: [.caseInsensitive]) != nil
             }
         }
 
@@ -314,7 +316,7 @@ public final class BrowserDetection: Sendable {
         guard let contents = self.directoryContents(profilePath) else { return false }
 
         if browser.usesGeckoProfileStore {
-            for name in contents where name.range(of: ".default", options: [.caseInsensitive]) != nil {
+            for name in contents where name.range(of: "default", options: [.caseInsensitive]) != nil {
                 let cookieDB = "\(profilePath)/\(name)/cookies.sqlite"
                 if self.fileExists(cookieDB) {
                     return true

@@ -4,6 +4,9 @@
 
 ### Added
 
+- Codex: show saved conversation titles in the Cost menu, retain session IDs in tooltips, and respect Hide personal information (#4429). Thanks @obrizan!
+- xAI: show an optional live remaining credit estimate from the current invoice preview alongside the posted prepaid balance (#4406). Thanks @lilbreadxiaomianbao!
+- Menu: add a default-on “Highlight menu cards on hover” toggle to preserve card colors when disabled, while keeping keyboard selection visible (#4414). Thanks @cynicalight!
 - Providers: add fal account credit balance through a bundled plugin, using an API key with billing read access.
 
 ### Changed
@@ -12,8 +15,13 @@
 
 ### Fixed
 
+- Usage & Spend: stop Codex status and activity read caches from retaining per-file request ledgers, reducing memory on large histories while preserving report turn performance (#4421, #4424). Thanks @harjothkhara and @Edenspiekermann-Chris!
+- Command Code: support Go v1’s $10 monthly grant and preserve API usage and the plan label for unknown subscriptions (#4405). Thanks @dalisoft!
+- OpenCode Go: mark estimated menu-bar percentages with `~` and clarify that local cost ratios do not establish account quota (#4410). Thanks @djbclark!
 - Menu bar: stop the blank Settings placeholder window from appearing on launch (regression in 0.74.0) (#4415). Thanks @tcurdt, @ChuJiannn11 and @kcharlan!
+- Claude: show prepaid Usage credits in custom menu bar Balance layouts and USD balance conditionals while preserving quota text and the optional credits setting (#4422). Thanks @lg!
 - Packaging: preserve the selected macOS SDK in app and helper binaries so newer macOS versions use current native UI metrics, while retaining macOS 14 support (#4403). Thanks @Yuxin-Qiao!
+- Replicate: use the official provider glyph across the app, website, and HTTP dashboard; refresh the dashboard’s bundled provider icons (#4411). Thanks @giuseppebisemi!
 
 ## 0.74.0 — 2026-10-10
 
