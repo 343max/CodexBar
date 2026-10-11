@@ -187,12 +187,10 @@ struct OpenCodeGoLocalUsageFetchStrategy: ProviderFetchStrategy {
         -> OpenCodeGoUsageSnapshot?
     typealias APIUsageOverlayFetcher = @Sendable (ProviderFetchContext, String) async throws
         -> OpenCodeGoUsageSnapshot
-    typealias CookieHeaderResolver = @Sendable (ProviderFetchContext, Bool) throws -> String
 
     private let localSnapshotLoader: LocalSnapshotLoader
     private let webUsageOverlayFetcher: WebUsageOverlayFetcher
     private let apiUsageOverlayFetcher: APIUsageOverlayFetcher
-    private let cookieHeaderResolver: CookieHeaderResolver
 
     private struct OverlayCookie {
         let header: String
@@ -214,15 +212,11 @@ struct OpenCodeGoLocalUsageFetchStrategy: ProviderFetchStrategy {
             try await OpenCodeGoUsageFetcher.fetchAPIUsage(
                 apiKey: apiKey,
                 timeout: context.webTimeout)
-        },
-        cookieHeaderResolver: @escaping CookieHeaderResolver = { context, allowCached in
-            try OpenCodeGoUsageFetchStrategy.resolveCookieHeader(context: context, allowCached: allowCached)
         })
     {
         self.localSnapshotLoader = localSnapshotLoader
         self.webUsageOverlayFetcher = webUsageOverlayFetcher
         self.apiUsageOverlayFetcher = apiUsageOverlayFetcher
-        self.cookieHeaderResolver = cookieHeaderResolver
     }
 
     func isAvailable(_: ProviderFetchContext) async -> Bool {
@@ -246,13 +240,15 @@ struct OpenCodeGoLocalUsageFetchStrategy: ProviderFetchStrategy {
         if let apiResult = try await self.tryAPIOverlay(snapshot: snapshot, context: context) {
             return apiResult
         }
-        guard let cookie = try self.resolveOverlayCookie(context: context) else {
+        guard context.settings?.opencodego?.cookieSource != .off,
+              let cookie = Self.cachedOrManualCookie(context: context)
+        else {
             return SnapshotResult(snapshot: snapshot, sourceLabel: "local", quotaIsAuthoritative: false)
         }
 
         // The server knows the real billing-cycle anchors; the local monthly window is only an
         // estimate anchored at the earliest local row. Overlay the authoritative web windows
-        // whenever a session cookie is already available or discovered from a browser in auto mode.
+        // whenever a session cookie is already available (never a fresh browser import here).
         // URLSession reports task cancellation as URLError.cancelled, so normalize it here to
         // keep a cancelled refresh from completing with a successful local-only result.
         let webSnapshot: OpenCodeGoUsageSnapshot?
@@ -262,13 +258,9 @@ struct OpenCodeGoLocalUsageFetchStrategy: ProviderFetchStrategy {
             #if os(macOS)
             if let cached = cookie.cachedEntry {
                 _ = CookieHeaderCache.clearIfCurrent(provider: .opencodego, expected: cached)
-            } else if context.settings?.opencodego?.cookieSource != .manual {
-                CookieHeaderCache.clear(provider: .opencodego)
-            }
-            #endif
-            if context.settings?.opencodego?.cookieSource != .manual {
                 return SnapshotResult(snapshot: snapshot, sourceLabel: "local", quotaIsAuthoritative: false)
             }
+            #endif
             // A manually configured credential is an explicit account selection. Do not hide its
             // authentication failure behind an unrelated local estimate.
             throw OpenCodeGoUsageError.invalidCredentials
@@ -302,24 +294,6 @@ struct OpenCodeGoLocalUsageFetchStrategy: ProviderFetchStrategy {
                 snapshot: self.preservingCookieBalance(in: apiOverlay, context: context),
                 sourceLabel: "local+api",
                 quotaIsAuthoritative: true)
-        } catch is CancellationError {
-            throw CancellationError()
-        } catch let error as URLError where error.code == .cancelled {
-            throw CancellationError()
-        } catch {
-            return nil
-        }
-    }
-
-    private func resolveOverlayCookie(context: ProviderFetchContext) throws -> OverlayCookie? {
-        guard context.settings?.opencodego?.cookieSource != .off else { return nil }
-        if let cached = Self.cachedOrManualCookie(context: context) {
-            return cached
-        }
-        guard context.sourceMode == .auto else { return nil }
-        do {
-            let header = try self.cookieHeaderResolver(context, false)
-            return OverlayCookie(header: header, cachedEntry: nil)
         } catch is CancellationError {
             throw CancellationError()
         } catch let error as URLError where error.code == .cancelled {

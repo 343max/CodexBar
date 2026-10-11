@@ -20,10 +20,8 @@ percentage cannot establish that the account has headroom. Consumers deciding ac
 
 The menu bar prefixes estimated percentages with `~`; the expanded menu and text CLI label them as estimated.
 JSON retains numeric percentages and the explicit confidence field. Available API or cached/manual session
-responses override local windows with authoritative server meters. In Auto mode without configured credentials,
-CodexBar attempts to discover an active browser session before falling back to local-only estimates, allowing
-logged-in console quotas to be displayed seamlessly. If no browser session or API key is available, Auto falls
-back to the local estimate (`~` in menu bar, `dataConfidence: "estimated"`). No local estimate is used for pace forecasts.
+responses already override local windows with authoritative server meters. An unscoped local read does not import
+new browser cookies; use Web mode to discover a browser session. No local estimate is used for pace forecasts.
 Local database scans are cached by file modification date and size (including SQLite WAL sidecars) to avoid
 repeated full scans of `opencode.db` on subsequent fetches.
 

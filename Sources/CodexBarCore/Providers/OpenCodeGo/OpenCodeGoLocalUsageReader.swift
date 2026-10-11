@@ -74,9 +74,11 @@ public struct OpenCodeGoLocalUsageReader: Sendable {
     }
 
     private func readRowsCached() throws -> [UsageRow] {
-        if let fingerprint = DatabaseFingerprint.current(for: self.databaseURL),
-           let cached = Self.cache.cachedRows(for: fingerprint)
-        {
+        guard let initialFingerprint = DatabaseFingerprint.current(for: self.databaseURL) else {
+            return try self.readRows()
+        }
+
+        if let cached = Self.cache.cachedRows(for: initialFingerprint) {
             return cached
         }
 
@@ -85,8 +87,10 @@ public struct OpenCodeGoLocalUsageReader: Sendable {
         #endif
 
         let rows = try self.readRows()
-        if let fingerprint = DatabaseFingerprint.current(for: self.databaseURL) {
-            Self.cache.store(rows: rows, for: fingerprint)
+        if let finalFingerprint = DatabaseFingerprint.current(for: self.databaseURL),
+           finalFingerprint == initialFingerprint
+        {
+            Self.cache.store(rows: rows, for: initialFingerprint)
         }
         return rows
     }

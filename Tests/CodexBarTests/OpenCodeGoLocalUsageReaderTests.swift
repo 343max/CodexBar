@@ -110,6 +110,41 @@ struct OpenCodeGoLocalUsageReaderTests {
     }
 
     @Test
+    func `fetch does not cache rows when database changes during scan`() throws {
+        OpenCodeGoLocalUsageReader.clearCacheForTesting()
+        defer { OpenCodeGoLocalUsageReader.clearCacheForTesting() }
+
+        let env = try Self.makeEnvironment()
+        defer { try? FileManager.default.removeItem(at: env.root) }
+
+        try Self.writeAuth(to: env.authURL)
+        try Self.createDatabase(at: env.databaseURL)
+        try Self.insertMessage(
+            databaseURL: env.databaseURL,
+            createdMs: Self.ms("2026-03-06T11:00:00.000Z"),
+            cost: 3.0)
+
+        let scanCount = LockIsolated<Int>(0)
+        let reader = OpenCodeGoLocalUsageReader(authURL: env.authURL, databaseURL: env.databaseURL)
+
+        let observer: @Sendable () -> Void = {
+            scanCount.setValue(scanCount.value + 1)
+            try? Self.insertMessage(
+                databaseURL: env.databaseURL,
+                createdMs: Self.ms("2026-03-06T11:30:00.000Z"),
+                cost: 3.0)
+        }
+
+        try OpenCodeGoLocalUsageReader.$scanObserverForTesting.withValue(observer) {
+            _ = try reader.fetch(now: Date(timeIntervalSince1970: 1_772_798_400))
+            #expect(scanCount.value == 1)
+
+            _ = try reader.fetch(now: Date(timeIntervalSince1970: 1_772_798_400))
+            #expect(scanCount.value == 2)
+        }
+    }
+
+    @Test
     func `builds daily cost history buckets within the requested window`() throws {
         let env = try Self.makeEnvironment()
         defer { try? FileManager.default.removeItem(at: env.root) }
