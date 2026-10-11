@@ -453,6 +453,8 @@ the local result and returns a nonzero exit code. See [CLI host reporting](cli.m
     External writes invalidate cached data; database replacement or incompatible metadata reopens the reader through
     existing validation on its next access. Every read still reconciles file identities, and detailed report history
     remains transient. Scanner and writer connections keep separate ownership.
+    Status and activity views omit per-file request ledgers to reduce retained memory. Detailed reports, scanner
+    reconciliation, and persisted caches keep the ledger, including native turn-performance data.
   - Cached Codex rows share byte-identical turn-ID strings within each read, reducing retained memory for repeated turns.
     The temporary string index ends with that read; persisted row values, Unicode spellings, and pricing stay unchanged.
   - Report, scan-baseline, and workspace reads decode stored usage rows as SQLite yields them, avoiding a second copy of the
