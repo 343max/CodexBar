@@ -604,7 +604,11 @@ beneath it. Untitled sessions use a shortened session ID. Titles come from `sess
 thread database as a fallback; relative `CODEX_SQLITE_HOME` paths resolve against each rollout's original working
 directory, even when its project is grouped under a different canonical repository path.
 
-Rows rank by cost descending, with unpriced sessions last. Ties use tokens descending, activity time descending,
+The menu's **Cost → Conversations** rows also use these saved titles, with the shortened session ID available
+in the row tooltip. Missing or blank titles keep the existing `Session <id>` label. **Hide personal information**
+uses that same ID label; no new scans or metadata stores are needed for menu titles.
+
+Usage & Spend rows rank by cost descending, with unpriced sessions last. Ties use tokens descending, activity time descending,
 and source-qualified session ID ascending. The panel initially shows eight rows and can expand to the top 50.
 Dates use the dashboard's cost-bucketing time zone. Naming and ranking leave daily totals, the ledger, and existing
 per-session costs unchanged; an unpriced session remains unpriced, and a partially priced session shows the subtotal
