@@ -16,6 +16,7 @@
 - OpenCode Go: mark estimated menu-bar percentages with `~` and clarify that local cost ratios do not establish account quota (#4410). Thanks @djbclark!
 - Menu bar: stop the blank Settings placeholder window from appearing on launch (regression in 0.74.0) (#4415). Thanks @tcurdt, @ChuJiannn11 and @kcharlan!
 - Packaging: preserve the selected macOS SDK in app and helper binaries so newer macOS versions use current native UI metrics, while retaining macOS 14 support (#4403). Thanks @Yuxin-Qiao!
+- Replicate: use the official provider glyph across the app, website, and HTTP dashboard; refresh the dashboard’s bundled provider icons (#4411). Thanks @giuseppebisemi!
 
 ## 0.74.0 — 2026-10-10
 
