@@ -9,6 +9,7 @@ struct BrowserCookieImportSupportTests {
         let detection = BrowserDetection(
             homeDirectory: "/synthetic-mimo-cookie-home",
             cacheTTL: 0,
+            now: { Date(timeIntervalSince1970: 0) },
             fileExists: { _ in true },
             directoryContents: { _ in ["Default"] },
             applicationURLs: { _ in [] },
