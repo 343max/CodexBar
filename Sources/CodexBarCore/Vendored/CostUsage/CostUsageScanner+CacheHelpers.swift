@@ -1276,6 +1276,11 @@ extension CostUsageScanner {
                 if let pricingModel = row.pricingModel, pricingModel != row.model {
                     pricing.requestPricingEvidenceGroups.insert(group)
                 }
+                // A free request is priced at $0, so a list price for the group's model can't stand in for it,
+                // even when the group's rows don't cover it and the request stays unpriced.
+                if row.isIncludedInPlan == true {
+                    pricing.requestPricingEvidenceGroups.insert(group)
+                }
             }
             for row in reconciled.rows
                 where CostUsageDayRange.isInRange(

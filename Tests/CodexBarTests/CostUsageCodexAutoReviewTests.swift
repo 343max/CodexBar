@@ -306,6 +306,56 @@ struct CostUsageCodexAutoReviewTests {
         #expect(report.hourly.allSatisfy { !$0.costIsComplete })
     }
 
+    /// When the rows don't account for the billed tokens, the group stays unpriced: neither the
+    /// day's aggregate fallback nor an hourly slice may apply a list price to a free request.
+    /// In the file, reconciliation drops the rows; beyond it, the rows stay but undercount the day.
+    @Test(arguments: [true, false])
+    func `uncovered free auto review stays unpriced despite a catalog price`(extraTokensInFile: Bool) throws {
+        let cutoff = CostUsageScanner.CodexIncludedUsage.autoReviewIncludedSinceUnixMs
+        let report = Self.report(
+            rows: [Self.row(index: 0, timestampUnixMs: cutoff + 1000, input: 1000)],
+            hasCreatorAccount: true,
+            catalog: Self.catalog(pricing: Self.autoReview),
+            extraBilledInput: 500,
+            extraBilledInputInFile: extraTokensInFile)
+        let entry = try #require(report.data.first)
+
+        #expect(entry.totalTokens == 1510)
+        #expect(entry.costUSD == nil)
+        #expect(entry.unpricedRequestCount == 1)
+        #expect(report.quotaSlices.isEmpty == extraTokensInFile)
+        #expect(report.quotaSlices.allSatisfy { $0.costUSD == nil && !$0.costIsComplete })
+        #expect(report.hourly.allSatisfy { $0.costUSD == nil && !$0.costIsComplete })
+    }
+
+    /// A free request without tokens costs nothing even where the day entry doesn't honor free requests.
+    @Test
+    func `a free request without tokens keeps its slice complete beside a priced request`() throws {
+        let cutoff = CostUsageScanner.CodexIncludedUsage.autoReviewIncludedSinceUnixMs
+        let empty = CostUsageScanner.CodexUsageRow(
+            day: Self.cutoffDay,
+            model: Self.autoReview,
+            turnID: "turn-1",
+            eventIndex: 1,
+            timestampUnixMs: cutoff + 1000,
+            input: 0,
+            cached: 0,
+            output: 0,
+            pricingModel: Self.autoReview,
+            pricingMode: "standard")
+        let report = Self.report(
+            rows: [Self.row(index: 0, timestampUnixMs: cutoff - 1000, input: 1000), empty],
+            hasCreatorAccount: true,
+            catalog: Self.catalog(pricing: Self.autoReview))
+        let entry = try #require(report.data.first)
+
+        #expect((entry.costUSD ?? 0) > 0)
+        #expect(entry.unpricedRequestCount == nil)
+        #expect(report.quotaSlices.count == 2)
+        let allSlicesComplete = report.quotaSlices.allSatisfy(\.costIsComplete)
+        #expect(allSlicesComplete)
+    }
+
     /// Caches written before the creator flag existed reparse once and then classify the requests.
     @Test
     func `stale parser caches pick up the creator flag on the next scan`() throws {
@@ -519,21 +569,24 @@ struct CostUsageCodexAutoReviewTests {
         rows: [CostUsageScanner.CodexUsageRow],
         hasCreatorAccount: Bool?,
         catalog: ModelsDevCatalog = ModelsDevCatalog(providers: [:]),
-        extraFiles: [String: CostUsageFileUsage] = [:]) -> CostUsageDailyReport
+        extraFiles: [String: CostUsageFileUsage] = [:],
+        extraBilledInput: Int = 0,
+        extraBilledInputInFile: Bool = false) -> CostUsageDailyReport
     {
         let input = rows.reduce(0) { $0 + $1.input }
         let output = rows.reduce(0) { $0 + $1.output }
+        let fileInput = extraBilledInputInFile ? input + extraBilledInput : input
         var usage = CostUsageScanner.makeFileUsage(
             mtimeUnixMs: 1,
             size: 1,
-            days: [self.cutoffDay: [self.autoReview: [input, 0, output]]],
+            days: [self.cutoffDay: [self.autoReview: [fileInput, 0, output]]],
             parsedBytes: 1,
             codexRows: rows,
             codexScanComplete: true)
         usage.codexSession = self.session(id: "review", hasCreatorAccount: hasCreatorAccount)
         var cache = CostUsageCache()
         cache.files = ["/auto-review.jsonl": usage].merging(extraFiles) { current, _ in current }
-        cache.days = usage.days
+        cache.days = [self.cutoffDay: [self.autoReview: [input + extraBilledInput, 0, output]]]
         return CostUsageScanner.buildCodexReportFromCache(
             cache: cache,
             range: .init(since: self.cutoffNoon, until: self.cutoffNoon, calendar: self.pacific),

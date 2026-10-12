@@ -61,8 +61,10 @@ extension CostUsageScanner {
             guard let timestamp = self.date(fromUnixMs: row.timestampUnixMs) else { continue }
             let group = CodexDayModelKey(day: row.day, model: row.model)
             // Same evidence as the day entry: only groups whose rows account for the day are free.
-            let isIncluded = row.isIncludedInPlan == true && includedGroups.contains(group)
-            let hasUnpricedTokens = !isIncluded && (row.unpricedTokens ?? 0) > 0
+            // Elsewhere a free request with tokens stays unpriced; a list price for its model is never its price.
+            let hasTokens = row.input > 0 || row.cached > 0 || row.output > 0
+            let isIncluded = row.isIncludedInPlan == true && (includedGroups.contains(group) || !hasTokens)
+            let hasUnpricedTokens = row.isIncludedInPlan == true ? !isIncluded : (row.unpricedTokens ?? 0) > 0
             let hasStablePricing = !hasUnpricedTokens
                 && !pricing.modeOwnershipMismatchGroups.contains(group)
                 && (row.eventIndex != nil || (row.input == 0 && row.output == 0))
