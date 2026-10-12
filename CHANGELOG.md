@@ -2,6 +2,10 @@
 
 ## 0.74.2 — Unreleased
 
+### Changed
+
+- Browser Local Storage imports pick the current record by LevelDB sequence, so a sign-out followed by a sign-in no longer hides the new session.
+
 ## 0.74.1 — 2026-10-11
 
 ### Added
