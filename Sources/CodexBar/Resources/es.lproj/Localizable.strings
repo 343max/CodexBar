@@ -1446,7 +1446,7 @@
 "menu_bar_layout_token_reset_at" = "Reinicio a las";
 "menu_bar_layout_token_runs_out" = "Se agota";
 "menu_bar_layout_token_cost_today" = "Coste de hoy";
-"menu_bar_layout_token_cost_30d" = "Coste de 30 días";
+"menu_bar_layout_token_cost_window" = "Coste (Ventana de historial)";
 "menu_bar_layout_token_space" = "Espacio";
 "menu_bar_layout_token_line_break" = "Salto de línea";
 "menu_bar_layout_token_separator_accessibility" = "Punto separador";
@@ -1464,7 +1464,6 @@
 "Reset time unavailable" = "Reinicio a las: No disponible";
 "Run-out estimate unavailable" = "Se agota: No disponible";
 "Cost today unavailable" = "Coste de hoy: No disponible";
-"30-day cost unavailable" = "Coste de 30 días: No disponible";
 "Resets" = "Reinicios";
 "codex_workspaces_cost_unavailable" = "Coste no disponible";
 "codex_workspaces_elevated_usage" = "Uso elevado";

@@ -14,6 +14,7 @@
 
 - Browser Local Storage imports pick the current record by LevelDB sequence, so a sign-out followed by a sign-in no longer hides the new session.
 - Browser imports: recognize Ego Lite through the shared catalog; Cursor account login continues to require a verified application identifier.
+- Menu bar: the Cost 30d layout item is now named Cost (History window), since it already shows the selected History window's total; saved layouts and conditional rules are unchanged (#4448). Thanks @benjschiller!
 
 ### Fixed
 

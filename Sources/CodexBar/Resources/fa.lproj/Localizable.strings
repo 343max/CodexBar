@@ -1451,7 +1451,7 @@
 "menu_bar_layout_token_reset_at" = "بازنشانی در ساعت";
 "menu_bar_layout_token_runs_out" = "تمام می‌شود";
 "menu_bar_layout_token_cost_today" = "هزینهٔ امروز";
-"menu_bar_layout_token_cost_30d" = "هزینهٔ ۳۰ روز";
+"menu_bar_layout_token_cost_window" = "هزینه (پنجره تاریخچه)";
 "menu_bar_layout_token_space" = "فاصله";
 "menu_bar_layout_token_line_break" = "شکست خط";
 "menu_bar_layout_token_separator_accessibility" = "نقطهٔ جداکننده";
@@ -1469,7 +1469,6 @@
 "Reset time unavailable" = "بازنشانی در ساعت: در دسترس نیست";
 "Run-out estimate unavailable" = "تمام می‌شود: در دسترس نیست";
 "Cost today unavailable" = "هزینهٔ امروز: در دسترس نیست";
-"30-day cost unavailable" = "هزینهٔ ۳۰ روز: در دسترس نیست";
 "Resets" = "بازنشانی‌ها";
 "codex_workspaces_estimated_cost_short" = "هزینهٔ تخمینی";
 "codex_workspaces_estimated_cost_value" = "تخمینی %@";

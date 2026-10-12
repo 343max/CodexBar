@@ -49,7 +49,7 @@ struct MenuBarLayoutRendererTests {
             (.runsOutCompact, "1d 16h"),
             (.balance, "$12.34"),
             (.costToday, "$1.25"),
-            (.cost30d, "$20.00"),
+            (.costWindow, "$20.00"),
             (.separatorDot, "·"),
             (.space, " "),
         ]
@@ -453,13 +453,22 @@ struct MenuBarLayoutRendererTests {
             .runsOutCompact,
             .balance,
             .costToday,
-            .cost30d,
+            .costWindow,
         ]])
 
         let output = renderer.render(layout: layout, data: missingData, icon: nil, options: self.options())
 
         #expect(output.attributedTitle.string.count(where: { $0 == "–" }) == 21)
         #expect(output.accessibilityLabel.contains("unavailable"))
+    }
+
+    @Test
+    func `missing cost window token names the history window in its accessibility text`() {
+        let renderer = MenuBarLayoutRenderer()
+        let layout = MenuBarLayout(lines: [[.costWindow]])
+
+        #expect(renderer.render(layout: layout, data: Self.missingData, icon: nil, options: self.options())
+            .accessibilityLabel == "Cost (History window) unavailable")
     }
 
     @Test
@@ -1542,7 +1551,7 @@ struct MenuBarLayoutRendererTests {
     func `predicate on a metric with no datum evaluates false`() {
         let renderer = MenuBarLayoutRenderer()
         let conditional = MenuBarLayoutConditional(
-            clauses: [self.clause(metric: .cost30d, comparison: .greaterThanOrEqual, threshold: 0)],
+            clauses: [self.clause(metric: .costWindow, comparison: .greaterThanOrEqual, threshold: 0)],
             thenToken: .percent(window: .session),
             elseToken: .resetCountdown)
         let output = renderer.render(

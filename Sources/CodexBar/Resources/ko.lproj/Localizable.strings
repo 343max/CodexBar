@@ -1417,7 +1417,7 @@
 "menu_bar_layout_token_reset_at" = "재설정 시각";
 "menu_bar_layout_token_runs_out" = "소진";
 "menu_bar_layout_token_cost_today" = "오늘 비용";
-"menu_bar_layout_token_cost_30d" = "30일 비용";
+"menu_bar_layout_token_cost_window" = "비용 (기록 범위)";
 "menu_bar_layout_token_space" = "공백";
 "menu_bar_layout_token_line_break" = "줄 바꿈";
 "menu_bar_layout_token_separator_accessibility" = "구분점";
@@ -1435,7 +1435,6 @@
 "Reset time unavailable" = "재설정 시각: 사용할 수 없음";
 "Run-out estimate unavailable" = "소진: 사용할 수 없음";
 "Cost today unavailable" = "오늘 비용: 사용할 수 없음";
-"30-day cost unavailable" = "30일 비용: 사용할 수 없음";
 "Resets" = "재설정";
 "codex_workspaces_cost_unavailable" = "비용을 사용할 수 없음";
 "codex_workspaces_elevated_usage" = "증가한 사용량";

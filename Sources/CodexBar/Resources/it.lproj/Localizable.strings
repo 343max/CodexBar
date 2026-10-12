@@ -1451,7 +1451,7 @@
 "menu_bar_layout_token_reset_at" = "Ripristino alle";
 "menu_bar_layout_token_runs_out" = "Termina";
 "menu_bar_layout_token_cost_today" = "Costo oggi";
-"menu_bar_layout_token_cost_30d" = "Costo 30 gg";
+"menu_bar_layout_token_cost_window" = "Costo (Finestra storica)";
 "menu_bar_layout_token_space" = "Spazio";
 "menu_bar_layout_token_line_break" = "Interruzione di riga";
 "menu_bar_layout_token_separator_accessibility" = "Punto separatore";
@@ -1469,7 +1469,6 @@
 "Reset time unavailable" = "Ripristino alle: Non disponibile";
 "Run-out estimate unavailable" = "Termina: Non disponibile";
 "Cost today unavailable" = "Costo oggi: Non disponibile";
-"30-day cost unavailable" = "Costo 30 gg: Non disponibile";
 "Resets" = "Ripristini";
 "codex_workspaces_title" = "Spazi di lavoro";
 "codex_workspaces_estimated_local_logs" = "Stimato dai registri locali di Codex";

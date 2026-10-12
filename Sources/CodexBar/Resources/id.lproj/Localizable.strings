@@ -1451,7 +1451,7 @@
 "menu_bar_layout_token_reset_at" = "Reset pukul";
 "menu_bar_layout_token_runs_out" = "Habis";
 "menu_bar_layout_token_cost_today" = "Biaya hari ini";
-"menu_bar_layout_token_cost_30d" = "Biaya 30 hari";
+"menu_bar_layout_token_cost_window" = "Biaya (Jendela riwayat)";
 "menu_bar_layout_token_space" = "Spasi";
 "menu_bar_layout_token_line_break" = "Pemisah baris";
 "menu_bar_layout_token_separator_accessibility" = "Titik pemisah";
@@ -1469,7 +1469,6 @@
 "Reset time unavailable" = "Reset pukul: Tidak tersedia";
 "Run-out estimate unavailable" = "Habis: Tidak tersedia";
 "Cost today unavailable" = "Biaya hari ini: Tidak tersedia";
-"30-day cost unavailable" = "Biaya 30 hari: Tidak tersedia";
 "Resets" = "Reset";
 "codex_workspaces_title" = "Ruang Kerja";
 "codex_workspaces_estimated_local_logs" = "Diperkirakan dari log Codex lokal";
