@@ -4,6 +4,8 @@
 
 ### Added
 
+- Kimi: discover the current China Desktop session from Local Storage for web usage and monthly membership enrichment, with session checks before each request (#4416, #3536). Thanks @OttoPrua!
+
 - Codex CLI: add opt-in identified-request subtotals across local and SSH histories, deduplicating strong request identities and preserving partial results without estimating combined prices (#4447, refs #3036). Thanks @jkobject!
 
 ### Changed
@@ -14,6 +16,7 @@
 ### Fixed
 
 - Codex costs: price ChatGPT-created Auto-review requests from October 6 at $0 so they no longer make otherwise complete costs appear as a lower bound; keep their tokens in totals and honor explicit custom prices (#4452, #4453). Thanks @gabrielrojasc!
+- Browser cookie imports raise at most one Keychain prompt per manual refresh, respect a denied prompt for its cooldown, and never prompt from settings-triggered refreshes (#4443).
 
 ## 0.74.1 — 2026-10-11
 
