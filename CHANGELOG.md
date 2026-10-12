@@ -2,6 +2,10 @@
 
 ## 0.74.2 — Unreleased
 
+### Fixed
+
+- Menu bar: restore meters and critters immediately when switching back from Icon & percent, without waiting for usage to change (#4450). Thanks @benjschiller!
+
 ## 0.74.1 — 2026-10-11
 
 ### Added
