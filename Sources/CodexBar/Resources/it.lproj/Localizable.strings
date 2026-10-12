@@ -2519,3 +2519,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Obbligatorio. L’ID ws_… del workspace che la chiave può fatturare. Oppure imposta FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Ordine dei fornitori aggiornato";
+"Undo" = "Annulla";
+"Clear filters" = "Cancella filtri";
+"Change provider order" = "Modifica l’ordine dei fornitori";
+"Provider sorting" = "Ordinamento dei fornitori";
+"Only enabled providers" = "Solo fornitori attivi";
+"Restore default order" = "Ripristina l’ordine predefinito";
+"Also restores the provider order in the menu bar. Can be undone." = "Ripristina anche l’ordine dei fornitori nella barra dei menu. L’azione può essere annullata.";

@@ -2483,3 +2483,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "필수. 키가 결제할 수 있는 워크스페이스의 ws_… ID. 또는 FLORA_WORKSPACE_ID를 설정하세요.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "공급자 순서가 변경되었습니다";
+"Undo" = "실행 취소";
+"Clear filters" = "필터 지우기";
+"Change provider order" = "공급자 순서 변경";
+"Provider sorting" = "공급자 정렬";
+"Only enabled providers" = "활성 공급자만 표시";
+"Restore default order" = "기본 순서 복원";
+"Also restores the provider order in the menu bar. Can be undone." = "메뉴 막대의 공급자 순서도 복원합니다. 실행 취소할 수 있습니다.";

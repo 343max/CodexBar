@@ -2515,3 +2515,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "必須。キーが請求できるワークスペースの ws_… ID。または FLORA_WORKSPACE_ID を設定します。";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "プロバイダーの順序を更新しました";
+"Undo" = "取り消す";
+"Clear filters" = "フィルターを解除";
+"Change provider order" = "プロバイダーの順序を変更";
+"Provider sorting" = "プロバイダーの並べ替え";
+"Only enabled providers" = "有効なプロバイダーのみ";
+"Restore default order" = "既定の順序に戻す";
+"Also restores the provider order in the menu bar. Can be undone." = "メニューバーのプロバイダー順序も戻します。取り消し可能です。";

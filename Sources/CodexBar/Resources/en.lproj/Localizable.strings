@@ -2519,3 +2519,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Provider order updated";
+"Undo" = "Undo";
+"Clear filters" = "Clear filters";
+"Change provider order" = "Change provider order";
+"Provider sorting" = "Provider sorting";
+"Only enabled providers" = "Only enabled providers";
+"Restore default order" = "Restore default order";
+"Also restores the provider order in the menu bar. Can be undone." = "Also restores the provider order in the menu bar. Can be undone.";

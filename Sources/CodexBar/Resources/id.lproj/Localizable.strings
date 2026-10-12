@@ -2518,3 +2518,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Wajib. ID ws_… workspace yang dapat ditagih oleh kunci. Atau atur FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Urutan penyedia diperbarui";
+"Undo" = "Urungkan";
+"Clear filters" = "Hapus filter";
+"Change provider order" = "Ubah urutan penyedia";
+"Provider sorting" = "Pengurutan penyedia";
+"Only enabled providers" = "Hanya penyedia aktif";
+"Restore default order" = "Pulihkan urutan bawaan";
+"Also restores the provider order in the menu bar. Can be undone." = "Juga memulihkan urutan penyedia di bar menu. Dapat diurungkan.";

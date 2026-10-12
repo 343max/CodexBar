@@ -2514,3 +2514,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Obligatoriskt. ws_…-ID för arbetsytan som nyckeln kan fakturera. Eller ange FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Leverantörsordningen uppdaterad";
+"Undo" = "Ångra";
+"Clear filters" = "Rensa filter";
+"Change provider order" = "Ändra leverantörsordning";
+"Provider sorting" = "Sortera leverantörer";
+"Only enabled providers" = "Endast aktiverade leverantörer";
+"Restore default order" = "Återställ standardordning";
+"Also restores the provider order in the menu bar. Can be undone." = "Återställer även leverantörsordningen i menyraden. Kan ångras.";
