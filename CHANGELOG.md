@@ -16,6 +16,7 @@
 
 ### Fixed
 
+- Antigravity: stop `agy` usage refreshes from opening browser sign-in when saved authentication cannot refresh silently, while preserving background quota recovery (#4441, #4451, #4446). Thanks @deven367, @davisonio, and @Yuxin-Qiao!
 - Usage & Spend: stop Codex status and activity read caches from retaining per-file request ledgers, reducing memory on large histories while preserving report turn performance (#4421, #4424). Thanks @harjothkhara and @Edenspiekermann-Chris!
 - Command Code: support Go v1’s $10 monthly grant and preserve API usage and the plan label for unknown subscriptions (#4405). Thanks @dalisoft!
 - OpenCode Go: mark estimated menu-bar percentages with `~` and clarify that local cost ratios do not establish account quota (#4410). Thanks @djbclark!
