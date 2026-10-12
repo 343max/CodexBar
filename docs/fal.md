@@ -25,8 +25,9 @@ The bundled JavaScript plugin reads `GET /v1/account/billing?expand=credits` and
 `username` is shown as the organization. Zero balances remain visible. A numeric string balance is accepted;
 any other missing, malformed, or nonfinite balance fails parsing instead of becoming zero.
 
-fal occasionally answers HTTP 200 without the `credits` block while its billing backend is degraded. CodexBar
-treats that as a temporary provider outage, keeps the last good value, and succeeds on a later refresh.
+A response can return HTTP 200 without a usable `credits` block. CodexBar reports the balance as unavailable
+and keeps the last good value; it never substitutes zero. The cause of the contributor-reported response was
+not captured, so a later refresh is not guaranteed to succeed.
 
 The endpoint does not report consumption, a monthly allowance, or a reset time, so CodexBar shows the balance
 without a percentage or guessed reset. Open the billing dashboard for usage history and top-ups.

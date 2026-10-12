@@ -35,7 +35,7 @@ defineProvider({
     }
     const credits = data.credits;
     if (!credits || typeof credits !== "object" || Array.isArray(credits)) {
-      // fal sometimes answers 200 without the credits block while its billing backend is degraded.
+      // A successful response without credits cannot establish a balance.
       throw ctx.fail.providerUnavailable("fal did not return the credit balance this time. Try Refresh in a moment.");
     }
     const raw = credits.current_balance;
