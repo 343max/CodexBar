@@ -2511,3 +2511,6 @@
 "Pace sign" = "Pace sign";
 "Ahead of pace is +" = "Ahead of pace is +";
 "Reserve is +" = "Reserve is +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY.";

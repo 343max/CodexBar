@@ -2485,3 +2485,6 @@
 "Pace sign" = "使用節奏符號";
 "Ahead of pace is +" = "超出節奏為 +";
 "Reserve is +" = "餘量為 +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "具有帳單讀取權限的金鑰（BILLING 或 READONLY 預設）。或設定 FAL_KEY。";

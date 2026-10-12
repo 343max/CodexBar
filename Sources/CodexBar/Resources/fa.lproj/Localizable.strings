@@ -2511,3 +2511,6 @@
 "Pace sign" = "علامت آهنگ مصرف";
 "Ahead of pace is +" = "جلوتر از آهنگ مصرف یعنی +";
 "Reserve is +" = "ذخیره یعنی +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "کلیدی با دسترسی خواندن صورت‌حساب (پیش‌تنظیم BILLING یا READONLY). یا FAL_KEY را تنظیم کنید.";

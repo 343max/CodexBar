@@ -5,6 +5,7 @@
 ### Added
 
 - Kimi: discover the current China Desktop session from Local Storage for web usage and monthly membership enrichment, with session checks before each request (#4416, #3536). Thanks @OttoPrua!
+- Providers: add fal account credit balances through its billing API, with explicit guidance for missing billing permissions (#4438). Thanks @giuseppebisemi!
 
 - Codex CLI: add opt-in identified-request subtotals across local and SSH histories, deduplicating strong request identities and preserving partial results without estimating combined prices (#4447, refs #3036). Thanks @jkobject!
 

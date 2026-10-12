@@ -2508,3 +2508,6 @@
 "Pace sign" = "Знак темпа расхода";
 "Ahead of pace is +" = "Опережение темпа — +";
 "Reserve is +" = "Запас — +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Ключ с доступом на чтение биллинга (пресет BILLING или READONLY). Или задайте FAL_KEY.";

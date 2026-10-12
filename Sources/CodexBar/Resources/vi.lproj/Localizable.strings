@@ -2508,3 +2508,6 @@
 "Pace sign" = "Dấu nhịp sử dụng";
 "Ahead of pace is +" = "Vượt nhịp là +";
 "Reserve is +" = "Dự trữ là +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Khóa có quyền đọc thanh toán (cài đặt sẵn BILLING hoặc READONLY). Hoặc đặt FAL_KEY.";

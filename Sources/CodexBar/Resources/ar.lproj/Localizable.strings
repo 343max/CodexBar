@@ -2511,3 +2511,6 @@
 "Pace sign" = "إشارة وتيرة الاستخدام";
 "Ahead of pace is +" = "تجاوز الوتيرة هو +";
 "Reserve is +" = "الاحتياطي هو +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "مفتاح بصلاحية قراءة الفوترة (الإعداد المسبق BILLING أو READONLY). أو اضبط FAL_KEY.";

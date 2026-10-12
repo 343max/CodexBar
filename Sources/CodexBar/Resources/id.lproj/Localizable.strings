@@ -2510,3 +2510,6 @@
 "Pace sign" = "Tanda laju penggunaan";
 "Ahead of pace is +" = "Di atas laju adalah +";
 "Reserve is +" = "Cadangan adalah +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Kunci dengan akses baca penagihan (preset BILLING atau READONLY). Atau atur FAL_KEY.";

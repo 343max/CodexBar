@@ -2510,3 +2510,6 @@
 "Pace sign" = "Znak tempa zużycia";
 "Ahead of pace is +" = "Powyżej tempa to +";
 "Reserve is +" = "Rezerwa to +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Klucz z dostępem do odczytu rozliczeń (preset BILLING lub READONLY). Lub ustaw FAL_KEY.";

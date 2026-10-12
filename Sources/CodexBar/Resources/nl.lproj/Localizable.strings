@@ -2506,3 +2506,6 @@
 "Pace sign" = "Teken van gebruikstempo";
 "Ahead of pace is +" = "Boven het tempo is +";
 "Reserve is +" = "Reserve krijgt +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Sleutel met leestoegang tot facturering (preset BILLING of READONLY). Of stel FAL_KEY in.";

@@ -2510,3 +2510,6 @@
 "Pace sign" = "Kullanım hızı işareti";
 "Ahead of pace is +" = "Hızın üzerinde kullanım +";
 "Reserve is +" = "Rezerv +";
+
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Faturalama okuma erişimi olan anahtar (BILLING veya READONLY ön ayarı). Ya da FAL_KEY değerini ayarlayın.";
