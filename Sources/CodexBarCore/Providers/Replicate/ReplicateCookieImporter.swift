@@ -45,7 +45,7 @@ public enum ReplicateCookieImporter {
     }
 
     static func resolvedImportOrder(_ preferredBrowsers: [Browser]?) -> [Browser] {
-        guard let preferredBrowsers, !preferredBrowsers.isEmpty else { return [.chrome] }
+        guard let preferredBrowsers, !preferredBrowsers.isEmpty else { return Browser.defaultImportOrder }
         return preferredBrowsers
     }
 

@@ -70,8 +70,7 @@ public enum GrokProviderDescriptor {
                 isPrimaryProvider: false,
                 usesAccountFallback: false,
                 debugLogUnavailableMessage: "Grok debug log not yet implemented",
-                browserCookieOrder: BrowserCookieImportSupport.chromeOnly(
-                    reason: "Avoid unrelated browser Keychain prompts"),
+                browserCookieOrder: ProviderBrowserCookieDefaults.defaultImportOrder,
                 dashboardURL: "https://grok.com/?_s=usage",
                 changelogURL: "https://x.ai/news",
                 statusPageURL: nil,

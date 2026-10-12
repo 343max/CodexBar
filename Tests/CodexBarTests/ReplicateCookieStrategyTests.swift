@@ -138,8 +138,8 @@ struct ReplicateCookieStrategyTests {
 
     #if os(macOS)
     @Test
-    func `browser import is Chrome only and session cookies do not require CSRF`() throws {
-        #expect(ReplicateCookieImporter.resolvedImportOrder(nil) == [.chrome])
+    func `browser import preserves overrides and session cookies do not require CSRF`() throws {
+        #expect(ReplicateCookieImporter.resolvedImportOrder([.dia]) == [.dia])
         let cookie = try #require(HTTPCookie(properties: [
             .domain: "replicate.com",
             .path: "/",

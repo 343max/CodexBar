@@ -185,6 +185,8 @@ struct BrowserCookieAccessGateTests {
         // Safari does not decrypt cookies via the Keychain, so the gate short-circuits to true before
         // any preflight or interaction check — in the background just as in a user-initiated refresh.
         #expect(self.evaluate(.safari, preflight: .interactionRequired, interaction: .background))
+        #expect(self.evaluate(.firefox, preflight: .interactionRequired, interaction: .background))
+        #expect(self.evaluate(.zen, preflight: .interactionRequired, interaction: .background))
     }
 
     @Test

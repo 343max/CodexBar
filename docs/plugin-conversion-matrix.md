@@ -140,15 +140,15 @@ Abacus, Muse, LongCat, Replicate, and TypeSafe unchanged.
 | Provider | Status | Engines | Scope |
 |---|---|---|---|
 | gitkraken | `cut-over` | QuickJS + JavaScriptCore | First-party bearer GET, optional organization header, weekly personal/shared credits; API-only, no subprocess fallback. |
-| hyper | `cut-over` | QuickJS + JavaScriptCore | Fixed-origin credits GET with Chrome/manual session preference and API-key fallback; native HC balance, no invented quotas or resets. |
+| hyper | `cut-over` | QuickJS + JavaScriptCore | Fixed-origin credits GET with supported-browser/manual session preference and API-key fallback; native HC balance, no invented quotas or resets. |
 | devpass | `cut-over` | QuickJS + JavaScriptCore | Documented bearer GET for billing-cycle and premium weekly credits plus separate all-time key spend; API-only. |
 | atlascloud | `cut-over` | QuickJS + JavaScriptCore | Public billing API bearer GET for the account-wide available USD balance; no invented quota or Coding Plan allowance. |
 | vercel | `cut-over` | QuickJS + JavaScriptCore | Public credits API bearer GET for team USD balance and lifetime spend; no CLI discovery or metered reporting. |
 | llmman | `cut-over` | QuickJS + JavaScriptCore | Configured loopback/private-network daemon origin with an optional bearer key; `/llmman/node` memory and model summaries, best-effort version. |
 | xkiro | `cut-over` | QuickJS + JavaScriptCore | Documented, unmetered bearer GET for daily free-token counters; separate from paid spend and wallet balances. |
 | aixy | `cut-over` | QuickJS + JavaScriptCore | Plugin-first key-scoped usage and overlapping budgets via bearer GET; both engines preserve reservations and zero-versus-unavailable spend. |
-| raycast | `cut-over` | QuickJS + JavaScriptCore | Declared-domain Chrome/manual cookies, host-over-parent cookie precedence, same-refresh session rejection, and website credit mapping; no native session strategy. |
-| museai | `cut-over` | QuickJS + JavaScriptCore | Declared-domain Chrome or manual cookies (including Linux CLI), persisted Next.js server-action ID with settings-chunk rediscovery after deploys, and weekly percent mapping; no native fetcher. |
+| raycast | `cut-over` | QuickJS + JavaScriptCore | Declared-domain supported-browser/manual cookies, host-over-parent cookie precedence, same-refresh session rejection, and website credit mapping; no native session strategy. |
+| museai | `cut-over` | QuickJS + JavaScriptCore | Declared-domain supported-browser or manual cookies (including Linux CLI), persisted Next.js server-action ID with settings-chunk rediscovery after deploys, and weekly percent mapping; no native fetcher. |
 <!-- Generated provider additions: Scripts/regenerate-provider-docs.mjs -->
 
 | Provider | Status | Engines | Scope |

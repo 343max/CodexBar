@@ -13,7 +13,7 @@ public enum BrowserCookieImportSupport {
         #endif
     }
 
-    /// Keep deliberate Chrome-only policies explicit without duplicating platform guards in descriptors.
+    /// TypeSafe's remaining call is being removed separately in #4442; delete this helper when it lands.
     static func chromeOnly(reason _: StaticString) -> BrowserCookieImportOrder? {
         #if os(macOS)
         Browser.defaultImportOrder.filter { $0 == .chrome }

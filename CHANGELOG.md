@@ -2,6 +2,14 @@
 
 ## 0.74.2 — Unreleased
 
+### Changed
+
+- Cookie imports: 23 providers now find signed-in sessions in every supported browser instead of Chrome-only or other restricted lists; Keychain prompts stay bounded by the shared access gate (#4443). Thanks @lg!
+
+### Fixed
+
+- Muse (muse.ai): include browser sessions in explicit CLI cookie refresh and `--all` (#4443). Thanks @lg!
+
 ## 0.74.1 — 2026-10-11
 
 ### Added

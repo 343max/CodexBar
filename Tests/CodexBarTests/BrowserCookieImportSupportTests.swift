@@ -5,6 +5,22 @@ import Testing
 
 struct BrowserCookieImportSupportTests {
     @Test
+    func `automatic provider cookie orders include every supported browser`() {
+        #expect(ReplicateCookieImporter.resolvedImportOrder(nil) == Browser.defaultImportOrder)
+        #expect(ReplicateCookieImporter.resolvedImportOrder([]) == Browser.defaultImportOrder)
+        for descriptor in ProviderDescriptorRegistry.all {
+            // Devin reads Chromium local storage; selected-profile providers must honor the user's picker.
+            // WorkBuddy's session is bound to the Chrome User-Agent supplied by its host integration.
+            // TypeSafe remains owned by the in-flight #4442 until that change lands.
+            guard descriptor.id != .devin, descriptor.id != .workbuddy, descriptor.id != .typesafe,
+                  descriptor.settingsSection.selectedProfileBrowsers == nil,
+                  let order = descriptor.metadata.browserCookieOrder
+            else { continue }
+            #expect(Set(order) == Set(Browser.defaultImportOrder), "\(descriptor.id) restricts automatic cookie import")
+        }
+    }
+
+    @Test
     func `browser labels and keychain requirements follow catalog metadata without discovery`() {
         #expect(BrowserCookieImportSupport.browserNames(for: nil) == "Chrome")
         #expect(BrowserCookieImportSupport.importOrder(for: .museai) == Browser.defaultImportOrder)
@@ -40,32 +56,6 @@ struct BrowserCookieImportSupportTests {
             logger: { _ in },
             load: { _ in [] })
         #expect(sessions.isEmpty)
-    }
-
-    @Test(arguments: [
-        UsageProvider.copilot,
-        .grok,
-        .helmcode,
-        .qoder,
-        .replicate,
-        .typesafe,
-        .venice,
-        .zoommate,
-    ])
-    func `Chrome-only providers retain their bounded browser policy`(provider: UsageProvider) throws {
-        let browsers = try #require(ProviderDefaults.metadata[provider]?.browserCookieOrder)
-        #expect(browsers == [.chrome])
-        var visited: [Browser] = []
-        let sessions = try BrowserCookieImportSupport.collectSessions(
-            from: browsers,
-            missingError: ImportError.missing,
-            logger: { _ in },
-            load: { browser in
-                visited.append(browser)
-                return ["fixture-session"]
-            })
-        #expect(visited == [.chrome])
-        #expect(sessions == ["fixture-session"])
     }
 
     private enum ImportError: Error {
