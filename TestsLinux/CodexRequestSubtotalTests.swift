@@ -17,6 +17,67 @@ struct CodexRequestSubtotalTests {
             reasoningTokens: 3)])
     }
 
+    @Test(arguments: [1, 2])
+    func `overflowing remote usage retains the valid local subtotal`(remoteRequests: Int) async throws {
+        let local = Self.ledger()
+        var remote = local
+        remote.records = ["b", "c"].prefix(remoteRequests).map { character in .init(
+            id: String(repeating: character, count: 64),
+            timestampUnixMs: Self.end,
+            inputTokens: remoteRequests == 1 ? Int.max - 109 : Int.max / 2 + 1,
+            cacheReadTokens: 0,
+            outputTokens: 0,
+            reasoningTokens: nil) }
+        let report = try await CodexBarCLI.collectCodexIdentifiedUsage(
+            remote: "fixture-host",
+            startUnixMs: Self.start,
+            endUnixMs: Self.end,
+            local: { local },
+            fetchRemote: { [remote] _ in remote })
+        #expect(report.subtotal?.totalTokens == 110)
+        #expect(report.reports[1].ledger == nil)
+        #expect(!report.allSourcesAvailable && report.partial)
+    }
+
+    @Test
+    func `foreign legacy usage does not make Codex coverage partial`() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let content = """
+        {"type":"session_meta","payload":{"id":"fixture-session"}}
+        {"type":"event_msg","timestamp":"2026-08-31T12:00:00Z","payload":{"type":"token_count",\
+        "info":{"model":"kimi-coding/k2p5","total_token_usage":{"input_tokens":100,"output_tokens":10}}}}
+
+        """
+        try Data(content.utf8).write(to: root.appendingPathComponent("foreign.jsonl"))
+        var options = CostUsageScanner.Options()
+        options.codexSessionsRoot = root
+        let ledger = try CodexRequestLedger.load(
+            startUnixMs: Self.start, endUnixMs: Self.end, options: options, checkCancellation: {})
+        #expect(ledger.excludedCount == 0)
+        #expect(!ledger.partial)
+    }
+
+    @Test
+    func `a vanished file marks discovered history partial instead of unavailable`() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let vanished = root.appendingPathComponent("vanished.jsonl")
+        try Data().write(to: vanished)
+        var options = CostUsageScanner.Options()
+        options.codexSessionsRoot = root
+        var checks = 0
+        let ledger = try CodexRequestLedger.load(
+            startUnixMs: Self.start, endUnixMs: Self.end, options: options, checkCancellation: {
+                checks += 1
+                // Initial check, one inventory entry, then the per-file check before its first snapshot.
+                if checks == 3 { try FileManager.default.removeItem(at: vanished) }
+            })
+        #expect(ledger.partial)
+    }
+
     @Test
     func `scan snapshots refresh Foundation metadata after a file changes`() throws {
         let file = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)

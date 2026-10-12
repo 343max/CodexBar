@@ -37,6 +37,7 @@ public struct CodexRequestLedger: Codable, Sendable {
               self.excludedCount >= 0, Set(self.conflictingIDs).count == self.conflictingIDs.count,
               self.conflictingIDs.allSatisfy(Self.isDigest)
         else { throw RemoteCodexCostError.invalidReport }
+        var total = 0
         for record in self.records {
             guard Self.isDigest(record.id), (startUnixMs...endUnixMs).contains(record.timestampUnixMs),
                   record.inputTokens >= 0, (0...record.inputTokens).contains(record.cacheReadTokens),
@@ -44,6 +45,9 @@ public struct CodexRequestLedger: Codable, Sendable {
                   record.reasoningTokens.map({ (0...record.outputTokens).contains($0) }) ?? true,
                   !record.inputTokens.addingReportingOverflow(record.outputTokens).overflow
             else { throw RemoteCodexCostError.invalidReport }
+            let sum = total.addingReportingOverflow(record.inputTokens + record.outputTokens)
+            guard !sum.overflow else { throw RemoteCodexCostError.invalidReport }
+            total = sum.partialValue
         }
     }
 
@@ -112,7 +116,7 @@ public struct CodexRequestLedger: Codable, Sendable {
         }
         for file in files.sorted(by: { $0.path < $1.path }) {
             try checkCancellation()
-            let before = try Self.fileMetadata(file)
+            let before = try? Self.fileMetadata(file)
             let parsed = try CostUsageScanner.parseCodexFileCancellable(
                 fileURL: file,
                 range: range,
@@ -155,15 +159,17 @@ public struct CodexRequestLedger: Codable, Sendable {
                 scanIssueObserver: { ledger.partial = true },
                 checkCancellation: checkCancellation)
             guard !exceededLimit else { throw RemoteCodexCostError.invalidReport }
-            let after = try Self.fileMetadata(file)
+            let after = try? Self.fileMetadata(file)
             ledger.excludedCount += parsed.rows.filter {
                 $0.responseID == nil && $0.day >= range.sinceKey && $0.day <= range.untilKey
                     && ($0.timestampUnixMs.map { (startUnixMs...endUnixMs).contains($0) } ?? true)
+                    && OpenCodexRouteDispatcher.countsTowardCodexSubscription(modelName: $0.model)
             }.count
             ledger.partial = ledger.partial || parsed.jsonlResumeState != nil
                 || parsed.bufferedUnresolvedForkLines != nil || parsed.bufferedSubagentLines != nil
-                || before.fileSize == nil || parsed.parsedBytes != Int64(before.fileSize ?? 0)
-                || before.fileSize != after.fileSize || before.contentModificationDate != after.contentModificationDate
+                || before?.fileSize == nil || parsed.parsedBytes != Int64(before?.fileSize ?? 0)
+                || before?.fileSize != after?.fileSize || before?.contentModificationDate != after?
+                .contentModificationDate
         }
         ledger.records = records.values.sorted { $0.id < $1.id }
         ledger.conflictingIDs = conflicts.sorted()

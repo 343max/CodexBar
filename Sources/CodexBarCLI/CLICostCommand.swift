@@ -8,11 +8,11 @@ extension CodexBarCLI {
 
     static func runCost(_ values: ParsedValues) async {
         let output = CLIOutputPreferences.from(values: values)
-        if Self.isCodexIdentifiedUsageRequested(values) {
+        if values.flags.contains("identifiedOnly") || values.options["identifiedEnd"] != nil {
             await Self.runCodexIdentifiedUsage(values, output: output)
-        } else {
-            await Self.runStandardCost(values, output: output)
+            return
         }
+        await Self.runStandardCost(values, output: output)
     }
 
     private static func runStandardCost(_ values: ParsedValues, output: CLIOutputPreferences) async {
@@ -973,7 +973,7 @@ struct CostOptions: CommanderParsable {
     @Option(name: .long("group-by"), help: "Group text output by: project | session")
     var groupBy: String?
 
-    @Option(name: .long("remote"), help: "Also report native Codex costs from one SSH host as a separate report")
+    @Option(name: .long("remote"), help: "Read one SSH host; separate summaries unless --identified-only is selected")
     var remote: String?
 
     @Flag(name: .long("summary-only"), help: "Versioned native Codex JSON totals without account or session details")
@@ -984,9 +984,6 @@ struct CostOptions: CommanderParsable {
 
     @Option(name: .long("identified-end"), help: "Identified subtotal window end, inclusive Unix milliseconds (UTC)")
     var identifiedEnd: Int64?
-
-    @Option(name: .long("combine-remote"), help: "Deduplicate identified Codex requests with one explicit SSH host")
-    var combineRemote: String?
 }
 
 struct CostPayload: Encodable, Sendable {

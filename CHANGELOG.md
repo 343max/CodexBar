@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.74.2 — Unreleased
+
+### Added
+
+- Codex CLI: add opt-in identified-request subtotals across local and SSH histories, deduplicating strong request identities and preserving partial results without estimating combined prices (#4447, refs #3036). Thanks @jkobject!
+
 ## 0.74.1 — 2026-10-11
 
 ### Added

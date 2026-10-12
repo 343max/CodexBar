@@ -112,7 +112,6 @@ public struct RemoteCodexCostFetcher: Sendable {
     package typealias Runner = @Sendable ([String], [String: String]) async throws -> String
     private let runner: @Sendable ([String], [String: String], Int) async throws -> String
     package static let maximumOutputBytes = 16 * 1024
-    package static let maximumIdentifiedOutputBytes = 32 * 1024 * 1024
 
     public init() {
         self.runner = { arguments, environment, maximumOutputBytes in
@@ -145,7 +144,6 @@ public struct RemoteCodexCostFetcher: Sendable {
     }
 
     package static func arguments(host: String, historyDays: Int, force: Bool) throws -> [String] {
-        try self.validateHost(host)
         guard (1...365).contains(historyDays) else { throw RemoteCodexCostError.invalidReport }
         let options =
             "cost --provider codex --format json --summary-only --provider-native-only --days \(historyDays)" +
@@ -200,7 +198,7 @@ public struct RemoteCodexCostFetcher: Sendable {
             " --identified-end \(endUnixMs)"
         let output = try await self.output(
             arguments: Self.arguments(host: host, options: options),
-            maximumOutputBytes: Self.maximumIdentifiedOutputBytes,
+            maximumOutputBytes: CodexRequestLedger.maximumOutputBytes,
             environment: environment)
         guard let ledger = try? JSONDecoder().decode(CodexRequestLedger.self, from: Data(output.utf8))
         else { throw RemoteCodexCostError.invalidReport }

@@ -4258,14 +4258,12 @@ enum CostUsageScanner {
                 keys.append(mirrorKey(turnID: turnID, usage: usage, total: turnTotal, timestamp: timestamp))
             }
             // Explicit exports retain contradictory owned observations before replay suppression.
-            if let ownedRequestObserver {
-                let model = record.model
-                    ?? turnID.flatMap { requestLedger.turnModels[$0] }
-                    ?? (turnID == currentTurnID || turnID == requestLedger.activeTurnID
-                        ? Self.codexModelEvidence(currentModel) : nil)
-                    ?? CostUsagePricing.codexUnattributedModel
-                ownedRequestObserver(record, model)
-            }
+            let model = record.model
+                ?? turnID.flatMap { requestLedger.turnModels[$0] }
+                ?? (turnID == currentTurnID || turnID == requestLedger.activeTurnID
+                    ? Self.codexModelEvidence(currentModel) : nil)
+                ?? CostUsagePricing.codexUnattributedModel
+            ownedRequestObserver?(record, model)
             // Identity, rather than cumulative counters, proves that a reset is a new request.
             // Copied parent records fail the ownership check above even if the parent is unavailable.
             let isReplay = requestLedger.responseIDs.contains(responseID)
@@ -4347,11 +4345,6 @@ enum CostUsageScanner {
                 performance.reportedOutputTokens = record.turnTotal?.output
                 requestLedger.turnPerformance?[turnID] = performance
             }
-            let model = record.model
-                ?? turnID.flatMap { requestLedger.turnModels[$0] }
-                ?? (turnID == currentTurnID || turnID == requestLedger.activeTurnID
-                    ? Self.codexModelEvidence(currentModel) : nil)
-                ?? CostUsagePricing.codexUnattributedModel
             requestLedger.countedUsage = Self.codexAddTotals(base, usage)
             appendUsage(
                 usage,
