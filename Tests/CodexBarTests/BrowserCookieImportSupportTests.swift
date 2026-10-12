@@ -5,6 +5,43 @@ import Testing
 
 struct BrowserCookieImportSupportTests {
     @Test
+    func `mimo candidates leave later browsers unread after a usable Safari session`() throws {
+        let detection = BrowserDetection(
+            homeDirectory: "/synthetic-mimo-cookie-home",
+            cacheTTL: 0,
+            fileExists: { _ in true },
+            directoryContents: { _ in ["Default"] },
+            applicationURLs: { _ in [] },
+            profileAccessIssue: { _ in nil })
+        var visited: [Browser] = []
+        let candidates = try MiMoCookieImporter.importSessions(
+            browserDetection: detection,
+            loadRecords: { browser, _, _ in
+                visited.append(browser)
+                let store = BrowserCookieStore(
+                    browser: browser,
+                    profile: .init(id: "Default", name: "Default"),
+                    kind: .primary,
+                    label: browser.displayName,
+                    databaseURL: nil)
+                let records = ["api-platform_serviceToken", "userId"].map { name in
+                    BrowserCookieRecord(
+                        domain: "platform.xiaomimimo.com",
+                        name: name,
+                        path: "/",
+                        value: "fixture",
+                        expires: nil,
+                        isSecure: true,
+                        isHTTPOnly: true)
+                }
+                return [BrowserCookieStoreRecords(store: store, records: records)]
+            },
+            loadStores: { _ in [] })
+        #expect(candidates.first(where: { _ in true })?.sourceLabel == "Safari")
+        #expect(visited == [.safari])
+    }
+
+    @Test
     func `usable first session leaves later browsers unread`() throws {
         var visited: [Browser] = []
         let sessions = try BrowserCookieImportSupport.collectSessions(

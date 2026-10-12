@@ -87,7 +87,7 @@ public enum MiniMaxCookieImporter {
     public static func hasSession(browserDetection: BrowserDetection, logger: ((String) -> Void)? = nil) -> Bool {
         do {
             return try self.sessionCandidates(browserDetection: browserDetection, logger: logger)
-                .first(where: { _ in true }) != nil
+                .contains(where: { _ in true })
         } catch {
             return false
         }

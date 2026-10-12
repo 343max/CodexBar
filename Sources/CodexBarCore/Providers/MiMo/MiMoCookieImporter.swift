@@ -276,9 +276,7 @@ public enum MiMoCookieImporter {
         browserDetection: BrowserDetection,
         logger: ((String) -> Void)? = nil) -> Bool
     {
-        (try? self.sessionCandidates(browserDetection: browserDetection, logger: logger).first(where: { _ in
-            true
-        }) != nil)
+        (try? self.sessionCandidates(browserDetection: browserDetection, logger: logger).contains(where: { _ in true }))
             ?? false
     }
 

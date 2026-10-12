@@ -130,7 +130,9 @@ struct ProviderPluginCookieResultTests {
             try KeychainAccessGate.withTaskOverrideForTesting(false) {
                 try BrowserCookieAccessGate.withShouldAttemptOverrideForTesting(false) {
                     try ProviderPluginCookieBroker.importCookieJars(
-                        provider: provider, domains: runtime.manifest.cookieDomains, browserDetection: detection,
+                        provider: provider,
+                        domains: runtime.manifest.cookieDomains,
+                        browserDetection: detection,
                         batch: batch)
                 }
             }
@@ -140,7 +142,7 @@ struct ProviderPluginCookieResultTests {
             domains: runtime.manifest.cookieDomains,
             settings: .init(cookieSource: .auto, manualCookieHeader: nil),
             batches: { domain, batch in
-                return try KeychainAccessGate.withTaskOverrideForTesting(false) {
+                try KeychainAccessGate.withTaskOverrideForTesting(false) {
                     try BrowserCookieAccessGate.withShouldAttemptOverrideForTesting(false) {
                         if provider == .abacus {
                             guard batch == 0 else { return nil }
