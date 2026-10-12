@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.74.2 — Unreleased
+
+### Changed
+
+- Browser Local Storage imports pick the current record by LevelDB sequence, so a sign-out followed by a sign-in no longer hides the new session.
+- Browser imports: recognize Ego Lite through the shared catalog; Cursor account login continues to require a verified application identifier.
+
+### Fixed
+
+- OpenCode Go: cache unchanged local history scans with bounded memory and discover permitted browser sessions in Auto before falling back to marked estimates (#4410, #4445). Thanks @JackHo12 and @djbclark!
+
+- Codex costs: price ChatGPT-created Auto-review requests from October 6 at $0 so they no longer make otherwise complete costs appear as a lower bound; keep their tokens in totals and honor explicit custom prices (#4452, #4453). Thanks @gabrielrojasc!
+
 ## 0.74.1 — 2026-10-11
 
 ### Added
@@ -14,6 +27,7 @@
 
 ### Fixed
 
+- Antigravity: stop `agy` usage refreshes from opening browser sign-in when saved authentication cannot refresh silently, while preserving background quota recovery (#4441, #4451, #4446). Thanks @deven367, @davisonio, and @Yuxin-Qiao!
 - Usage & Spend: stop Codex status and activity read caches from retaining per-file request ledgers, reducing memory on large histories while preserving report turn performance (#4421, #4424). Thanks @harjothkhara and @Edenspiekermann-Chris!
 - Command Code: support Go v1’s $10 monthly grant and preserve API usage and the plan label for unknown subscriptions (#4405). Thanks @dalisoft!
 - OpenCode Go: mark estimated menu-bar percentages with `~` and clarify that local cost ratios do not establish account quota (#4410). Thanks @djbclark!
