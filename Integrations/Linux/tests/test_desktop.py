@@ -325,21 +325,29 @@ else:
         self.assertTrue(value['stale'])
         self.assertEqual(value['summary'], 'CX 60%')
 
-    def test_refresh_on_open_is_optional_and_does_not_scan_spending(self):
+    def test_quick_view_is_opt_in_and_never_scans_cost_on_open(self):
         calls = self.root / 'calls.jsonl'
-        self.client('--usage')
-        time.sleep(0.15)
-        self.assertEqual(len(calls.read_text().splitlines()), 1)
+        self.client('--configure', '{}')
+        settings = self.root / 'config/codexbar/linux.json'
+        self.assertFalse(json.loads(settings.read_text())['compactQuickView'])
+        for enabled in [False, True]:
+            self.client('--configure', json.dumps({'compactQuickView': enabled}))
+            self.assertEqual(json.loads(settings.read_text())['compactQuickView'], enabled)
+            for command in ['--usage', '--quick-view']:
+                self.client(command)
+                snapshot = self.client('--snapshot')
+                self.assertFalse(snapshot['costBusy'])
+                self.assertEqual(snapshot['costProviders'], 0)
+        self.assertEqual([json.loads(line)['args'][0] for line in calls.read_text().splitlines()], ['usage'])
         self.client('--configure', '{"refreshOnOpen":true}')
-        self.wait_for(lambda value: bool(value.get('entries')) and not value['busy'])
-        previous = len(calls.read_text().splitlines())
-        self.client('--usage')
-        end = time.monotonic() + 4
-        while len(calls.read_text().splitlines()) == previous and time.monotonic() < end:
-            time.sleep(0.05)
-        self.assertEqual(len(calls.read_text().splitlines()), previous + 1)
-        for line in calls.read_text().splitlines():
-            self.assertEqual(json.loads(line)['args'][0], 'usage')
+        self.client('--quick-view')
+        self.wait_for(lambda value: not value['busy'] and len(calls.read_text().splitlines()) >= 2)
+        self.assertEqual([json.loads(line)['args'][0] for line in calls.read_text().splitlines()],
+                         ['usage', 'usage'])
+        self.client('--spending')
+        self.wait_for(lambda value: value['costProviders'] == 1 and not value['costBusy'])
+        self.client('--quick-view')
+        self.assertEqual([json.loads(line)['args'][0] for line in calls.read_text().splitlines()].count('cost'), 1)
 
     def test_failed_spending_preserves_previous_scan(self):
         self.client('--spending')

@@ -8,6 +8,8 @@ read_when:
 # UI & icon
 
 ## Settings
+- Menu → Highlight menu cards on hover is on by default. Turn it off to keep normal text and usage-bar colors on provider cards, Overview cards, and Refresh while hovering. Keyboard selection stays visible; clicks and submenus are unchanged. The choice persists locally across restarts.
+- App copy, credential-expiry alerts, share cards, number formatting, and layout direction follow the selected app language. Widgets use the system language independently; all 23 supported languages have complete app catalogs and generated widget catalogs. After editing app translations or widget lookup keys, run `node Scripts/sync-widget-locales.mjs`; `make check` verifies key coverage, format arguments, plural branches, and generated resources.
 - Notifications → Reset notifications is off by default and uses confirmed session and weekly resets, independently of confetti. Alerts name the provider and window; account labels appear only when Hide personal info is off. The existing macOS notification permission and Focus/Do Not Disturb settings control delivery; this toggle adds no startup permission request.
 - Reset alerts and session-restored alerts share account-scoped reset receipts. Switching accounts establishes a fresh session-notification baseline. Known reset boundaries are persisted per provider, account, and window, preventing repeated banners after refreshes or restarts; a different account or a newly advanced boundary can notify independently. Without reset metadata, the existing detector requires a new usage cycle before notifying again; a new depleted episode can still produce a restored notice. Returning timestamps identify an already-announced cycle without replaying it, and previously announced boundaries stay deduplicated. The reset toggle supports portable preference export/import and remains local unless explicitly transferred.
 - Usage & Spend places its time-range picker below the title and Refresh button, keeping the header readable in narrow settings windows.
@@ -17,15 +19,15 @@ read_when:
 - Provider accent colors use a hex field and a color picker that also previews the selected color; Reset restores the provider default.
 - General → Default terminal supports installed Terminal, iTerm, Ghostty, and stable Warp. Terminal is the default and fallback. Warp launches target its app directly and use owner-only temporary tab configs, removed after one minute; interrupted-launch leftovers are cleaned on the next app start.
 - Provider → Visible usage items includes titled provider detail sections. Choices persist across language changes and apply to provider cards and Overview. Untitled details remain visible; cost-summary sections stay controlled by their existing display setting.
-- The empty SwiftUI Settings placeholder is dismissed once per presentation. Retained hidden windows are left alone; the real Settings window remains reusable.
+- The empty SwiftUI Settings placeholder is dismissed once per presentation, on the next main-queue turn after AppKit finishes ordering it onscreen. Retained hidden windows are left alone; the real Settings window remains reusable.
 - The placeholder never promotes the app to a Dock application or keeps it there. This avoids the launch-time Dock icon on macOS 27 when AppKit accepts promotion but refuses to restore accessory policy. Real Settings and update dialogs still request temporary Dock presence; the OS can still refuse demotion after those dialogs close.
 - Usage & Spend heatmap tooltips prefer the space above the hovered cell and stay within the grid, falling below when needed. On narrow grids they compact vertically and may overlap cells; keyboard selection remains available in the daily grid.
 - Token activity uses appearance-aware colors, brighter high-usage cells in Dark mode, and a slashed outline for unavailable history. The continuous annual grid keeps day cells at least 10 points wide with 3-point gaps; narrow cards scroll horizontally from the recent end and show labeled controls for earlier and more recent activity. The controls page with overlapping weeks, disable at each end, and disappear when the year fits. Month labels scroll with the grid, keyboard navigation reveals the active date, and tooltips stay inside the visible viewport.
 - Calendar columns keep their chronological left-to-right order in right-to-left interfaces, so paging and keyboard date reveal follow the same coordinates as the drawn activity cells; surrounding controls retain the interface's layout direction.
 - Both the application menu and status menu open About in the Settings window. An existing Settings window is reused
   and switches to the About pane.
-- Homebrew-managed installs show an Updates section in About with the automatic-check toggle, Check for Updates, and the tap status: checking, up to date, or "CodexBar x is available" with a prominent "Update to x" button. The menu shows the same "Update to x" action, then "Updating with Homebrew…" while `brew upgrade` runs; the app relaunches after verifying the installed version reached the offered update.
-- If a Homebrew check or update fails, About shows the error with a selectable monospaced upgrade command and a trailing copy control. The control confirms successful copies briefly; copying does not run an update.
+- Homebrew-managed installs show an Updates section in About with the automatic-check toggle, Check for Updates, and the owning cask's status: checking, up to date, or "CodexBar x is available" with a prominent "Update to x" button. The menu shows the same "Update to x" action, then "Updating with Homebrew…" while `brew upgrade` runs; the app relaunches after verifying the installed version reached the offered update.
+- If a Homebrew check or update fails, About shows the error and, when the active receipt identifies the cask, a selectable monospaced upgrade command for that cask with a trailing copy control. The control confirms successful copies briefly; copying does not run an update.
 
 ## Menu bar
 - About CodexBar includes the running version. When the updater is available, the menu offers Check for Updates… or the existing staged-update action.
@@ -47,6 +49,7 @@ read_when:
   a valid previous position. Valid new positions remain untouched; unrelated defaults are never repaired by this path.
 - When Overview has selected providers, the switcher includes an Overview tab that renders up to 6 provider rows.
 - Overview row order follows provider order; selecting a row jumps to that provider detail card.
+- Overview uses native vertical scrolling when its menu exceeds the visible height. Fitted menus retain coarse-wheel provider highlighting; precise input and row submenus keep their native scrolling behavior. Scrolling after Command-R still prevents a pending refresh from resetting the viewport.
 - Menu → Overview layout offers Detailed (default) and Compact. Compact keeps provider/account headers and labeled quota bars, omits their reset/detail lines and supplemental sections, and retains detail-only providers. Select a provider for its full card. Visibility choices and the shared Usage & Spend summary continue to apply.
 - Menu-card wrappers use standard non-vibrant view behavior so white GPU-tinted Overview content remains visible on macOS 15. Overview selection stays outside the SwiftUI graph, with native submenu click and drag tracking retained.
 - The global open-menu keyboard shortcut toggles the currently tracked menu closed before opening a new one.
@@ -96,11 +99,19 @@ behind it, `0%` on pace. Each pace token reads its own window, so `Weekly pace` 
 unavailable, including the first 3% of a window. The weekly menu-bar pace token may appear after 1% of its weekly
 window has elapsed; session, automatic, and Runs out tokens keep the 3% threshold. See [Pace tracking](#pace-tracking).
 
+Choose **Pace sign** under **Menu Bar → Icon**, next to **Color Pace Indicator**:
+**Ahead of pace is +** (the default) shows deficits as positive and reserves as negative;
+**Reserve is +** shows reserves as positive and deficits as negative. This applies to Session, Weekly, and Auto pace
+tokens, including conditional layouts, and both live and sample layout previews. Zero stays `0%`, and unavailable
+pace stays an en dash. The menu card's reserve/deficit wording and the numeric meaning of saved conditional rules
+do not change: positive pace thresholds still mean usage ahead of pace.
+
 Enable **Color Pace Indicator** under **Menu Bar → Icon** to show usage behind pace (reserve) in green and usage ahead
 of pace (risk of running out early) in red. The option defaults off, applies to all three pace tokens and the layout
 preview, and keeps the signed percentages. Zero and unavailable pace stay neutral; stale pace colors are dimmed unless high-contrast rendering is active.
 It colors **Session pace**, **Weekly pace**, and **Auto pace** in the layout editor. Enabling it does not add tokens,
 rewrite stored layouts, or migrate legacy display modes. Existing installs stay monochrome until the option is enabled.
+These colors keep the same meaning with either pace sign: reserve is green and deficit is red.
 
 Enable **Color by provider** under **Menu Bar → Icon** to tint each provider slot with its accent color, including custom accents. This single toggle defaults off and works with Critters, Meter bars, and Icon & percent, including stacked provider rows; it never changes the saved layout or the Brand/Monochrome artwork used in Usage & Spend. Pace tokens keep their independent green/red colors and VoiceOver keeps the same spoken labels.
 

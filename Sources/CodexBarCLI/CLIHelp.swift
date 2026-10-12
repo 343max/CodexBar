@@ -227,7 +227,7 @@ extension CodexBarCLI {
           codexbar serve [--host <host>] [--port <port>] [--refresh-interval <seconds>]
                          [--request-timeout <seconds>]
                          [--dashboard-token <token>] [--allow-plain-http]
-                         [--identity <redacted|full>]
+                         [--identity <redacted|full>] [--all-accounts]
                          [--json-output] [--log-level <trace|verbose|debug|info|warning|error|critical>]
                          [-v|--verbose]
 
@@ -245,12 +245,17 @@ extension CodexBarCLI {
           non-loopback host the token also gates /accounts, /usage, and /cost (account data);
           / and /health are always open. Use a TLS-terminating reverse proxy for anything
           beyond a trusted network segment.
-          Account identity follows the app's Hide personal information setting unless pinned.
-          --identity full includes account emails. --identity redacted hides arbitrary discovery labels and
-          email local parts and is recommended whenever responses cross a network.
+          Ordinary snapshots and /accounts discovery follow the app's Hide personal information
+          setting unless --identity is set. Redacted discovery hides arbitrary labels and email local parts.
+          --all-accounts includes visible Codex profiles and configured token accounts
+          in dashboard snapshots only, with neutral labels and no identity by default.
+          --identity full explicitly includes account identities, labels and error details;
+          --identity redacted keeps email domains but hides labels and error details.
+          /usage keeps its existing Codex enumeration.
 
           Account IDs are stable opaque identifiers; clients must not parse their internal format.
           Account discovery reads metadata only and never returns credentials or refreshes usage.
+
         Endpoints:
           GET /                    Built-in web dashboard
           GET /health

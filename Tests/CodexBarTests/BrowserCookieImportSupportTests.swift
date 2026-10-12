@@ -46,6 +46,7 @@ struct BrowserCookieImportSupportTests {
         UsageProvider.copilot,
         .grok,
         .helmcode,
+        .hyper,
         .qoder,
         .replicate,
         .typesafe,

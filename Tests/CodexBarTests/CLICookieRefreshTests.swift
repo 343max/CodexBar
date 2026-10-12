@@ -4,7 +4,7 @@ import Testing
 @testable import CodexBarCLI
 @testable import CodexBarCore
 
-@Suite(.serialized)
+@Suite(.serialized, ProviderTransportRegressionFixtures())
 struct CLICookieRefreshTests {
     @Test
     func `cookie refresh parses explicit keychain acknowledgement`() throws {
@@ -68,6 +68,40 @@ struct CLICookieRefreshTests {
         #expect(operationCalled == false)
         #expect(results.count == 1)
         #expect(results[0].status == .skipped)
+    }
+
+    @Test(arguments: [nil, "edge", "chrome", "safari"] as [String?], [false, true])
+    func `profile refresh acknowledgement applies only to the configured browser`(
+        browserID: String?, acknowledged: Bool) async
+    {
+        var provider = ProviderConfig(id: .langdock)
+        provider.browserID = browserID
+        provider.browserProfileID = "/synthetic/Profile"
+        let config = CodexBarConfig(providers: [provider])
+        let descriptor = ProviderDescriptorRegistry.descriptor(for: .langdock)
+        #expect(CodexBarCLI.cookieRefreshBrowserOrder(descriptor: descriptor, config: config).map(\.rawValue)
+            == [browserID ?? "edge"])
+        var operationCalled = false
+        let results = await CodexBarCLI.performCookieRefreshes(
+            targets: [descriptor], allowKeychainPrompt: acknowledged, config: config)
+        { descriptor in
+            operationCalled = true
+            #expect(ProviderInteractionContext.current == .userInitiated)
+            return CookieRefreshResult(provider: descriptor.cli.name, status: .refreshed, message: "synthetic success")
+        }
+        let permitted = acknowledged || browserID == "safari"
+        #expect(operationCalled == permitted)
+        #expect(results.first?.status == (permitted ? .refreshed : .blocked))
+    }
+
+    @Test(arguments: ["firefox", "", "Chrome"])
+    func `invalid selected browser cannot fall back to a different browser`(browserID: String) {
+        var provider = ProviderConfig(id: .langdock)
+        provider.browserID = browserID
+        provider.browserProfileID = "/synthetic/Profile"
+        #expect(CodexBarCLI.cookieRefreshBrowserOrder(
+            descriptor: ProviderDescriptorRegistry.descriptor(for: .langdock),
+            config: CodexBarConfig(providers: [provider])).isEmpty)
     }
 
     @Test
@@ -166,6 +200,25 @@ struct CLICookieRefreshTests {
 
                 #expect(result.status == .failed)
                 #expect(CookieHeaderCache.load(provider: provider)?.cookieHeader == "old-test-cookie")
+            }
+        }
+    }
+
+    @Test
+    func `validated nonpersistent refresh succeeds without changing persisted cookies`() async {
+        let service = "com.steipete.codexbar.tests.cookie-refresh.\(UUID().uuidString)"
+        await KeychainCacheStore.withServiceOverrideForTesting(service) {
+            await KeychainCacheStore.withImplicitTestStoreForTesting {
+                CookieHeaderCache.store(provider: .langdock, cookieHeader: "old-test-cookie", sourceLabel: "Test old")
+                let result = await CodexBarCLI.withCookieRefreshCacheSuppressed(
+                    provider: .langdock, providerName: "langdock")
+                {
+                    #expect(CookieHeaderCache.load(provider: .langdock) == nil)
+                    CookieHeaderCache.markNonpersistentRefreshValidated(provider: .langdock)
+                    return CookieRefreshResult(provider: "langdock", status: .refreshed, message: "validated")
+                }
+                #expect(result.status == .refreshed)
+                #expect(CookieHeaderCache.load(provider: .langdock)?.cookieHeader == "old-test-cookie")
             }
         }
     }
@@ -311,6 +364,37 @@ struct CLICookieRefreshTests {
         }
     }
 
+    @Test(arguments: ["edge", "chrome", "safari"], [false, true])
+    func `wrapped profile failures use only the selected browser access hints`(browserID: String, disabled: Bool) {
+        BrowserCookieAccessGate.resetForTesting()
+        defer { BrowserCookieAccessGate.resetForTesting() }
+        BrowserCookieAccessGate.recordDenied(for: .edge)
+        BrowserCookieAccessGate.recordDenied(for: .chrome)
+        var provider = ProviderConfig(id: .langdock)
+        provider.browserID = browserID
+        provider.browserProfileID = "/synthetic/Profile"
+        KeychainAccessGate.withTaskOverrideForTesting(disabled) {
+            for kind in [ProviderFetchClassifiedError.Kind.permissionDenied, .missingCredential] {
+                let result = CodexBarCLI.cookieRefreshFailure(
+                    provider: .langdock,
+                    error: ProviderBrowserSessionFailure(owner: nil, underlyingError: ProviderFetchClassifiedError(
+                        kind: kind, message: "opaque-test-marker")),
+                    config: CodexBarConfig(providers: [provider]))
+                if browserID == "safari" {
+                    let expected = kind == .permissionDenied
+                        ? "Permission was denied while refreshing the browser session. Check access and retry."
+                        : "No browser session cookie was refreshed. Sign in in a configured browser and retry."
+                    #expect(result.message == expected)
+                } else {
+                    let browserName = browserID == "edge" ? "Edge" : "Chrome"
+                    #expect(result.message.contains("\(browserName) cookie decryption"))
+                    #expect(result.message.contains(disabled ? "disabled" : "declined"))
+                }
+                #expect(!result.message.contains("opaque-test-marker"))
+            }
+        }
+    }
+
     @Test(arguments: BundledPluginTestSupport.engines)
     func `plugin HTTP rejection reaches cookie refresh output`(engine: ProviderPluginEngineKind) async throws {
         BrowserCookieAccessGate.resetForTesting()
@@ -349,6 +433,7 @@ struct CLICookieRefreshTests {
         BrowserCookieAccessGate.recordDenied(for: .chrome)
         let storage = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: storage) }
+        let service = "com.steipete.codexbar.tests.header-import.\(UUID().uuidString)"
         let domain = "cookies.example.test"
         let broker = ProviderInteractionContext.$current.withValue(.userInitiated) {
             BrowserCookieAccessGate.withExplicitRetry {
@@ -370,8 +455,12 @@ struct CLICookieRefreshTests {
             }
         }
         let session = try await Task.detached {
-            try CookieHeaderCache.withLegacyBaseURLOverrideForTesting(storage) {
-                try broker.nextSession(domain: domain)
+            try KeychainCacheStore.withServiceOverrideForTesting(service) {
+                try KeychainCacheStore.withImplicitTestStoreForTesting {
+                    try CookieHeaderCache.withLegacyBaseURLOverrideForTesting(storage) {
+                        try broker.nextSession(domain: domain)
+                    }
+                }
             }
         }.value
         #expect(session?.header == "session=synthetic")

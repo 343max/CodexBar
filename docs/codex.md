@@ -104,6 +104,8 @@ Usage source picker:
 - Settings → Providers → Codex shows each visible account's saved usage when multiple OAuth accounts are available.
   Opening the pane reads the retained snapshots without starting a refresh. Each row keeps its own usage age and
   error, including accounts not fetched yet, and distinguishes **CodexBar follows** from **System**.
+  The first failed refresh after managed credentials rotate shows its authentication error. Another rotation
+  discards the previous credentials' error, even when the saved account metadata has not changed.
   **Hide personal information** uses the same numbered account and workspace labels as the account switcher.
   Authorized OpenAI Code review usage remains on the followed account's row; sibling rows never inherit it,
   and same-email ambiguity keeps the existing display-only dashboard policy.
@@ -135,10 +137,14 @@ emails require the UUID. The app and CLI share the same preservation and workspa
 live credentials are saved before an owner-only atomic replacement, and detected changes to either
 auth file abort the replacement. A nonblocking process lock serializes participating account writers
 and is released automatically after a crash. External Codex processes do not share that lock.
-Preservation also checks legacy email-only destinations and rechecks saved authentication before
-replacing or deleting a managed destination. Read failures or conflicting credentials abort the promotion.
+Preservation checks every selectable repair destination—provider-keyed or legacy email-only—and
+rechecks saved authentication before replacing or deleting a managed destination. Read failures or
+conflicting credentials abort the promotion.
 Refreshed copies are read back before their fingerprints are committed, and every preserved copy is checked
 again immediately before the live replacement. External writers can still race after the final read.
+
+Saved-account removal and import repair retain an old managed home while another saved record references
+the same path. Cleanup still requires the managed-home safety checks and releases the home after its last reference.
 
 CLI promotion reads local files only and never requests Keychain access or starts login. It leaves
 the app's display selection and running Codex processes alone; `CODEX_HOME` selects the live destination.
@@ -147,6 +153,25 @@ It does not renew expired credentials or enable unscoped fallback for managed wo
 use the affected row's **Reauthenticate** action or ordinary `codex login` scoped to that managed home
 and intended workspace. A future CLI renewal command needs staged login and identity/workspace
 validation before committing; `promote` is not a renewal workaround. See [CLI details](cli.md#managed-codex-accounts-macos).
+
+### In-process managed credential resolution
+
+`ManagedCodexAccountCredentialResolver` resolves an explicit managed-account UUID using a metadata-only store
+and a trusted managed-home root. It reads the selected native OAuth file, checks its owner and native default
+workspace against the saved account, and revalidates the registry binding and original home before returning
+an access-only credential. Organization membership alone does not establish the native default workspace.
+Promotion retains its existing email precedence; credential release requires unambiguous owner claims.
+
+The fresh-only policy requires a known expiry beyond the larger caller or authority minimum plus clock skew.
+Defaults are a 60-second authority minimum and 30 seconds of skew; minimum-validity requests above one day
+are unsupported. Missing expiry requires renewal rather than relying on file dates or `last_refresh`.
+The result exposes the bearer through `withAccessToken` and includes `expiresAt`; diagnostics are redacted.
+Typed failures distinguish renewal, temporary unavailability, missing accounts, and unsupported requests.
+
+This is a core API with no CLI, HTTP, or IPC credential-export endpoint. It does not choose an active account,
+fall back to another account, start login, refresh credentials, cache tokens, or write credentials or registry data.
+Validation checks local consistency rather than JWT signatures or upstream acceptance. Filesystem revalidation
+is observational, not an atomic transaction against hostile same-user mutation; secure-memory zeroization is not claimed.
 
 ### Local account discovery
 
@@ -428,6 +453,8 @@ the local result and returns a nonzero exit code. See [CLI host reporting](cli.m
     External writes invalidate cached data; database replacement or incompatible metadata reopens the reader through
     existing validation on its next access. Every read still reconciles file identities, and detailed report history
     remains transient. Scanner and writer connections keep separate ownership.
+    Status and activity views omit per-file request ledgers to reduce retained memory. Detailed reports, scanner
+    reconciliation, and persisted caches keep the ledger, including native turn-performance data.
   - Cached Codex rows share byte-identical turn-ID strings within each read, reducing retained memory for repeated turns.
     The temporary string index ends with that read; persisted row values, Unicode spellings, and pricing stay unchanged.
   - Report, scan-baseline, and workspace reads decode stored usage rows as SQLite yields them, avoiding a second copy of the
@@ -508,7 +535,7 @@ the local result and returns a nonzero exit code. See [CLI host reporting](cli.m
   debounce is a separate internal limit, bypassed by forced scans and catch-up passes; it is not the app's refresh cadence.
 - Usage & Spend catch-up remains inactive after a no-progress or error pause until you choose **Refresh** in the dashboard toolbar or catch-up panel. Opening the dashboard or receiving background updates does not retry those terminal pauses. Low-power and thermal pauses can still recover automatically; this retry policy does not change cached history or token accounting.
 - Each catch-up worker permits one recovery per cache when a repeated progress state comes from a time-budget yield before any file attempt or byte read. Automatic recovery waits for the normal cooldown, then uses a full scan budget. Repeated empty passes and semantic cycles still pause; user stops, errors, and power or thermal constraints keep their existing behavior.
-- Dashboard synchronization can clear a no-progress pause with a read-only check when another scan has completed the same accounts, roots, time zone, and requested history window. It does not start a scan or override a user stop or error. Completion uses confirmed cache coverage rather than comparing scan start times with the pause time.
+- Dashboard synchronization can clear a no-progress pause or retire a sleeping automatic worker with a read-only check when another scan has completed the same accounts, roots, time zone, and requested history window. Synchronization during that check queues another coverage read before completion can publish. It does not start a scan, change scan budgets or duty-cycle delays, or override a user stop or error. Completion uses confirmed cache coverage rather than comparing scan start times with the pause time.
 - Menu cost catch-up keeps user stops and no-progress/error pauses across scheduled refreshes. Choose **Refresh** to retry after the worker stops. Successful completion still honors queued refreshes for newly discovered history; low-power and thermal pauses can recover automatically.
 - Automatic Codex catch-up scheduling in both usage and Spend Dashboard honors the app’s 30-minute Low Power Mode minimum after each pass. Explicit acceleration remains immediate, and physical low-power/thermal pauses retain their own retry policy. The setting applies when the next delay is computed; an already pending sleep is not replanned.
 - Automatic catch-up reports thermal pressure when serious heat and Low Power Mode coexist. Both constraints keep the existing 60-second pause before rechecking resource state.
@@ -543,6 +570,11 @@ day; billing keeps its existing request dates and range totals. No timing appear
 Whole-turn output includes reasoning, tools, and waits; first model token can precede visible answer text.
 See the [metric contract and synthetic verification](spend-turn-performance-validation.md).
 
+The collapsed **Tool activity** section reads native operations only when expanded. It separates recorded
+durations, nonzero exits, tool errors and unknown outcomes, with All / Needs review / Slow filters and
+on-demand input/result previews. Hide personal information masks previews and disables detail reads.
+See the [tool activity contract and limits](spend-tool-activity.md). Billing totals and exports are unchanged.
+
 Projects are grouped by account source and full directory identity, so equal folder names stay separate and
 renaming a project does not split its totals. Project and session rows use saved names from the selected Codex
 home's project metadata, matching each original rollout directory to the longest root on directory boundaries.
@@ -572,7 +604,11 @@ beneath it. Untitled sessions use a shortened session ID. Titles come from `sess
 thread database as a fallback; relative `CODEX_SQLITE_HOME` paths resolve against each rollout's original working
 directory, even when its project is grouped under a different canonical repository path.
 
-Rows rank by cost descending, with unpriced sessions last. Ties use tokens descending, activity time descending,
+The menu's **Cost → Conversations** rows also use these saved titles, with the shortened session ID available
+in the row tooltip. Missing or blank titles keep the existing `Session <id>` label. **Hide personal information**
+uses that same ID label; no new scans or metadata stores are needed for menu titles.
+
+Usage & Spend rows rank by cost descending, with unpriced sessions last. Ties use tokens descending, activity time descending,
 and source-qualified session ID ascending. The panel initially shows eight rows and can expand to the top 50.
 Dates use the dashboard's cost-bucketing time zone. Naming and ranking leave daily totals, the ledger, and existing
 per-session costs unchanged; an unpriced session remains unpriced, and a partially priced session shows the subtotal

@@ -136,6 +136,7 @@ struct QuotaBurndownChartMenuView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
         .frame(minWidth: self.width, maxWidth: .infinity, alignment: .topLeading)
+        .codexBarLocalized()
     }
 
     var hasSeries: Bool {

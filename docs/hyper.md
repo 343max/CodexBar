@@ -8,7 +8,7 @@ read_when:
 
 Charm Hyper is an opt-in bundled TypeScript provider. A browser session reads the signed-in team dashboard with
 `GET https://hyper.charm.land/` (same-origin redirects land on `/teams/{team}/dashboard`) and shows the Hypercredit
-balance, plan, and refresh note from that page. An API key requests `GET https://hyper.charm.land/v1/credits`,
+balance from that page. An API key requests `GET https://hyper.charm.land/v1/credits`,
 which accepts bearer keys only — cookie authentication is rejected there, so cookies are never sent to it.
 
 ## Authentication
@@ -20,12 +20,8 @@ or the session request cannot connect. Malformed successful responses fail visib
 If Chrome is signed in but cookie access needs permission, use **Refresh** beside **Cookie source**.
 A successful browser refresh is reported as `web` and saves the imported session for subsequent refreshes.
 
-Missing guidance names the actual blocker instead of a generic sign-in request: Off says the cookie source is
-turned off, Manual asks for a pasted Cookie header, and an Automatic source that finds no cookie says no
-signed-in session was found. A session that does not reach the dashboard (HTTP 401/403, a sign-in redirect, or a
-marketing page) is rejected before the API-key fallback. An expired manual session then asks for a fresh pasted Cookie
-header, since signing in through a browser does not replace the stored header; an expired automatic session asks the
-user to sign in again.
+A session that does not reach the dashboard is rejected before the API-key fallback. An expired manual
+session asks for a fresh pasted Cookie header; an expired automatic session asks the user to sign in again.
 
 Add an API key in the provider settings or set `HYPER_API_KEY` in the environment that launches CodexBar.
 Saved API keys and manual Cookie headers use the CodexBar config file. Multiple API-key token accounts
@@ -39,11 +35,14 @@ Automatic browser import is macOS-only. On Linux, Auto can fall back to the API 
 ## Display and limits
 
 The card and CLI show a **Hypercredits → Balance** detail row. The JSON detail row preserves the numeric
-balance in `usageValue` alongside the HC display string. A dashboard session also reports **Plan** and **Refresh**
-rows when the page shows them; no usage percentage, spend history, limit, or reset countdown is inferred
+balance in `usageValue` alongside the HC display string. No plan, usage percentage, spend history, limit, or reset countdown is inferred
 from this balance-only response. The menu bar shows HC through the Balance or Auto % layout token;
 widgets are not supported.
 Missing credentials produce setup guidance instead of a fabricated zero balance.
 
 The request and parsing contracts are covered by synthetic fixtures on both plugin engines, including the
 dashboard markup shape, redirect/expiry handling, and the API-key response.
+
+Public contracts: [Credits API](https://hyper.charm.land/docs/api/credits.html) and
+[Dashboard](https://hyper.charm.land/docs/dashboard.html). The dashboard markup fixture comes from #4435;
+no live account or browser cookies were accessed during maintainer verification.

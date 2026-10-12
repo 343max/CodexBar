@@ -753,8 +753,10 @@ public struct CursorStatusProbe: Sendable {
     let browserCookieImportOrder: BrowserCookieImportOrder
     let urlSession: any ProviderHTTPTransport
     let sessionStore: CursorSessionStore
-    #if os(macOS) || os(Linux)
+    #if os(macOS)
     let appAuthStore: any CursorAppAuthSessionProviding
+    #elseif os(Linux)
+    let appAuthStores: [any CursorAppAuthSessionProviding]
     #endif
     #if os(macOS)
     let persistAppAuthSession: @Sendable (CursorAppAuthSession) async -> Void
@@ -788,7 +790,6 @@ public struct CursorStatusProbe: Sendable {
             browserDetection: browserDetection,
             browserCookieImportOrder: Self.defaultBrowserCookieImportOrder,
             urlSession: urlSession,
-            appAuthStore: CursorAppAuthStore(),
             sessionStore: sessionStore,
             conditionalMutationCoordinator: .shared)
         #endif
@@ -822,7 +823,6 @@ public struct CursorStatusProbe: Sendable {
             browserDetection: browserDetection,
             browserCookieImportOrder: Self.defaultBrowserCookieImportOrder,
             urlSession: urlSession,
-            appAuthStore: CursorAppAuthStore(),
             sessionStore: sessionStore,
             conditionalMutationCoordinator: conditionalMutationCoordinator)
         #endif

@@ -298,6 +298,11 @@ extension SettingsStore {
         set { self.setDefault(\.providerChangelogLinksEnabled, newValue, key: "providerChangelogLinksEnabled") }
     }
 
+    var highlightMenuCardsOnHover: Bool {
+        get { self.defaultsState.highlightMenuCardsOnHover }
+        set { self.setDefault(\.highlightMenuCardsOnHover, newValue, key: "highlightMenuCardsOnHover") }
+    }
+
     var menuBarShowsBrandIconWithPercent: Bool {
         get { self.defaultsState.menuBarShowsBrandIconWithPercent }
         set { self.setDefault(\.menuBarShowsBrandIconWithPercent, newValue, key: "menuBarShowsBrandIconWithPercent") }
@@ -311,6 +316,11 @@ extension SettingsStore {
     var menuBarColorPace: Bool {
         get { self.defaultsState.menuBarColorPace }
         set { self.setDefault(\.menuBarColorPace, newValue, key: "menuBarColorPace") }
+    }
+
+    var menuBarPaceReservePositive: Bool {
+        get { self.defaultsState.menuBarPaceReservePositive }
+        set { self.setDefault(\.menuBarPaceReservePositive, newValue, key: "menuBarPaceReservePositive") }
     }
 
     var menuBarColorByProvider: Bool {

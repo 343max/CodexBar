@@ -74,8 +74,7 @@ struct HyperPluginTests {
         #expect(snapshot.dataConfidence == .exact)
         #expect(snapshot.primary == nil)
         let labels = (snapshot.details.first?.rows ?? []).map(\.label)
-        #expect(labels == ["Balance", "Plan", "Refresh"])
-        #expect(snapshot.details.first?.rows.last?.value == "1 week")
+        #expect(labels == ["Balance"])
     }
 
     @Test(arguments: Self.engines)
@@ -169,6 +168,18 @@ struct HyperPluginTests {
         } catch { Issue.record("Unexpected error: \(error)") }
     }
 
+    @Test(arguments: Self.engines)
+    func `dashboard balance rejects a numeric prefix of malformed text`(engine: ProviderPluginEngineKind) async {
+        do {
+            _ = try await Self.fetch(
+                engine: engine, cookie: "session=fixture", mode: .web,
+                sessionBody: Self.dashboardHTML.replacingOccurrences(of: ">100<", with: ">100oops<"))
+            Issue.record("Expected parse failure")
+        } catch let error as ProviderFetchClassifiedError {
+            #expect(error.kind == .parseFailure)
+        } catch { Issue.record("Unexpected error: \(error)") }
+    }
+
     @Test(arguments: [
         "",
         "{}",
@@ -181,20 +192,16 @@ struct HyperPluginTests {
         "null",
         "[]"
     ], Self.engines)
-    func `invalid draft and extended fixtures fail closed without key fallback`(
+    func `malformed API balances fail closed`(
         body: String, engine: ProviderPluginEngineKind) async
     {
-        for cookie in [nil, "session=fixture"] {
-            do {
-                _ = try await Self.fetch(
-                    engine: engine, apiBody: body, cookie: cookie,
-                    sessionBody: cookie == nil ? Self.dashboardHTML : Self.landingHTML,
-                    sessionURL: cookie == nil ? Self.dashboardURL : Self.landingURL)
-                Issue.record("Expected parse failure")
-            } catch let error as ProviderFetchClassifiedError {
-                #expect(error.kind == .parseFailure)
-            } catch { Issue.record("Unexpected error: \(error)") }
-        }
+        do {
+            _ = try await Self.fetch(
+                engine: engine, apiBody: body)
+            Issue.record("Expected parse failure")
+        } catch let error as ProviderFetchClassifiedError {
+            #expect(error.kind == .parseFailure)
+        } catch { Issue.record("Unexpected error: \(error)") }
     }
 
     @Test(arguments: [
@@ -226,31 +233,6 @@ struct HyperPluginTests {
         } catch let error as ProviderFetchClassifiedError {
             #expect(error.kind == .missingCredential)
             #expect(error.message.contains("Sign in"))
-            #expect(error.message.contains("API key"))
-        } catch { Issue.record("Unexpected error: \(error)") }
-    }
-
-    @Test(arguments: Self.engines)
-    func `automatic cookies without a session name the sign in gap`(engine: ProviderPluginEngineKind) async {
-        do {
-            _ = try await Self.fetch(engine: engine, key: "", cookieSource: .auto)
-            Issue.record("Expected missing credential")
-        } catch let error as ProviderFetchClassifiedError {
-            #expect(error.kind == .missingCredential)
-            #expect(error.message.contains("No signed-in Hyper session was found"))
-            #expect(error.message.contains("Sign in to hyper.charm.land"))
-            #expect(error.message.contains("API key"))
-        } catch { Issue.record("Unexpected error: \(error)") }
-    }
-
-    @Test(arguments: Self.engines)
-    func `manual cookies without a header ask for a pasted Cookie header`(engine: ProviderPluginEngineKind) async {
-        do {
-            _ = try await Self.fetch(engine: engine, key: "", cookieSource: .manual)
-            Issue.record("Expected missing credential")
-        } catch let error as ProviderFetchClassifiedError {
-            #expect(error.kind == .missingCredential)
-            #expect(error.message.contains("Paste a Cookie header"))
             #expect(error.message.contains("API key"))
         } catch { Issue.record("Unexpected error: \(error)") }
     }

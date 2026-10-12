@@ -118,8 +118,10 @@ struct BrowserDetectionTests {
         #expect(detection.isCookieSourceAvailable(.safari))
     }
 
-    @Test
-    func `cookie client permits isolated chromium stores during tests`() throws {
+    @Test(arguments: [false, true])
+    func `profile discovery needs no Keychain permission while record reads stay gated`(
+        keychainDisabled: Bool) throws
+    {
         let temp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let profile = temp
             .appendingPathComponent("Library/Application Support/Google/Chrome/Default/Network")
@@ -128,14 +130,22 @@ struct BrowserDetectionTests {
         defer { try? FileManager.default.removeItem(at: temp) }
 
         let client = BrowserCookieClient(configuration: .init(homeDirectories: [temp]))
-        let stores = try KeychainAccessGate.withTaskOverrideForTesting(false) {
-            try KeychainAccessPreflight.withCheckGenericPasswordOverrideForTesting { _, _ in .allowed } operation: {
-                try ProviderInteractionContext.$current.withValue(.userInitiated) {
-                    try client.codexBarStores(for: .chrome)
+        let preflights = OSAllocatedUnfairLock(initialState: 0)
+        try KeychainAccessGate.withTaskOverrideForTesting(keychainDisabled) {
+            try KeychainAccessPreflight.withCheckGenericPasswordOverrideForTesting { _, _ in
+                preflights.withLock { $0 += 1 }
+                return .interactionRequired
+            } operation: {
+                try ProviderInteractionContext.$current.withValue(.background) {
+                    let stores = try client.codexBarStores(for: .chrome)
+                    #expect(stores.count == 1)
+                    #expect(preflights.withLock { $0 } == 0)
+                    let query = BrowserCookieQuery(domains: ["langdock.com"], domainMatch: .exact)
+                    #expect(try client.codexBarRecords(matching: query, in: .chrome).isEmpty)
+                    #expect(try client.codexBarRecords(matching: query, in: #require(stores.first)).isEmpty)
                 }
             }
         }
-        #expect(stores.count == 1)
     }
 
     @Test
@@ -791,6 +801,27 @@ struct BrowserDetectionTests {
             profileAccessIssue: { _ in nil })
 
         #expect(detection.isCookieSourceAvailable(.firefox))
+    }
+
+    @Test
+    func `firefox developer edition default profile provides a cookie store`() throws {
+        let temp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temp) }
+
+        // Firefox Developer Edition creates its default profile as `<salt>.dev-edition-default`.
+        let profile = temp
+            .appendingPathComponent("Library")
+            .appendingPathComponent("Application Support")
+            .appendingPathComponent("Firefox")
+            .appendingPathComponent("Profiles")
+            .appendingPathComponent("abc.dev-edition-default")
+        try FileManager.default.createDirectory(at: profile, withIntermediateDirectories: true)
+        FileManager.default.createFile(atPath: profile.appendingPathComponent("cookies.sqlite").path, contents: Data())
+
+        let detection = self.detection(homeDirectory: temp.path, installedBrowsers: [.firefoxDeveloperEdition])
+        #expect(detection.isCookieSourceAvailable(.firefoxDeveloperEdition) == true)
+        #expect(detection.hasUsableProfileData(.firefoxDeveloperEdition) == true)
     }
 
     @Test

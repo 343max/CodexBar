@@ -80,6 +80,11 @@ honor pinned-account fallback, and enforce their existing redirect policies.
 
 ## Minimal plugin
 
+[Cosmic AI](cosmic.md), [Aerostack](aerostack.md), [Sail Research](sailresearch.md), and [Sofya](sofya.md)
+use the shared API credential spec and fixed-origin GET requests on both engines. Cosmic adds an explicit Project ID
+through the spec's workspace field. Their scripts preserve each API's account scope, separate credit pools, and
+reported periods; missing quotas and reset dates remain unavailable.
+
 ```js
 defineProvider({
   id: "acme-usage",
@@ -538,6 +543,8 @@ Bundled scripts own requests, error classification, and snapshot mapping; Swift 
 
 ## Native adapters with declarative registration
 
+Ollama's API-key strategy runs `ollama-api.ts` on both engines: a fixed-origin bearer GET reads the included allowance, reset, and purchased balance into the existing Monthly and Credits presentation. Cookie import and HTML parsing remain native. The public legacy catalog fetcher remains available for CodexBarCore API compatibility but is no longer used by provider refreshes.
+
 Hugging Face, Nous, Fireworks, xAI, Venice, and Zed also declare `PluginProviderSpec` values. Hugging Face keeps its
 serialized, retained script runtime and CLI-token reader. Nous keeps Hermes credential validation and diagnostics;
 Fireworks keeps account-slug projection and its typed result-persistence policy. xAI shares the API-key and workspace
@@ -555,8 +562,15 @@ credential discovery merely to use the default script builder.
 A bundled plugin can declare `cookiePolicy.store: "selected-profile"` with `selection: "request-url"`,
 `cache: "nonpersistent"`, `imports: "access-gated"`, a nonempty `requiredCookies` list, and a `sessionURL` on
 its single declared request host. Its `PluginProviderSpec.WebSource` registers a settings section with
-`selectedProfileBrowser`; the shared **Browser profile** picker persists the explicit `browserProfileID`.
+`selectedProfileBrowsers`; the shared **Browser** and **Browser profile** pickers persist `browserID` and
+the explicit `browserProfileID`. The first registered browser preserves legacy configurations without a
+`browserID`; it does not select a profile. Unsupported browser IDs fail closed. Changing the browser clears
+the profile selection, previous measurements, and pending fetches. Safari requires a concrete cookie file;
+the importer's browser-wide placeholder is rejected.
 There is no default profile, Manual header path, other-profile fallback, or cookie-cache read/write.
+The single-browser `selectedProfileBrowser` initializer and property remain supported for source compatibility
+with the public `CodexBarCore` API shipped in v0.73.0. New registrations use `selectedProfileBrowsers`; the legacy
+property returns `nil` for registrations that support multiple browsers.
 
 The host fingerprints the selected browser/profile and the applicable required cookies before fetching. After
 success, failure, or cancellation it reads that same profile again under the background no-interaction gate.
@@ -570,3 +584,11 @@ Providers without stable account identity can set `history: .unavailable` and `b
 on the spec. Langdock uses these capabilities and does not backfill missing reset dates from prior sessions.
 Providers with both widget capabilities disabled are omitted from widget files. Selected-profile usage is never
 exported as a cloud account snapshot: its ownership can only be verified on the importing device.
+
+## Search and research credit providers
+
+[Tavily](tavily.md) reads account-plan, API-key, and pay-as-you-go credits through the public usage API;
+[Linkup](linkup.md) reads its prepaid USD balance. Both use explicit API keys and the shared `PluginProviderSpec`.
+[Exa](exa.md) reads selected-key monthly spend using a support-enabled Team Management service key and API key ID.
+[TinyApi](tinyapi.md) reads aggregate available credits through its website session and the shared cookie host.
+These plugins omit undocumented reset dates, credit-bucket splits, and live request-rate headroom.

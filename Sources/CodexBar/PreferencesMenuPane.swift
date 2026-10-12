@@ -65,6 +65,7 @@ struct MenuPane: View {
 
             Section {
                 Toggle(L("show_provider_changelog_links_title"), isOn: self.$settings.providerChangelogLinksEnabled)
+                Toggle(L("highlight_menu_cards_on_hover_title"), isOn: self.$settings.highlightMenuCardsOnHover)
 
                 SettingsMenuPicker(
                     selection: self.$settings.mergedOverviewLayout,
@@ -127,9 +128,9 @@ struct AgentSessionsSettingsSection: View {
         Section {
             Toggle(isOn: self.$settings.stayAwakeEnabled) {
                 SettingsRowLabel(
-                    "Stay Awake",
-                    subtitle: "Prevent idle system sleep while a local agent process is running, even when idle. " +
-                        "Uses battery power; does not prevent lid-close or display sleep.")
+                    L("Stay Awake"),
+                    subtitle: L("Prevent idle system sleep while a local agent process is running, even when idle. " +
+                        "Uses battery power; does not prevent lid-close or display sleep."))
             }
 
             Toggle(isOn: self.$settings.agentSessionsEnabled) {

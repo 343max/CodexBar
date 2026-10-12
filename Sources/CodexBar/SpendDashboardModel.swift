@@ -1,6 +1,23 @@
 import CodexBarCore
 import Foundation
 
+/// Group copies share a memo; its inputs are immutable and cache state does not affect equality.
+private final class SpendHourlyDaysMemo: @unchecked Sendable, Equatable {
+    private let lock = NSLock()
+    private var cached: [Date]?
+
+    static func == (_: SpendHourlyDaysMemo, _: SpendHourlyDaysMemo) -> Bool { true }
+
+    func value(build: () -> [Date]) -> [Date] {
+        self.lock.withLock {
+            if let cached = self.cached { return cached }
+            let dates = build()
+            self.cached = dates
+            return dates
+        }
+    }
+}
+
 // swiftlint:disable:next type_body_length
 struct SpendDashboardModel: Equatable, Sendable {
     enum SourceKind: String, Sendable, Equatable {
@@ -262,12 +279,19 @@ struct SpendDashboardModel: Equatable, Sendable {
         let meteredCost: Double?
         let sessions: [SessionRow]
         let projects: [ProjectRow]
-        let overflowModelCount: Int
-        let displayedModels: [ModelRow]
         let selectedDay: Date?
         let hourlyPoints: [HourlyPoint]
-        let hourlyChartDomain: ClosedRange<Date>?
+        private let hourlyDaysMemo = SpendHourlyDaysMemo()
         let timeZone: TimeZone
+
+        var hourlyDays: [Date] {
+            self.hourlyDaysMemo.value {
+                let calendar = self.calendar
+                return Set(self.hourlyPoints.filter {
+                    $0.hour >= self.chartDomain.lowerBound && $0.hour < self.chartDomain.upperBound
+                }.map { calendar.startOfDay(for: $0.hour) }).sorted()
+            }
+        }
 
         var calendar: Calendar {
             SpendDashboardModel.gregorianCalendar(timeZone: self.timeZone)
@@ -295,10 +319,8 @@ struct SpendDashboardModel: Equatable, Sendable {
             provenance: CostProvenance = .unknown,
             meteredCost: Double? = nil,
             sessions: [SessionRow] = [],
-            overflowModelCount: Int = 0,
             selectedDay: Date? = nil,
             hourlyPoints: [HourlyPoint] = [],
-            hourlyChartDomain: ClosedRange<Date>? = nil,
             timeZone: TimeZone = .current)
         {
             self.currencyCode = currencyCode
@@ -318,15 +340,10 @@ struct SpendDashboardModel: Equatable, Sendable {
             self.meteredCost = meteredCost
             self.sessions = sessions
             self.projects = projects
-            self.overflowModelCount = overflowModelCount
-            self.displayedModels = Array(models.prefix(Self.modelRowDisplayLimit))
             self.selectedDay = selectedDay
             self.hourlyPoints = hourlyPoints
-            self.hourlyChartDomain = hourlyChartDomain
             self.timeZone = timeZone
         }
-
-        static let modelRowDisplayLimit = 8
     }
 
     struct SessionRow: Identifiable, Equatable, Sendable {
@@ -343,6 +360,7 @@ struct SpendDashboardModel: Equatable, Sendable {
         let totalCost: Double?
         let modelName: String?
         var turnPerformance: CostUsageTurnPerformanceSummary?
+        var toolActivitySource: SessionToolActivitySource?
     }
 
     struct HourlyPoint: Identifiable, Equatable, Sendable {
@@ -366,7 +384,6 @@ struct SpendDashboardModel: Equatable, Sendable {
     let selectedDay: Date?
 
     static let tokenActivityDayCount = 365
-    static let modelRowDisplayLimit = 8
 
     init(
         requestedDays: Int,
@@ -439,7 +456,6 @@ struct SpendDashboardModel: Equatable, Sendable {
                     currencyCode: currencyCode,
                     inputs: inputs,
                     days: days,
-                    now: now,
                     calendar: calculationCalendar,
                     bounds: bounds,
                     selectedDay: selectedDay.map { calculationCalendar.startOfDay(for: $0) })
@@ -555,12 +571,10 @@ struct SpendDashboardModel: Equatable, Sendable {
         currencyCode: String,
         inputs: [ClassifiedInput],
         days: Int,
-        now: Date,
         calendar: Calendar,
-        bounds: ClosedRange<Date>? = nil,
+        bounds: ClosedRange<Date>,
         selectedDay: Date?) -> CurrencyGroup
     {
-        let bounds = bounds ?? Self.bounds(days: days, now: now, calendar: calendar)
         let summaries = inputs.map { classified in
             Self.inputSummary(
                 input: classified.input,
@@ -639,7 +653,6 @@ struct SpendDashboardModel: Equatable, Sendable {
         case (false, true): .listPriceEstimate
         case (false, false): .unknown
         }
-        let overflowCount = max(0, modelSummary.rows.count - CurrencyGroup.modelRowDisplayLimit)
         let hourlyPoints = Self.hourlyPoints(
             summaries: summaries,
             selectedDay: selectedDay,
@@ -654,7 +667,7 @@ struct SpendDashboardModel: Equatable, Sendable {
             dailySummaries: Self.dailySummaries(summaries: summaries, calendar: calendar),
             totalTokens: Self.knownIntSum(providers.map(\.totalTokens)),
             totalCost: Self.knownCostSum(providers.map(\.totalCost)),
-            coveredDayCount: Self.commonCoverageDayCount(summaries: summaries, calendar: calendar),
+            coveredDayCount: Self.dayCount(in: Self.commonCoverageInterval(summaries: summaries), calendar: calendar),
             chartDomain: Self.chartDomain(bounds: bounds, calendar: calendar),
             modelHistoryCompleteness: modelHistoryCompleteness,
             incompleteModelProviders: incompleteModelProviders,
@@ -667,13 +680,8 @@ struct SpendDashboardModel: Equatable, Sendable {
                 bounds: bounds,
                 calendar: calendar,
                 selectedDay: selectedDay),
-            overflowModelCount: overflowCount,
             selectedDay: selectedDay,
             hourlyPoints: hourlyPoints,
-            hourlyChartDomain: Self.hourlyChartDomain(
-                points: hourlyPoints,
-                selectedDay: selectedDay,
-                calendar: calendar),
             timeZone: calendar.timeZone)
     }
 
@@ -1349,10 +1357,6 @@ struct SpendDashboardModel: Equatable, Sendable {
         return intersection
     }
 
-    private static func commonCoverageDayCount(summaries: [InputSummary], calendar: Calendar) -> Int {
-        self.dayCount(in: self.commonCoverageInterval(summaries: summaries), calendar: calendar)
-    }
-
     static func dayCount(in interval: ClosedRange<Date>?, calendar: Calendar) -> Int {
         guard let interval,
               let first = calendar.ordinality(of: .day, in: .era, for: interval.lowerBound),
@@ -1498,7 +1502,10 @@ struct SpendDashboardModel: Equatable, Sendable {
                     totalTokens: session.totalTokens,
                     totalCost: session.costUSD.map { $0 * summary.costMultiplier },
                     modelName: modelName,
-                    turnPerformance: CostUsageTurnPerformanceSummary(samples: performanceSamples))
+                    turnPerformance: CostUsageTurnPerformanceSummary(samples: performanceSamples),
+                    // Provider-specific by design: Only native Codex logs supply owned item_completed tool records.
+                    toolActivitySource: summary.input.provider == .codex && summary.input.sourceKind == .native
+                        ? session.toolActivitySource : nil)
             }
         }
         .sorted(by: Self.sessionOrder)
@@ -1583,22 +1590,6 @@ struct SpendDashboardModel: Equatable, Sendable {
             }
             return points
         }
-    }
-
-    private static func hourlyChartDomain(
-        points: [HourlyPoint],
-        selectedDay: Date?,
-        calendar: Calendar) -> ClosedRange<Date>?
-    {
-        if let selectedDay {
-            let start = calendar.startOfDay(for: selectedDay)
-            return Self.chartDomain(bounds: start...start, calendar: calendar)
-        }
-        guard let first = points.map(\.hour).min(),
-              let last = points.map(\.hour).max(),
-              let end = calendar.date(byAdding: .hour, value: 1, to: last)
-        else { return nil }
-        return first...end
     }
 }
 

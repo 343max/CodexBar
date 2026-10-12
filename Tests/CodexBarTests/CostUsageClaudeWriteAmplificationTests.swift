@@ -1,4 +1,5 @@
 import Foundation
+import os
 import Testing
 @testable import CodexBarCore
 
@@ -26,6 +27,62 @@ struct CostUsageClaudeWriteAmplificationTests {
                 #expect(after == before)
                 #expect(bytes == 0)
             }
+        }
+    }
+
+    @Test
+    func `one row appends reduce writes without changing reports`() throws {
+        var baselineBytes = 0
+        var baselineReports: [CostUsageDailyReport] = []
+        for disableCloning in [true, false] {
+            let fixture = try Fixture(rowCount: 24000)
+            defer { fixture.env.cleanup() }
+            let initial = try fixture.load(context: .spendDashboard)
+            let source = fixture.env.claudeProjectsRoot.appendingPathComponent("session.jsonl")
+            let probe = fixture.env.root.appendingPathComponent("clone-probe")
+            let canClone = clonefile(fixture.cacheURL(context: .spendDashboard).path, probe.path, 0) == 0
+            let bytes = OSAllocatedUnfairLock(initialState: 0)
+            let observeBytes: @Sendable (Int) -> Void = { count in
+                bytes.withLock { $0 += count }
+            }
+            let start = ContinuousClock.now
+            var reports: [CostUsageDailyReport] = []
+            try CostUsageClaudeArtifactWriter.$disableCloningForTesting.withValue(disableCloning) {
+                try CostUsageClaudeArtifactWriter.$observeWrittenBytesForTesting.withValue(observeBytes) {
+                    for cycle in 1...12 {
+                        let handle = try FileHandle(forWritingTo: source)
+                        try handle.seekToEnd()
+                        try handle.write(contentsOf: Data(fixture.event(index: 24000 + cycle).utf8))
+                        try handle.close()
+                        let report = try fixture.load(context: .spendDashboard, cycle: cycle)
+                        #expect(report.summary?
+                            .totalInputTokens == (initial.summary?.totalInputTokens ?? 0) + cycle * 10)
+                        reports.append(report)
+                    }
+                }
+            }
+            let written = bytes.withLock { $0 }
+            print("[claude-append-writes] rows=24000 appends=12 fallback=\(disableCloning) " +
+                "cloneAvailable=\(canClone) bytes=\(written) elapsed=\(start.duration(to: .now))")
+            if disableCloning {
+                baselineBytes = written
+                baselineReports = reports
+            } else {
+                // Same-offset reuse is partial: early length changes can still shift large suffixes.
+                if canClone { #expect(written * 2 < baselineBytes) }
+                for (actual, expected) in zip(reports, baselineReports) {
+                    #expect(actual.data == expected.data)
+                    #expect(actual.hourly == expected.hourly)
+                    #expect(actual.quotaSlices == expected.quotaSlices)
+                }
+            }
+            CostUsageScanner.evictClaudeReportMemoForTesting(
+                provider: .claude, cacheRoot: fixture.env.cacheRoot, reportContext: .spendDashboard)
+            CostUsageClaudeCacheIO.evictArtifactMemoForTesting(at: fixture.cacheURL(context: .spendDashboard))
+            let cold = try fixture.load(context: .spendDashboard, cycle: 13)
+            #expect(cold.data == reports.last?.data)
+            #expect(cold.hourly == reports.last?.hourly)
+            #expect(cold.quotaSlices == reports.last?.quotaSlices)
         }
     }
 
@@ -390,6 +447,32 @@ struct CostUsageClaudeWriteAmplificationTests {
         let cold = try fixture.load(context: .regular, cycle: 3)
         #expect(cold.data == changed.data)
         #expect(cold.quotaSlices == changed.quotaSlices)
+    }
+
+    @Test
+    func `cancellation after private output preserves the target and removes temporary artifacts`() throws {
+        let fixture = try Fixture(rowCount: 128)
+        defer { fixture.env.cleanup() }
+        _ = try fixture.load(context: .regular)
+        let url = fixture.cacheURL(context: .regular)
+        let original = try Data(contentsOf: url)
+        var cache = CostUsageClaudeCacheIO.load(provider: .claude, cacheRoot: fixture.env.cacheRoot)
+        cache.usage.lastScanUnixMs += 1
+        var checks = 0
+        #expect(throws: CancellationError.self) {
+            try CostUsageClaudeCacheIO.save(
+                provider: .claude,
+                cache: cache,
+                cacheRoot: fixture.env.cacheRoot,
+                checkCancellation: {
+                    checks += 1
+                    if checks == 2 { throw CancellationError() }
+                })
+        }
+        #expect(checks == 2)
+        #expect(try Data(contentsOf: url) == original)
+        let files = try FileManager.default.contentsOfDirectory(atPath: url.deletingLastPathComponent().path)
+        #expect(!files.contains { $0.hasPrefix(".claude-cache-") })
     }
 
     @Test

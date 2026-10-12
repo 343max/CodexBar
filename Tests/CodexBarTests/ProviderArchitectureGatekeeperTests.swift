@@ -156,9 +156,9 @@ struct ProviderArchitectureGatekeeperTests {
             Self.hash(descriptor.branding.burnDownWidgetColor, into: &burnDownFingerprint)
         }
 
-        // X API extends the palette without changing existing provider colors.
-        #expect(widgetFingerprint == 7_318_583_779_471_121_882)
-        #expect(burnDownFingerprint == 8_800_572_749_065_936_795)
+        // Both provider batches extend the palette without changing existing provider colors.
+        #expect(widgetFingerprint == 14_588_483_983_924_548_755)
+        #expect(burnDownFingerprint == 14_027_062_183_472_836_508)
     }
 
     @Test
@@ -197,7 +197,8 @@ struct ProviderArchitectureGatekeeperTests {
     func `small provider capabilities preserve legacy registries`() {
         let descriptors = ProviderDescriptorRegistry.all
         #expect(Set(descriptors.filter(\.metadata.balanceOnly).map(\.id)) == [
-            .deepseek, .deepinfra, .moonshot, .poe, .hyper, .atlascloud, .vercel, .lithosai, .xapi,
+            .deepseek, .deepinfra, .moonshot, .poe, .hyper, .atlascloud, .vercel, .lithosai, .xapi, .linkup, .tinyapi,
+            .sailresearch, .sofya,
         ])
         #expect(Set(descriptors.filter(\.metadata.usesDetailBackedWindow).map(\.id)) == [
             .perplexity,
@@ -1810,13 +1811,6 @@ struct ProviderArchitectureGatekeeperTests {
             expectedReferenceFingerprint: ["codex@0"],
             reason: "This exact shared construct dispatches a provider-owned capability at the generic integration boundary."),
         AllowedProviderConstruct(
-            path: "Sources/CodexBar/MenuBarLayoutEditor.swift",
-            anchor: "if provider == .codex,",
-            expectedProviderIDs: ["codex"],
-            expectedReferenceCount: 1,
-            expectedReferenceFingerprint: ["codex@0"],
-            reason: "This exact shared construct dispatches a provider-owned capability at the generic integration boundary."),
-        AllowedProviderConstruct(
             path: "Sources/CodexBar/MenuCardView+CodexResetCredits.swift",
             anchor: "case .codex:",
             expectedProviderIDs: ["claude", "codex", "grok"],
@@ -2961,7 +2955,7 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "This exact app-runtime bridge coordinates provider-owned state through the shared controller."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/UsageStore+SpendDashboardCodexCostCatchUp.swift",
-            anchor: "self.settings.providerConfigRevision(for: .codex) == context.providerConfigRevision",
+            anchor: "&& self.settings.providerConfigRevision(for: .codex) == context.providerConfigRevision",
             expectedProviderIDs: ["codex"],
             expectedReferenceCount: 1,
             expectedReferenceFingerprint: ["codex@0"],

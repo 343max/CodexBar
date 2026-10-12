@@ -118,6 +118,15 @@ the cookie import.
 - Explicit Refresh can repair Claude OAuth Keychain access when direct-read consent is enabled and the policy
   allows user prompts. Ordinary OAuth fetches remain noninteractive, including with `Always allow prompts`;
   that policy still governs the existing delegated refresh and experimental reader paths.
+- After a missing-credentials failure, a newer Claude Code credential timestamp replaces the stale error with
+  **Claude Code credentials changed** and a **Refresh** instruction in the menu and OAuth CLI output. Click the
+  existing menu **Refresh** action to retry; direct-read consent and the prompt policy still control access.
+  The freshness probe reads only Keychain attributes with UI disabled and the credentials file's modification
+  time. It never requests the Keychain credential payload, launches Claude, or grants access in the background.
+  A changed timestamp can mean a login or token rotation; it does not prove the credential is valid. Custom
+  credential profiles use their own file timestamp, never the global Claude Code Keychain item. CodexBar saves
+  only the last failure time per profile so the guidance survives restarts and is shared with the bundled CLI;
+  a readable credential clears it. Auto continues to configured CLI/Web sources under their existing access gates.
 - This setting only affects Claude OAuth Keychain prompting behavior; it does not switch your Claude usage source.
 - The policy also applies to the experimental `/usr/bin/security` reader and delegated OAuth refresh through
   `claude`: background operations that can prompt require `Always allow prompts`.
@@ -281,7 +290,10 @@ the cookie import.
   - A missing session measurement does not render as 100% remaining. Measured weekly and extra windows stay visible; when only a synthetic session placeholder exists, menus and plain CLI output report that limits are unavailable. Raw JSON retains the placeholder for diagnostics.
   - Daily Routines extra window when returned by the usage API.
   - Extra usage spend/limit (if enabled). Compact Overview keeps this section when no measured quota bars exist, including Enterprise accounts with unavailable limits.
-  - Remaining Usage credits balance (if enabled).
+  - Remaining Usage credits balance (if enabled). Custom menu bar layouts can show it with the **Balance** element
+    beside the quota windows; the default menu bar text keeps showing quota. Turning off **Show credits & extra
+    usage** hides it from the menu card and the Balance element immediately. Otherwise a fresh snapshot without a
+    successful prepaid credits response has no balance, while a failed refresh keeps the last snapshot and its balance.
   - Account email + inferred plan.
   - Limit Reset Credits (see below).
 - A Cloudflare challenge on `claude.ai` is a network-path restriction, not a stale-cookie signal. CodexBar keeps the
@@ -443,6 +455,8 @@ Model-scoped weekly-window proof (synthetic data, no real accounts or credential
 
 ## CLI PTY (fallback)
 - Runs `claude` in a PTY session (`ClaudeCLISession`).
+- The PTY and replay screen share a 160-column, 200-row viewport so tall inline `/usage` panels retain their session,
+  weekly, and model-specific quotas alongside session statistics and usage insights. Erased content remains discarded.
 - The bundled watchdog is discovered only in the running executable's resolved app bundle; launching through a CLI symlink preserves that association.
 - Default behavior: exit after each probe; Debug → "Keep CLI sessions alive" keeps it running between probes.
 - Both PTY probes and the non-PTY `/usage` fallback pass `--settings '{"remoteControlAtStartup":false,"disableAllHooks":true}'` to disable Remote Control startup and user hooks for the probe process. This process-local override leaves the user's saved settings unchanged; Claude's managed-settings policy still applies.
@@ -525,6 +539,7 @@ Model-scoped weekly-window proof (synthetic data, no real accounts or credential
   - A pricing catalog replacement during a refresh preserves certification of the parsed transcript window. The next refresh applies the replacement prices to cached rows without reparsing unchanged transcripts, including after a restart. Externally replaced transcript caches still require window certification again.
   - Unchanged sources reuse the memo even when a menu refresh bypasses the scan debounce. Explicit rescans still reparse transcripts, but identical cache and report-memo content is not rewritten; an unchanged rebuild retains its previous scan timestamp. Existing artifacts may be rewritten once to establish deterministic key ordering. Changed transcripts or report metadata still replace the corresponding complete JSON artifacts.
   - Persistence keeps at most eight lightweight artifact identities independently of the decoded-row cache. An unchanged cache identity plus matching device/inode, size, and nanosecond mtime skips encoding; otherwise sorted JSON fingerprints avoid full-file read-back while preserving identical rebuilds. External replacement invalidates reuse, and changed files still use temporary-file rename. Evicted identities are re-established on load or the next save.
+  - On clone-capable macOS volumes, changed Claude/Vertex cache and report-memo artifacts clone the previous file into a private temporary sibling and write only different blocks before atomic replacement. Linux and unsupported volumes use full writes. JSON schemas and filenames stay unchanged; serialized length changes can still rewrite large suffixes. See the [synthetic write-amplification proof](research/cost-history-write-amplification-2026-10-09.md).
   - Decoded cache artifacts can be reused in memory while their canonical path, file identity, size, and nanosecond modification time match. Schema and time-zone checks still run on every load; report-level source, window, filter, and pricing checks still run separately. Atomic replacements invalidate this reuse, and explicit rescans still reparse source transcripts.
   - Successful cache saves retain the just-written decoded value, avoiding another full row decode on the next changed refresh. Unmodified loaded values skip encoding and writing while the artifact stamp still matches; external replacements, deleted files, and failed or cancelled saves cannot establish this reuse. Changed content still replaces the complete JSON artifact. Compact row field names reduce its size; schema 3 artifacts rebuild from transcripts once when the rows are next needed. Report memos and user-facing JSON retain their existing formats.
   - The app's Usage & Spend refresh uses `claude-history-v6.json` and its own report memo. The two app refreshes do not replace each other's retained rows or restart each other's transcript scans. Once both have established their windows, same-day append refreshes read changed tails once per cache.

@@ -100,6 +100,11 @@ check_ci_path_gate() {
   "${ROOT_DIR}/Scripts/test_ci_path_gate.sh"
 }
 
+check_ci_build_cache() {
+  python3 "${ROOT_DIR}/Scripts/test_ci_swiftpm_cache.py"
+  python3 "${ROOT_DIR}/Scripts/test_ci_prune_swiftpm_cache.py"
+}
+
 check_homebrew_tap_wait() {
   "${ROOT_DIR}/Scripts/test_wait_for_homebrew_tap_update.sh"
 }
@@ -121,8 +126,10 @@ check_shell_scripts() {
 }
 
 check_app_locales() {
+  node --test "${ROOT_DIR}/Scripts/test_localization_formats.mjs"
   node "${ROOT_DIR}/Scripts/check-app-locales.mjs" --test
   node "${ROOT_DIR}/Scripts/check-app-locales.mjs"
+  node "${ROOT_DIR}/Scripts/sync-widget-locales.mjs" --check
 }
 
 check_site_locales() {
@@ -157,6 +164,7 @@ run_portable_checks() {
   check_mimo_usage_script
   check_swift_test_sharding
   check_ci_path_gate
+  check_ci_build_cache
   check_homebrew_tap_wait
   check_repository_size
   check_shell_scripts

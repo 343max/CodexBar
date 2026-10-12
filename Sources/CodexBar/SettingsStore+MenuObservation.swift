@@ -29,9 +29,11 @@ extension SettingsStore {
         _ = self.usageBarsShowUsed
         _ = self.resetTimesShowAbsolute
         _ = self.providerChangelogLinksEnabled
+        _ = self.highlightMenuCardsOnHover
         _ = self.menuBarShowsBrandIconWithPercent
         _ = self.menuBarHidesCritters
         _ = self.menuBarColorPace
+        _ = self.menuBarPaceReservePositive
         _ = self.menuBarColorByProvider
         _ = self.menuBarHighContrastOnInactiveDisplays
         _ = self.unifiedIconSource
