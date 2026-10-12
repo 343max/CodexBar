@@ -140,15 +140,15 @@ struct ProviderPluginCookieResultTests {
             domains: runtime.manifest.cookieDomains,
             settings: .init(cookieSource: .auto, manualCookieHeader: nil),
             batches: { domain, batch in
-                guard batch == 0 else { return nil }
                 return try KeychainAccessGate.withTaskOverrideForTesting(false) {
                     try BrowserCookieAccessGate.withShouldAttemptOverrideForTesting(false) {
                         if provider == .abacus {
+                            guard batch == 0 else { return nil }
                             return AbacusCookieImporter.importSessions(browserDetection: detection)
                                 .map { ($0.cookieHeader, $0.sourceLabel) }
                         }
                         return try ProviderPluginCookieBroker.importCookieHeaders(
-                            provider: provider, domain: domain, browserDetection: detection)
+                            provider: provider, domain: domain, browserDetection: detection, batch: batch)
                     }
                 }
             },
