@@ -82,9 +82,9 @@ struct ProviderPluginCookieResultTests {
         """, engine: engine)
         try await ProviderInteractionContext.$current.withValue(.userInitiated) {
             try await BrowserCookieAccessGate.withExplicitRetry {
-                let importJar: ProviderPluginCookieBroker.JarImporter = {
+                let importJar: ProviderPluginCookieBroker.JarImporter = { batch in
                     #expect(ProviderInteractionContext.current == .userInitiated)
-                    return [ProviderPluginCookieSession(header: "", source: "Chrome", origin: "")]
+                    return batch == 0 ? [ProviderPluginCookieSession(header: "", source: "Chrome", origin: "")] : nil
                 }
                 let broker = ProviderPluginCookieBroker(
                     provider: .lithosai,
@@ -126,11 +126,12 @@ struct ProviderPluginCookieResultTests {
             directoryContents: { _ in ["Default"] },
             applicationURLs: { _ in [] },
             profileAccessIssue: { _ in nil })
-        let importJar: ProviderPluginCookieBroker.JarImporter = {
+        let importJar: ProviderPluginCookieBroker.JarImporter = { batch in
             try KeychainAccessGate.withTaskOverrideForTesting(false) {
                 try BrowserCookieAccessGate.withShouldAttemptOverrideForTesting(false) {
                     try ProviderPluginCookieBroker.importCookieJars(
-                        provider: provider, domains: runtime.manifest.cookieDomains, browserDetection: detection)
+                        provider: provider, domains: runtime.manifest.cookieDomains, browserDetection: detection,
+                        batch: batch)
                 }
             }
         }
