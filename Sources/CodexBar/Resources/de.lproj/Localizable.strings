@@ -1450,7 +1450,7 @@
 "menu_bar_layout_token_reset_at" = "Zurücksetzung um";
 "menu_bar_layout_token_runs_out" = "Reicht bis";
 "menu_bar_layout_token_cost_today" = "Kosten heute";
-"menu_bar_layout_token_cost_30d" = "Kosten 30 Tage";
+"menu_bar_layout_token_cost_window" = "Kosten (Verlaufsfenster)";
 "menu_bar_layout_token_space" = "Leerraum";
 "menu_bar_layout_token_line_break" = "Zeilenumbruch";
 "menu_bar_layout_token_separator_accessibility" = "Trennpunkt";
@@ -1468,7 +1468,6 @@
 "Reset time unavailable" = "Zurücksetzung um: Nicht verfügbar";
 "Run-out estimate unavailable" = "Reicht bis: Nicht verfügbar";
 "Cost today unavailable" = "Kosten heute: Nicht verfügbar";
-"30-day cost unavailable" = "Kosten 30 Tage: Nicht verfügbar";
 "Resets" = "Zurücksetzungen";
 "codex_workspaces_cost_unavailable" = "Kosten nicht verfügbar";
 "codex_workspaces_elevated_usage" = "Erhöhte Nutzung";

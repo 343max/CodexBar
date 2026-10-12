@@ -1446,7 +1446,7 @@
 "menu_bar_layout_token_reset_at" = "Återställs kl.";
 "menu_bar_layout_token_runs_out" = "Tar slut";
 "menu_bar_layout_token_cost_today" = "Kostnad idag";
-"menu_bar_layout_token_cost_30d" = "Kostnad 30 dagar";
+"menu_bar_layout_token_cost_window" = "Kostnad (Historikfönster)";
 "menu_bar_layout_token_space" = "Blanksteg";
 "menu_bar_layout_token_line_break" = "Radbrytning";
 "menu_bar_layout_token_separator_accessibility" = "Avgränsarpunkt";
@@ -1464,7 +1464,6 @@
 "Reset time unavailable" = "Återställs kl.: Inte tillgänglig";
 "Run-out estimate unavailable" = "Tar slut: Inte tillgänglig";
 "Cost today unavailable" = "Kostnad idag: Inte tillgänglig";
-"30-day cost unavailable" = "Kostnad 30 dagar: Inte tillgänglig";
 "Resets" = "Återställningar";
 "codex_workspaces_cost_unavailable" = "Kostnaden är inte tillgänglig";
 "codex_workspaces_elevated_usage" = "Förhöjd användning";

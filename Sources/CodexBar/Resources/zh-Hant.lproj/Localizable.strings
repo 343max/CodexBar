@@ -1478,7 +1478,7 @@
 "menu_bar_layout_token_reset_at" = "重設時間";
 "menu_bar_layout_token_runs_out" = "預計用盡";
 "menu_bar_layout_token_cost_today" = "今日費用";
-"menu_bar_layout_token_cost_30d" = "30 天費用";
+"menu_bar_layout_token_cost_window" = "費用（歷史時段）";
 "menu_bar_layout_token_space" = "空格";
 "menu_bar_layout_token_line_break" = "換行";
 "menu_bar_layout_token_separator_accessibility" = "分隔點";
@@ -1496,7 +1496,6 @@
 "Reset time unavailable" = "重設時間: 無法使用";
 "Run-out estimate unavailable" = "預計用盡: 無法使用";
 "Cost today unavailable" = "今日費用: 無法使用";
-"30-day cost unavailable" = "30 天費用: 無法使用";
 "Resets" = "重設";
 "codex_workspaces_cost_unavailable" = "無法取得費用";
 "codex_workspaces_elevated_usage" = "使用量偏高";
