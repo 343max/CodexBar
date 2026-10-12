@@ -1588,7 +1588,7 @@ public struct CostUsageFetcher: Sendable {
     {
         let options = Self.resolvedScannerOptions(
             overrideScannerOptions,
-            provider: .codex, // Provider-specific by design: local workspace history belongs to the selected Codex home.
+            provider: .codex, // Provider-specific by design: local history belongs to the selected Codex home.
             codexHomePath: codexHomePath)
         return CodexLocalDataScope.resolve(options: options).applying(to: options)
     }
