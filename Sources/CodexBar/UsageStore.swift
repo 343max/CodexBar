@@ -1431,19 +1431,8 @@ extension UsageStore {
         }
     }
 
-    private func runBackgroundSnapshot(
-        _ snapshot: @escaping @Sendable () async -> PathDebugSnapshot) async
-    {
-        let result = await snapshot()
-        await MainActor.run {
-            self.pathDebugInfo = result
-        }
-    }
-
     private func refreshPathDebugInfo() async {
-        await self.runBackgroundSnapshot {
-            await PathBuilder.debugSnapshotAsync(purposes: [.rpc, .tty, .nodeTooling])
-        }
+        self.pathDebugInfo = await PathBuilder.debugSnapshotAsync(purposes: [.rpc, .tty, .nodeTooling])
     }
 
     func refreshTokenUsage(_ provider: UsageProvider, force: Bool) async {
