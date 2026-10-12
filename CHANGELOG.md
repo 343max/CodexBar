@@ -5,6 +5,7 @@
 ### Changed
 
 - Browser Local Storage imports pick the current record by LevelDB sequence, so a sign-out followed by a sign-in no longer hides the new session.
+- Browser imports: recognize Ego Lite through the shared catalog; Cursor account login continues to require a verified application identifier.
 
 ## 0.74.1 — 2026-10-11
 
