@@ -9,7 +9,7 @@ defineProvider({
   ],
   capabilities: ["http-status"],
   async fetchUsage(ctx) {
-    // API keys do not list their workspaces (GET /workspaces returns an empty list), so the ID is required.
+    // Workspace listing can be empty without read permission, so billing uses an explicit workspace ID.
     const workspace = (ctx.settings.get("FLORA_WORKSPACE_ID") || "").trim();
     if (!workspace) {
       throw ctx.fail.missingCredential("Set the FLORA workspace ID (ws_…) in Settings or FLORA_WORKSPACE_ID.");

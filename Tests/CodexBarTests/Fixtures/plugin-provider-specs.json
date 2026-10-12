@@ -644,6 +644,20 @@
     "workspaceOrder": null
   },
   {
+    "availability": [true, true, true],
+    "cliResolution": {"FAL": ["fal"]},
+    "enterpriseHost": false,
+    "environmentAvailability": [[true, false], [true, true], [true, true], [true, true]],
+    "fields": ["secure"],
+    "id": "fal",
+    "projectToken": "",
+    "projections": {"FAL_KEY": "fixture-key"},
+    "sourceModes": ["api", "auto"],
+    "strategies": ["fal.js"],
+    "supportsTokenCost": false,
+    "workspaceOrder": null
+  },
+  {
     "availability": [false, false, true],
     "cliResolution": {"FLORA": ["flora"]},
     "enterpriseHost": false,

@@ -2512,6 +2512,9 @@
 "Ahead of pace is +" = "جلوتر از آهنگ مصرف یعنی +";
 "Reserve is +" = "ذخیره یعنی +";
 
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "کلیدی با دسترسی خواندن صورت‌حساب (پیش‌تنظیم BILLING یا READONLY). یا FAL_KEY را تنظیم کنید.";
+
 /* FLORA provider credentials */
 "Needs billing permission on the workspace. Or set FLORA_API_KEY." = "به مجوز صورت‌حساب در فضای کاری نیاز دارد. یا FLORA_API_KEY را تنظیم کنید.";
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "الزامی. شناسه ws_… فضای کاری که کلید می‌تواند صورت‌حساب آن را ببیند. یا FLORA_WORKSPACE_ID را تنظیم کنید.";

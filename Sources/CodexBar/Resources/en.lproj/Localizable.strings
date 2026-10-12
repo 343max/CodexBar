@@ -2512,6 +2512,9 @@
 "Ahead of pace is +" = "Ahead of pace is +";
 "Reserve is +" = "Reserve is +";
 
+/* fal provider credentials */
+"Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY.";
+
 /* FLORA provider credentials */
 "Needs billing permission on the workspace. Or set FLORA_API_KEY." = "Needs billing permission on the workspace. Or set FLORA_API_KEY.";
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID.";

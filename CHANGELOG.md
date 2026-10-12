@@ -1,13 +1,19 @@
 # Changelog
 
-## 0.74.1 — Unreleased
+## 0.74.2 — Unreleased
+
+### Added
+
+- Providers: add fal account credit balances through its billing API, with explicit guidance for missing billing permissions (#4438). Thanks @giuseppebisemi!
+- Providers: add FLORA workspace balances, member limits, and available month-to-date spending through a bundled billing plugin (#4439). Thanks @giuseppebisemi!
+
+## 0.74.1 — 2026-10-11
 
 ### Added
 
 - Codex: show saved conversation titles in the Cost menu, retain session IDs in tooltips, and respect Hide personal information (#4429). Thanks @obrizan!
 - xAI: show an optional live remaining credit estimate from the current invoice preview alongside the posted prepaid balance (#4406). Thanks @lilbreadxiaomianbao!
 - Menu: add a default-on “Highlight menu cards on hover” toggle to preserve card colors when disabled, while keeping keyboard selection visible (#4414). Thanks @cynicalight!
-- Providers: add FLORA workspace balance, member limit and month-to-date spend through a bundled plugin, using an API key with billing permission and a workspace ID.
 
 ### Changed
 
