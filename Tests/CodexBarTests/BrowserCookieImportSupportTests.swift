@@ -49,7 +49,6 @@ struct BrowserCookieImportSupportTests {
         .hyper,
         .qoder,
         .replicate,
-        .typesafe,
         .venice,
         .zoommate,
     ])
