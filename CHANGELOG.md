@@ -21,6 +21,7 @@
 
 - Codex costs: price ChatGPT-created Auto-review requests from October 6 at $0 so they no longer make otherwise complete costs appear as a lower bound; keep their tokens in totals and honor explicit custom prices (#4452, #4453). Thanks @gabrielrojasc!
 - TypeSafe: discover console sessions in the shared browser order while preserving manual cookies and CLI cookie refresh (#4442). Thanks @lg!
+- Charm Hyper: read browser-session balances from the signed-in dashboard while keeping API keys on the credits endpoint and preserving cookie-refresh validation (#4435). Thanks @dnicolson!
 - Menu bar: restore meters and critters immediately when switching back from Icon & percent, without waiting for usage to change (#4450). Thanks @benjschiller!
 - Browser cookie imports raise at most one Keychain prompt per manual refresh, respect a denied prompt for its cooldown, and never prompt from settings-triggered refreshes (#4443).
 

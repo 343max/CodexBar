@@ -140,7 +140,7 @@ Abacus, Muse, LongCat, Replicate, and TypeSafe unchanged.
 | Provider | Status | Engines | Scope |
 |---|---|---|---|
 | gitkraken | `cut-over` | QuickJS + JavaScriptCore | First-party bearer GET, optional organization header, weekly personal/shared credits; API-only, no subprocess fallback. |
-| hyper | `cut-over` | QuickJS + JavaScriptCore | Fixed-origin credits GET with Chrome/manual session preference and API-key fallback; native HC balance, no invented quotas or resets. |
+| hyper | `cut-over` | QuickJS + JavaScriptCore | Signed-in dashboard GET with Chrome/manual session preference and API-key fallback to a fixed credits GET; native HC balance, no invented quotas or resets. |
 | devpass | `cut-over` | QuickJS + JavaScriptCore | Documented bearer GET for billing-cycle and premium weekly credits plus separate all-time key spend; API-only. |
 | atlascloud | `cut-over` | QuickJS + JavaScriptCore | Public billing API bearer GET for the account-wide available USD balance; no invented quota or Coding Plan allowance. |
 | vercel | `cut-over` | QuickJS + JavaScriptCore | Public credits API bearer GET for team USD balance and lifetime spend; no CLI discovery or metered reporting. |
