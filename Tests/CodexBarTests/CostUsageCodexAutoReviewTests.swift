@@ -4,6 +4,57 @@ import Testing
 
 struct CostUsageCodexAutoReviewTests {
     @Test
+    func `custom rates win while uncovered free requests stay unknown`() throws {
+        let model = "codex-auto-review"
+        let day = "2026-10-06"
+        let instant = Date(timeIntervalSince1970: 1_791_270_000)
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try #require(TimeZone(secondsFromGMT: 0))
+        var usage = CostUsageScanner.makeFileUsage(
+            mtimeUnixMs: 1,
+            size: 1,
+            days: [day: [model: [1000, 0, 10]]],
+            parsedBytes: 1,
+            codexRows: [.init(
+                day: day,
+                model: model,
+                turnID: nil,
+                eventIndex: 0,
+                timestampUnixMs: 1_791_270_000_000,
+                input: 1000,
+                cached: 0,
+                output: 10)],
+            codexScanComplete: true)
+        usage.codexSession = .init(hasCreatorAccount: true)
+        var cache = CostUsageCache()
+        cache.files = ["/review-fixture.jsonl": usage]
+        cache.days = usage.days
+        let catalog = ModelsDevCatalog(providers: ["openai": .init(
+            id: "openai", name: "OpenAI", models: [model: .init(
+                id: model, name: nil, cost: .init(input: 1, output: 2), limit: nil)])])
+        func report(_ custom: CostUsageCustomPricing = .empty) -> CostUsageDailyReport {
+            CostUsageScanner.buildCodexReportFromCache(
+                cache: cache,
+                range: .init(since: instant, until: instant, calendar: calendar),
+                modelsDevCatalog: catalog,
+                customPricing: custom)
+        }
+        let custom = CostUsageCustomPricing.parse(Data(#"{"openai/codex-auto-review":{"input":5,"output":10}}"#.utf8))
+        #expect(report().data.first?.costUSD == 0)
+        #expect(abs((report(custom).data.first?.costUSD ?? -1) - 0.0051) < 1e-12)
+
+        // A missing request makes the day's token totals larger than the retained rows.
+        cache.days[day]?[model]?[0] = 1500
+        let uncovered = report()
+        #expect(uncovered.data.first?.costUSD == nil)
+        #expect(uncovered.data.first?.coverageCounts.unpriced == 1)
+        #expect(uncovered.quotaSlices.count == 1)
+        #expect(uncovered.quotaSlices.first?.costUSD == nil)
+        #expect(uncovered.quotaSlices.first?.costIsComplete == false)
+        #expect(abs((report(custom).data.first?.costUSD ?? -1) - 0.0076) < 1e-12)
+    }
+
+    @Test
     func `only ChatGPT auto review from the cutoff is free across cache refreshes`() throws {
         let cutoff = Date(timeIntervalSince1970: 1_791_270_000)
         for creator in [nil, " \n", "account-fixture"] as [String?] {

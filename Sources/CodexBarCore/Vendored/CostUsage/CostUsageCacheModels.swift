@@ -434,13 +434,6 @@ struct CostUsageCodexTotals: Codable, Equatable {
     var cached: Int
     var output: Int
     var reasoning: Int?
-
-    init(input: Int, cached: Int, output: Int, reasoning: Int? = nil) {
-        self.input = input
-        self.cached = cached
-        self.output = output
-        self.reasoning = reasoning
-    }
 }
 
 struct CostUsageCodexTokenSnapshot: Codable, Equatable {

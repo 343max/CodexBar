@@ -493,8 +493,8 @@ the local result and returns a nonzero exit code. See [CLI host reporting](cli.m
     has a non-blank `creator_account_id`. [Upstream documents this field](https://github.com/openai/codex/blob/27065a91ccbf5ba8532844be3777fcf83b77820d/codex-rs/protocol/src/protocol.rs#L3249)
     as the account selected at thread creation, unchanged on resume, so a ChatGPT-created session later resumed
     with an API key still counts Auto-review at $0. Tokens remain in all totals; missing eligibility or unreliable
-    request evidence keeps previous pricing. The free price overrides catalog/custom estimates, while saved
-    monetary amounts still win. Classification affects report copies only. Parser revision 13 reparses files
+    request evidence keeps previous pricing. The free price overrides catalog estimates; explicit
+    custom-pricing rates and saved monetary amounts still win. Classification affects report copies only. Parser revision 13 reparses files
     through the normal scan budget to capture the flag; stores from `f406dae284de4a55` retain saved history and
     checkpoints without a rebuild. Workspaces/Models analytics use a sidecar without this flag and remain unpriced.
   - Fully read empty session fragments retain completion records even when another file contributes the same session.

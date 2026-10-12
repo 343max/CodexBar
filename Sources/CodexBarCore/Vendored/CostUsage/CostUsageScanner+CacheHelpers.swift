@@ -1184,6 +1184,7 @@ extension CostUsageScanner {
         modelsDevCacheRoot: URL? = nil,
         priorityTurns: [String: CodexPriorityTurnMetadata]? = nil,
         pricingResolver: CostUsagePricing.CodexResolver? = nil,
+        customPricing: CostUsageCustomPricing? = nil,
         modelsDevCatalogLoader: (URL?) -> ModelsDevCatalog? = {
             CostUsagePricing.modelsDevCatalog(cacheRoot: $0)
         }) -> CostUsageDailyReport
@@ -1192,6 +1193,7 @@ extension CostUsageScanner {
         CostUsageStoreTestHooks.current.readWorkRecorder?.recordReportBuild()
         #endif
         let priorityTurns = priorityTurns ?? cache.codexResolvedPriorityTurns ?? [:]
+        let customPricing = customPricing ?? CostUsagePricing.customPricingOverlay()
         var reportCache = cache
         for (path, usage) in cache.files where self.needsCodexPricingMetadata(usage, range: range) {
             reportCache.files[path] = self.codexFileUsageWithPricingMetadata(
@@ -1204,9 +1206,12 @@ extension CostUsageScanner {
             for (index, row) in (usage.codexRows ?? []).enumerated() {
                 guard row.knownCostNanos == nil, row.eventIndex != nil, (row.unpricedTokens ?? 0) == 0,
                       let timestamp = row.timestampUnixMs, timestamp >= 1_791_270_000_000, // 2026-10-06 00:00 PDT.
-                      CostUsagePricing.normalizeCodexModel(row.model) == "codex-auto-review"
+                      CostUsagePricing.normalizeCodexModel(row.model) == "codex-auto-review",
+                      customPricing.rates(
+                          providerID: CostUsagePricing.codexModelsDevProviderID,
+                          model: Self.codexPricedModel(for: row, priorityTurns: priorityTurns)) == nil
                 else { continue }
-                reportCache.files[path]?.codexRows?[index].knownCostNanos = 0
+                reportCache.files[path]?.codexRows?[index].isIncludedInPlan = true
             }
         }
         var entries: [CostUsageDailyReport.Entry] = []
@@ -1237,7 +1242,7 @@ extension CostUsageScanner {
             priorityTurns: priorityTurns,
             modelsDevCatalog: catalog,
             modelsDevCacheRoot: modelsDevCacheRoot,
-            customPricing: CostUsagePricing.customPricingOverlay(),
+            customPricing: customPricing,
             pricingResolver: pricingResolver ?? CostUsagePricing.CodexResolver(catalog: catalog))
         for usage in reportCache.files.values {
             let reconciled = self.codexCanonicalPricingRows(usage)
@@ -1263,6 +1268,9 @@ extension CostUsageScanner {
                     pricing.authoritativeCostEvidenceGroups.insert(group)
                 }
                 if let pricingModel = row.pricingModel, pricingModel != row.model {
+                    pricing.requestPricingEvidenceGroups.insert(group)
+                }
+                if row.isIncludedInPlan == true {
                     pricing.requestPricingEvidenceGroups.insert(group)
                 }
             }
@@ -1305,6 +1313,7 @@ extension CostUsageScanner {
                 Self.addCodexHourly(
                     rows: pricing.rowsByDayModel[day]?[breakdown.modelName] ?? [],
                     pricing: pricing,
+                    allowIncluded: breakdown.costUSD != nil,
                     calendar: range.calendar,
                     into: &temporalBuckets)
             }

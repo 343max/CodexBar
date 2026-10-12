@@ -484,6 +484,8 @@ enum CostUsageScanner {
         var unpricedTokens: Int?
         var pricingModel: String?
         var pricingMode: String?
+        /// Classified on report copies only; never written to the cache.
+        var isIncludedInPlan: Bool?
 
         init(
             day: String,

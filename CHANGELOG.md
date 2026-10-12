@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Codex costs: price ChatGPT-created Auto-review requests from October 6 at $0 so they no longer make otherwise complete costs appear as a lower bound; keep their tokens in totals (#4452, #4453). Thanks @gabrielrojasc!
+- Codex costs: price ChatGPT-created Auto-review requests from October 6 at $0 so they no longer make otherwise complete costs appear as a lower bound; keep their tokens in totals and honor explicit custom prices (#4452, #4453). Thanks @gabrielrojasc!
 
 ## 0.74.1 — 2026-10-11
 
