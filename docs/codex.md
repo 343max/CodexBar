@@ -492,12 +492,16 @@ the local result and returns a nonzero exit code. See [CLI host reporting](cli.m
     [`get_account_id`](https://github.com/openai/codex/blob/27065a91ccbf5ba8532844be3777fcf83b77820d/codex-rs/login/src/auth/manager.rs#L614)),
     so only the first `session_meta` counts and API-key sessions don't qualify. The request counts in
     `pricedRequestCount`, keeps its tokens in the day, model, session, project, hourly, and quota-window totals, and
-    never receives a list price from models.dev or a custom overlay. A retained authoritative amount wins over $0.
+    never receives a list price from models.dev or the bundled rates. A retained authoritative amount wins over $0.
     Requests before the cutoff, requests without a timestamp, and requests from sessions without the field stay
     unpriced. A request also stays unpriced, in daily and hourly totals alike, when its model/day rows don't account
-    for the billed tokens. Parser revision 13 reparses existing files once to record the field. The store from
-    `f406dae284de4a55` is adopted without a rebuild. Codex Workspaces/Models analytics read the workspace sidecar,
-    which doesn't carry the field, so they still show these requests as unpriced.
+    for the billed tokens. An explicit [custom-pricing](model-pricing.md#custom-pricing-overlay) rate for the
+    request's model wins over $0, because overlays keep precedence over dated pricing changes. The request is then
+    priced like any other custom-priced request, including the day's aggregate estimate when its rows don't account
+    for the billed tokens, and a custom row without a rate for a consumed token class leaves it unpriced. Parser
+    revision 13 reparses existing files once to record the field. The store from `f406dae284de4a55` is adopted
+    without a rebuild. Codex Workspaces/Models analytics read the workspace sidecar, which doesn't carry the field, so
+    they still show these requests as unpriced.
   - Fully read empty session fragments retain completion records even when another file contributes the same session.
     They contribute no usage and reparse from the start if they grow. Usage-bearing duplicates and incomplete fragments
     keep their existing accounting and retry rules. Existing 0.56.4 cost caches are adopted without rebuilding

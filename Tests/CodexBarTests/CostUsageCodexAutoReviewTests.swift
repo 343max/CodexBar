@@ -201,7 +201,7 @@ struct CostUsageCodexAutoReviewTests {
         #expect(entry.unpricedRequestCount == 1)
     }
 
-    /// A list price for the model, from models.dev or a custom overlay, must not charge free requests.
+    /// A models.dev or bundled list price for the model must not charge free requests.
     @Test
     func `free auto review ignores a catalog price for the model`() throws {
         let cutoff = CostUsageScanner.CodexIncludedUsage.autoReviewIncludedSinceUnixMs
@@ -215,37 +215,49 @@ struct CostUsageCodexAutoReviewTests {
         #expect(entry.unpricedRequestCount == nil)
     }
 
-    @Test
-    func `free auto review ignores a custom price for the model`() {
+    /// An explicit custom rate keeps its precedence over dated pricing changes, the waiver included.
+    @Test(arguments: [Self.autoReview, "openai/\(Self.autoReview)"])
+    func `free auto review uses an explicit custom rate for the model`(key: String) throws {
         let cutoff = CostUsageScanner.CodexIncludedUsage.autoReviewIncludedSinceUnixMs
-        let overlay = CostUsageCustomPricing.parse(Data(#"{"codex-auto-review":{"input":5,"output":10}}"#.utf8))
-        func entry(included: Bool) -> CostUsageDailyReport.Entry? {
-            var row = Self.row(index: 0, timestampUnixMs: cutoff + 1000, input: 1000)
-            row.isIncludedInPlan = included ? true : nil
-            let catalog = ModelsDevCatalog(providers: [:])
-            var groups = Set<CostUsageScanner.CodexDayModelKey>()
-            return CostUsageScanner.makeCodexBilledDayEntry(
-                day: Self.cutoffDay,
-                models: [Self.autoReview: [1000, 0, 10]],
-                unmetered: 0,
-                pricing: .init(
-                    rowsByDayModel: [Self.cutoffDay: [Self.autoReview: [row]]],
-                    unresolvedRowGroups: [],
-                    modeOwnershipMismatchGroups: [],
-                    requestPricingEvidenceGroups: [],
-                    incompletePricingEvidenceGroups: [],
-                    authoritativeCostEvidenceGroups: [],
-                    priorityTurns: [:],
-                    modelsDevCatalog: catalog,
-                    modelsDevCacheRoot: nil,
-                    customPricing: overlay,
-                    pricingResolver: CostUsagePricing.CodexResolver(catalog: catalog)),
-                includedGroups: &groups)
-        }
+        let report = Self.report(
+            rows: [Self.row(index: 0, timestampUnixMs: cutoff + 1000, input: 1000)],
+            hasCreatorAccount: true,
+            catalog: Self.catalog(pricing: Self.autoReview),
+            customPricing: Self.overlay(key: key, rates: #"{"input":5,"output":10}"#))
+        let entry = try #require(report.data.first)
+        let breakdown = try #require(entry.modelBreakdowns?.first { $0.modelName == Self.autoReview })
+        // 1,000 input tokens at $5/M plus 10 output tokens at $10/M.
+        let expected = 0.0051
 
-        #expect((entry(included: false)?.costUSD ?? 0) > 0)
-        #expect(entry(included: true)?.costUSD == 0)
-        #expect(entry(included: true)?.unpricedRequestCount == nil)
+        #expect(abs((entry.costUSD ?? -1) - expected) < 1e-12)
+        #expect(abs((breakdown.costUSD ?? -1) - expected) < 1e-12)
+        #expect(entry.unpricedRequestCount == nil)
+        #expect(entry.coverageCounts.priced == 1)
+        #expect(entry.coverageCounts.unpriced == 0)
+        let hourlyComplete = report.hourly.allSatisfy(\.costIsComplete)
+        let slicesComplete = report.quotaSlices.allSatisfy(\.costIsComplete)
+        #expect(report.hourly.count == 1)
+        #expect(abs((report.hourly.first?.costUSD ?? -1) - expected) < 1e-12)
+        #expect(hourlyComplete)
+        #expect(report.quotaSlices.count == 1)
+        #expect(abs((report.quotaSlices.first?.costUSD ?? -1) - expected) < 1e-12)
+        #expect(slicesComplete)
+    }
+
+    /// A custom row missing a consumed token class is unpriced, as for any model; it is neither $0 nor a catalog price.
+    @Test
+    func `a partial custom rate leaves free auto review unpriced`() throws {
+        let cutoff = CostUsageScanner.CodexIncludedUsage.autoReviewIncludedSinceUnixMs
+        let report = Self.report(
+            rows: [Self.row(index: 0, timestampUnixMs: cutoff + 1000, input: 1000)],
+            hasCreatorAccount: true,
+            catalog: Self.catalog(pricing: Self.autoReview),
+            customPricing: Self.overlay(key: Self.autoReview, rates: #"{"input":5}"#))
+        let entry = try #require(report.data.first)
+
+        #expect(entry.costUSD == nil)
+        #expect(entry.unpricedRequestCount == 1)
+        #expect(report.quotaSlices.allSatisfy { $0.costUSD == nil && !$0.costIsComplete })
     }
 
     @Test
@@ -326,6 +338,34 @@ struct CostUsageCodexAutoReviewTests {
         #expect(report.quotaSlices.isEmpty == extraTokensInFile)
         #expect(report.quotaSlices.allSatisfy { $0.costUSD == nil && !$0.costIsComplete })
         #expect(report.hourly.allSatisfy { $0.costUSD == nil && !$0.costIsComplete })
+    }
+
+    /// With an explicit custom rate, an uncovered group prices exactly like the same rows from an API-key
+    /// session: the custom rate applies as it does to any custom-priced model, and the catalog never does.
+    @Test(arguments: [true, false])
+    func `uncovered auto review with a custom rate prices like an ineligible session`(extraTokensInFile: Bool) throws {
+        let cutoff = CostUsageScanner.CodexIncludedUsage.autoReviewIncludedSinceUnixMs
+        func report(hasCreatorAccount: Bool, rates: String?) -> CostUsageDailyReport {
+            Self.report(
+                rows: [Self.row(index: 0, timestampUnixMs: cutoff + 1000, input: 1000)],
+                hasCreatorAccount: hasCreatorAccount,
+                catalog: Self.catalog(pricing: Self.autoReview),
+                customPricing: rates.map { Self.overlay(key: Self.autoReview, rates: $0) } ?? .empty,
+                extraBilledInput: 500,
+                extraBilledInputInFile: extraTokensInFile)
+        }
+        let custom = #"{"input":5,"output":10}"#
+        let eligible = report(hasCreatorAccount: true, rates: custom)
+        let ineligible = report(hasCreatorAccount: false, rates: custom)
+        let entry = try #require(eligible.data.first)
+
+        #expect(eligible.data == ineligible.data)
+        #expect(eligible.hourly == ineligible.hourly)
+        #expect(eligible.quotaSlices == ineligible.quotaSlices)
+        #expect(entry.totalTokens == 1510)
+        // The day's 1,500 input and 10 output tokens at the custom rate; the catalog rate would give $0.00152.
+        #expect(abs((entry.costUSD ?? -1) - 0.0076) < 1e-12)
+        #expect(entry.unpricedRequestCount == nil)
     }
 
     /// A free request without tokens costs nothing even where the day entry doesn't honor free requests.
@@ -569,6 +609,7 @@ struct CostUsageCodexAutoReviewTests {
         rows: [CostUsageScanner.CodexUsageRow],
         hasCreatorAccount: Bool?,
         catalog: ModelsDevCatalog = ModelsDevCatalog(providers: [:]),
+        customPricing: CostUsageCustomPricing = .empty,
         extraFiles: [String: CostUsageFileUsage] = [:],
         extraBilledInput: Int = 0,
         extraBilledInputInFile: Bool = false) -> CostUsageDailyReport
@@ -590,7 +631,12 @@ struct CostUsageCodexAutoReviewTests {
         return CostUsageScanner.buildCodexReportFromCache(
             cache: cache,
             range: .init(since: self.cutoffNoon, until: self.cutoffNoon, calendar: self.pacific),
-            modelsDevCatalog: catalog)
+            modelsDevCatalog: catalog,
+            customPricing: customPricing)
+    }
+
+    private static func overlay(key: String, rates: String) -> CostUsageCustomPricing {
+        CostUsageCustomPricing.parse(Data(#"{"\#(key)":\#(rates)}"#.utf8))
     }
 
     private static func catalog(pricing model: String) -> ModelsDevCatalog {

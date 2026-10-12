@@ -1202,6 +1202,7 @@ extension CostUsageScanner {
         modelsDevCacheRoot: URL? = nil,
         priorityTurns: [String: CodexPriorityTurnMetadata]? = nil,
         pricingResolver: CostUsagePricing.CodexResolver? = nil,
+        customPricing: CostUsageCustomPricing? = nil,
         modelsDevCatalogLoader: (URL?) -> ModelsDevCatalog? = {
             CostUsagePricing.modelsDevCatalog(cacheRoot: $0)
         }) -> CostUsageDailyReport
@@ -1210,6 +1211,7 @@ extension CostUsageScanner {
         CostUsageStoreTestHooks.current.readWorkRecorder?.recordReportBuild()
         #endif
         let priorityTurns = priorityTurns ?? cache.codexResolvedPriorityTurns ?? [:]
+        let customPricing = customPricing ?? CostUsagePricing.customPricingOverlay()
         var reportCache = cache
         for (path, usage) in cache.files where self.needsCodexPricingMetadata(usage, range: range) {
             reportCache.files[path] = self.codexFileUsageWithPricingMetadata(
@@ -1218,7 +1220,10 @@ extension CostUsageScanner {
                 priorityTurns: priorityTurns)
         }
         for (path, usage) in reportCache.files where usage.codexSession?.hasCreatorAccount == true {
-            reportCache.files[path] = self.codexFileUsageMarkingIncludedRows(usage)
+            reportCache.files[path] = self.codexFileUsageMarkingIncludedRows(
+                usage,
+                customPricing: customPricing,
+                priorityTurns: priorityTurns)
         }
         var entries: [CostUsageDailyReport.Entry] = []
         var temporalBuckets = TemporalBuckets()
@@ -1248,7 +1253,7 @@ extension CostUsageScanner {
             priorityTurns: priorityTurns,
             modelsDevCatalog: catalog,
             modelsDevCacheRoot: modelsDevCacheRoot,
-            customPricing: CostUsagePricing.customPricingOverlay(),
+            customPricing: customPricing,
             pricingResolver: pricingResolver ?? CostUsagePricing.CodexResolver(catalog: catalog))
         for usage in reportCache.files.values {
             let reconciled = self.codexCanonicalPricingRows(usage)

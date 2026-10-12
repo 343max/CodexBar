@@ -14,7 +14,7 @@
 
 ### Fixed
 
-- Codex costs: Auto-review requests made on or after 2026-10-06 in ChatGPT-signed-in sessions are priced at $0 instead of left unpriced, so they no longer turn the Codex cost into a lower bound. Their tokens stay in totals; API-key sessions and earlier requests stay unpriced (#4452, #4453). Thanks @gabrielrojasc!
+- Codex costs: Auto-review requests made on or after 2026-10-06 in ChatGPT-signed-in sessions are priced at $0 instead of left unpriced, so they no longer turn the Codex cost into a lower bound. Their tokens stay in totals; API-key sessions and earlier requests stay unpriced, and an explicit custom-pricing rate for `codex-auto-review` still applies (#4452, #4453). Thanks @gabrielrojasc!
 - Usage & Spend: stop Codex status and activity read caches from retaining per-file request ledgers, reducing memory on large histories while preserving report turn performance (#4421, #4424). Thanks @harjothkhara and @Edenspiekermann-Chris!
 - Command Code: support Go v1’s $10 monthly grant and preserve API usage and the plan label for unknown subscriptions (#4405). Thanks @dalisoft!
 - OpenCode Go: mark estimated menu-bar percentages with `~` and clarify that local cost ratios do not establish account quota (#4410). Thanks @djbclark!
