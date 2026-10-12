@@ -322,6 +322,8 @@ unless explicitly exported and imported. Import does not modify `config.json` or
 
 ### Menu bar controls
 
+Switching from **Icon & percent** back to **Meters** or **Critters** redraws the selected style immediately, even when usage has not changed.
+
 **Surprise me** is disabled while brand icons are selected, and static brand layouts do not run the blink timer.
 Your animation preference is kept for switching back to critters. If a brand image is unavailable and the legacy
 layout falls back to a critter, that visible critter can still animate; stored layouts remain static.
