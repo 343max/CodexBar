@@ -484,6 +484,8 @@ enum CostUsageScanner {
         var unpricedTokens: Int?
         var pricingModel: String?
         var pricingMode: String?
+        /// Set only on report-time copies by `codexFileUsageMarkingIncludedRows`; never persisted.
+        var isIncludedInPlan: Bool?
 
         init(
             day: String,
@@ -3441,6 +3443,9 @@ enum CostUsageScanner {
         let subagentHistoryStartOrdinal: Int?
         let historyBaseThreadId: String?
         let requestSessionID: String?
+        /// Codex records the ChatGPT account that created the thread; API-key sign-in has none.
+        /// Optional so persisted replay buffers from earlier parsers still decode.
+        let hasCreatorAccount: Bool?
 
         init(
             sessionId: String?,
@@ -3450,7 +3455,8 @@ enum CostUsageScanner {
             isSubagentThread: Bool,
             subagentHistoryStartOrdinal: Int?,
             historyBaseThreadId: String? = nil,
-            requestSessionID: String? = nil)
+            requestSessionID: String? = nil,
+            hasCreatorAccount: Bool? = nil)
         {
             self.sessionId = sessionId
             self.forkedFromId = forkedFromId
@@ -3460,6 +3466,7 @@ enum CostUsageScanner {
             self.subagentHistoryStartOrdinal = subagentHistoryStartOrdinal
             self.historyBaseThreadId = historyBaseThreadId
             self.requestSessionID = requestSessionID
+            self.hasCreatorAccount = hasCreatorAccount
         }
     }
 
@@ -3965,7 +3972,9 @@ enum CostUsageScanner {
             isSubagentThread: Self.codexIsSubagentThread(from: payload),
             subagentHistoryStartOrdinal: (payload?["subagent_history_start_ordinal"] as? NSNumber)?.intValue,
             historyBaseThreadId: Self.codexHistoryBaseThreadId(from: payload),
-            requestSessionID: payload?["session_id"] as? String)
+            requestSessionID: payload?["session_id"] as? String,
+            hasCreatorAccount: (payload?["creator_account_id"] as? String)
+                .map { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } ?? false)
     }
 
     private static func parseCodexSessionMetadata(
@@ -4593,6 +4602,9 @@ enum CostUsageScanner {
             subagentHistoryStartOrdinal = metadata.subagentHistoryStartOrdinal
             codexSession.sessionId = metadata.sessionId
             codexSession.forkedFromId = metadata.forkedFromId
+            // Only the leaf decides; Codex never updates the creator account on resume. Incremental parses
+            // start past the leaf and leave this nil, so merging keeps the cached leaf value.
+            codexSession.hasCreatorAccount = metadata.hasCreatorAccount
             observeTimestamp(metadata.forkTimestamp)
             observeCwd(metadata.projectPath)
             isSubagentThread = metadata.isSubagentThread

@@ -53,27 +53,35 @@ extension CostUsageScanner {
     static func addCodexHourly(
         rows: [CodexUsageRow],
         pricing: CodexReportDayPricingContext,
+        includedGroups: Set<CodexDayModelKey>,
         calendar: Calendar,
         into buckets: inout TemporalBuckets)
     {
         for row in rows {
             guard let timestamp = self.date(fromUnixMs: row.timestampUnixMs) else { continue }
             let group = CodexDayModelKey(day: row.day, model: row.model)
-            let hasUnpricedTokens = (row.unpricedTokens ?? 0) > 0
+            // Same evidence as the day entry: only groups whose rows account for the day are free.
+            let isIncluded = row.isIncludedInPlan == true && includedGroups.contains(group)
+            let hasUnpricedTokens = !isIncluded && (row.unpricedTokens ?? 0) > 0
             let hasStablePricing = !hasUnpricedTokens
                 && !pricing.modeOwnershipMismatchGroups.contains(group)
                 && (row.eventIndex != nil || (row.input == 0 && row.output == 0))
             // An authoritative amount (including zero) survives incomplete request evidence.
             // Estimated prices require a stable request boundary and unambiguous ownership.
-            let cost = row.knownCostNanos != nil || hasStablePricing
-                ? self.codexResolvedCostUSD(
+            // Requests excluded from plan usage are an exact zero where the day entry honors them.
+            let cost: Double? = if isIncluded {
+                0
+            } else if row.knownCostNanos != nil || hasStablePricing {
+                self.codexResolvedCostUSD(
                     for: row,
                     priorityTurns: pricing.priorityTurns,
                     modelsDevCatalog: pricing.modelsDevCatalog,
                     modelsDevCacheRoot: pricing.modelsDevCacheRoot,
                     customPricing: pricing.customPricing,
                     pricingResolver: pricing.pricingResolver)
-                : nil
+            } else {
+                nil
+            }
             let hour = self.hourStart(for: timestamp, calendar: calendar)
             var hourly = buckets.hourly[hour] ?? HourlyBucket()
             var timed = buckets.quotaSlices[timestamp] ?? HourlyBucket()

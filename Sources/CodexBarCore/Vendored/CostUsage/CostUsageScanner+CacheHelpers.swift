@@ -27,6 +27,8 @@ extension CostUsageScanner {
         /// Requests with tokens whose cost is known; marked or unresolvable requests are counted separately.
         var pricedRequestCount = 0
         var unpricedRequestCount = 0
+        /// Requests excluded from plan usage. They are also priced requests, with an exact $0 cost.
+        var includedRequestCount = 0
 
         var optionalStandardCostUSD: Double? {
             self.sawStandardCost ? self.standardCostUSD : nil
@@ -81,7 +83,8 @@ extension CostUsageScanner {
             if hasTokens, row.eventIndex == nil {
                 breakdown.hasUnstableTokenRows = true
             }
-            let isMarkedUnpriced = (row.unpricedTokens ?? 0) > 0
+            let isIncluded = row.isIncludedInPlan == true
+            let isMarkedUnpriced = !isIncluded && (row.unpricedTokens ?? 0) > 0
             if isMarkedUnpriced {
                 breakdown.hasIncompletePricing = true
             }
@@ -95,6 +98,14 @@ extension CostUsageScanner {
                 let (total, overflow) = breakdown.standardTokens.addingReportingOverflow(tokenCount)
                 breakdown.standardTokens = overflow ? breakdown.standardTokens : total
                 breakdown.hasTokenOverflow = breakdown.hasTokenOverflow || overflow
+            }
+            if isIncluded {
+                if hasTokens {
+                    breakdown.includedRequestCount += 1
+                    breakdown.pricedRequestCount += 1
+                }
+                if isPriority { breakdown.sawPriorityCost = true } else { breakdown.sawStandardCost = true }
+                continue
             }
             // Retained history without proven pricing stays unknown; current list prices are not its price.
             guard !isMarkedUnpriced, let cost = self.codexResolvedCostUSD(
@@ -357,7 +368,17 @@ extension CostUsageScanner {
         var updated = usage
         updated.days = days
         updated.codexCostCacheComplete = true
-        updated.codexSession = nil
+        // Filtered copies drop session presentation fields, but the leaf creator flag still prices their rows.
+        updated.codexSession = usage.codexSession?.hasCreatorAccount.map {
+            CostUsageCodexSessionMetadata(
+                sessionId: nil,
+                forkedFromId: nil,
+                cwd: nil,
+                title: nil,
+                startedAtUnixMs: nil,
+                latestActivityUnixMs: nil,
+                hasCreatorAccount: $0)
+        }
         updated.claudeRows = nil
         updated.codexReadRetryBufferPresence = nil
         updated.codexParserRevision = CostUsageFileUsage.currentCodexParserRevision
@@ -1196,6 +1217,9 @@ extension CostUsageScanner {
                 range: range,
                 priorityTurns: priorityTurns)
         }
+        for (path, usage) in reportCache.files where usage.codexSession?.hasCreatorAccount == true {
+            reportCache.files[path] = self.codexFileUsageMarkingIncludedRows(usage)
+        }
         var entries: [CostUsageDailyReport.Entry] = []
         var temporalBuckets = TemporalBuckets()
         var totalInput = CostUsageDailyReport.OptionalCountAccumulator(0)
@@ -1264,6 +1288,7 @@ extension CostUsageScanner {
             }
         }
 
+        var includedGroups = Set<CodexDayModelKey>()
         for day in dayKeys {
             let unmetered = unmeteredByDay[day] ?? 0
             guard let models = reportCache.days[day] else {
@@ -1276,7 +1301,8 @@ extension CostUsageScanner {
                 day: day,
                 models: models,
                 unmetered: unmetered,
-                pricing: pricing)
+                pricing: pricing,
+                includedGroups: &includedGroups)
             else { continue }
             entries.append(entry)
             for breakdown in entry.modelBreakdowns ?? [] {
@@ -1292,6 +1318,7 @@ extension CostUsageScanner {
                 Self.addCodexHourly(
                     rows: pricing.rowsByDayModel[day]?[breakdown.modelName] ?? [],
                     pricing: pricing,
+                    includedGroups: includedGroups,
                     calendar: range.calendar,
                     into: &temporalBuckets)
             }

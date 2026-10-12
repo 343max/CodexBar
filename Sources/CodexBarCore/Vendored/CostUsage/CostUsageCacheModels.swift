@@ -323,7 +323,7 @@ struct CostUsageCodexRetryBufferPresence: Codable, Equatable, Sendable {
 
 struct CostUsageFileUsage: Codable, Equatable {
     /// Increment for native parser corrections; older or absent revisions use bounded reparsing.
-    static let currentCodexParserRevision = 12
+    static let currentCodexParserRevision = 13
 
     var mtimeUnixMs: Int64
     var size: Int64
@@ -409,10 +409,12 @@ struct CostUsageCodexSessionMetadata: Codable, Equatable {
     var title: String?
     var startedAtUnixMs: Int64?
     var latestActivityUnixMs: Int64?
+    /// Whether the leaf `session_meta` named a ChatGPT creator account. `nil` means not yet parsed.
+    var hasCreatorAccount: Bool?
 
     var isEmpty: Bool {
         self.sessionId == nil && self.forkedFromId == nil && self.cwd == nil && self.title == nil
-            && self.startedAtUnixMs == nil && self.latestActivityUnixMs == nil
+            && self.startedAtUnixMs == nil && self.latestActivityUnixMs == nil && self.hasCreatorAccount == nil
     }
 
     func merging(_ newer: CostUsageCodexSessionMetadata) -> CostUsageCodexSessionMetadata {
@@ -422,7 +424,8 @@ struct CostUsageCodexSessionMetadata: Codable, Equatable {
             cwd: newer.cwd ?? self.cwd,
             title: newer.title ?? self.title,
             startedAtUnixMs: Self.earlier(self.startedAtUnixMs, newer.startedAtUnixMs),
-            latestActivityUnixMs: Self.later(self.latestActivityUnixMs, newer.latestActivityUnixMs))
+            latestActivityUnixMs: Self.later(self.latestActivityUnixMs, newer.latestActivityUnixMs),
+            hasCreatorAccount: newer.hasCreatorAccount ?? self.hasCreatorAccount)
     }
 
     private static func earlier(_ lhs: Int64?, _ rhs: Int64?) -> Int64? {

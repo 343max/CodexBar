@@ -89,7 +89,8 @@ extension CostUsageScanner {
         day: String,
         models: [String: [Int]],
         unmetered: Int,
-        pricing: CodexReportDayPricingContext) -> CostUsageDailyReport.Entry?
+        pricing: CodexReportDayPricingContext,
+        includedGroups: inout Set<CodexDayModelKey>) -> CostUsageDailyReport.Entry?
     {
         let modelNames = models.keys
             .filter { OpenCodexRouteDispatcher.countsTowardCodexSubscription(modelName: $0) }
@@ -162,8 +163,14 @@ extension CostUsageScanner {
                     modelsDevCacheRoot: pricing.modelsDevCacheRoot,
                     customPricing: pricing.customPricing,
                     pricingResolver: pricing.pricingResolver)
+            // Requests excluded from plan usage are priced at $0; a list price for their model must not apply.
+            // Hourly slices honor them only where this group's rows do.
+            let honorsIncluded = rowsCoverGroup && (rowCost?.includedRequestCount ?? 0) > 0
+            if honorsIncluded {
+                includedGroups.insert(group)
+            }
             let cost = if rowCostIsTrusted {
-                rowCost?.totalCostUSD ?? aggregateCost
+                honorsIncluded ? rowCost?.totalCostUSD : rowCost?.totalCostUSD ?? aggregateCost
             } else if let partialRowCost {
                 partialRowCost.totalCostUSD
             } else {
