@@ -154,7 +154,7 @@ sources and setup guide. The [provider ID list](provider-ids.md) is generated fr
   - Choose exactly one of `--provider <id>` or `--all`; provider support comes from shared browser-cookie metadata rather than a fixed CLI list.
   - Prompt-capable Chromium imports require `--allow-keychain-prompt`. Without it, the command fails before cache mutation with an interactive-retry hint.
   - Selected-profile providers use only their configured browser for that check. Safari needs no Chromium Keychain acknowledgment; a validated nonpersistent refresh succeeds without storing cookies.
-  - A six-hour Keychain-denial cooldown is bypassed only by that explicit acknowledgment flag. Output never includes cookie values.
+  - A six-hour Keychain-denial cooldown also applies to menu and settings Refresh actions; only that explicit acknowledgment flag bypasses it. The command shares one interactive browser read across its selected providers. Output never includes cookie values.
   - Classified provider failures distinguish rejected sessions, permissions, rate limits, outages, network errors, and unreadable responses. Missing credentials retain the browser sign-in hint; disabled or denied Keychain access takes precedence. Hints never echo raw provider error messages.
   - Providers configured for Manual or Off cookie sources are skipped.
 - `codexbar guard --provider <id>` gates automation on one provider's remaining quota.
