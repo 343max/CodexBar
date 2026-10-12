@@ -4,19 +4,24 @@ import Foundation
 import SweetCookieKit
 
 public enum KimiCookieImporter {
-    public static func desktopAuthToken(region: KimiRegion = .china) -> String? {
-        self.desktopCredential(region: region)?.token
+    public static func desktopAuthToken(
+        region: KimiRegion = .china,
+        homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser) -> String?
+    {
+        self.desktopCredential(region: region, homeDirectory: homeDirectory)?.token
     }
 
-    static func desktopCredential(region: KimiRegion = .china) -> KimiWebCredential? {
-        #if CODEXBAR_KIMI_DESKTOP_CANDIDATE
+    static func desktopCredential(
+        region: KimiRegion = .china,
+        homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser) -> KimiWebCredential?
+    {
         if region == .china {
-            return KimiDesktopSessionDiscovery.candidate.credential(
+            return KimiDesktopSessionDiscovery.live.credential(
                 settings: .init(cookieSource: .auto, manualCookieHeader: nil, region: region),
-                homeDirectory: FileManager.default.homeDirectoryForCurrentUser)
+                homeDirectory: homeDirectory)
         }
-        #endif
-        return KimiDesktopAuthToken.load(region: region).map { KimiWebCredential(token: $0) }
+        return KimiDesktopAuthToken.load(region: region, homeDirectory: homeDirectory)
+            .map { KimiWebCredential(token: $0) }
     }
 
     private static let log = CodexBarLog.logger(LogCategories.provider(.kimi, scope: "cookie"))

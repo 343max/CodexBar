@@ -1,5 +1,4 @@
 import Foundation
-import Synchronization
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
@@ -54,17 +53,18 @@ private struct KimiDesktopRequestTransport: ProviderHTTPTransport {
 }
 
 /// Concurrent requests share invalidation: an observed failure cannot be revived by a later identical value.
-private final class KimiDesktopDispatchValidation: Sendable {
-    private let valid = Mutex(true)
+private final class KimiDesktopDispatchValidation: @unchecked Sendable {
+    private let lock = NSLock()
+    private var valid = true
     private let isCurrent: @Sendable () -> Bool
 
     init(isCurrent: @escaping @Sendable () -> Bool) { self.isCurrent = isCurrent }
 
     func check() -> Bool {
-        self.valid.withLock { valid in
-            guard valid else { return false }
-            valid = self.isCurrent()
-            return valid
+        self.lock.withLock {
+            guard self.valid else { return false }
+            self.valid = self.isCurrent()
+            return self.valid
         }
     }
 }

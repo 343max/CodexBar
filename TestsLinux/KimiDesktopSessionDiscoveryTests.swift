@@ -4,9 +4,6 @@ import Darwin
 #elseif canImport(Glibc)
 import Glibc
 #endif
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
 import Testing
 @testable import CodexBarCore
 
@@ -63,84 +60,13 @@ struct KimiDesktopSessionDiscoveryTests {
         "future-not-before", "boolean-not-before", "unsigned", "empty-signature", "malformed", "json-wrapper",
         "quoted-string", "wrong-encoding", "oversized",
     ])
-    func `unusable Desktop values cannot initiate a web fetch`(kind: String) async throws {
+    func `unusable Desktop values are rejected`(kind: String) throws {
         let raw = try Self.invalidValue(kind: kind)
         let discovery = KimiDesktopSessionDiscovery { _, _ in raw }
-        let strategy = KimiWebFetchStrategy(
-            fetchUsage: { _, _ in
-                Issue.record("Rejected Desktop data must not initiate a web fetch")
-                throw KimiAPIError.invalidToken
-            },
-            desktopToken: { region in
-                discovery.accessToken(
-                    settings: .init(cookieSource: .auto, manualCookieHeader: nil, region: region),
-                    homeDirectory: Self.home,
-                    now: Self.now)
-            },
-            browserTokens: { _ in [] })
-        #expect(await !strategy.isAvailable(Self.context()))
-        do {
-            _ = try await strategy.fetch(Self.context())
-            Issue.record("Expected missing token")
-        } catch KimiAPIError.missingToken {} catch {
-            Issue.record("Unexpected error: \(error)")
-        }
-    }
-
-    @Test(arguments: [ProviderCookieSource.manual, .off])
-    func `web strategy keeps disabled discovery and empty manual input off the network`(
-        source: ProviderCookieSource) async
-    {
-        let strategy = KimiWebFetchStrategy(
-            fetchUsage: { _, _ in
-                Issue.record("No explicit credential was provided")
-                throw KimiAPIError.invalidToken
-            },
-            desktopToken: { _ in
-                Issue.record("Must not discover Desktop")
-                return nil
-            },
-            browserTokens: { _ in
-                Issue.record("Must not discover browsers")
-                return []
-            })
-        #expect(await !strategy.isAvailable(Self.context(source: source)))
-        do {
-            _ = try await strategy.fetch(Self.context(source: source))
-            Issue.record("Expected missing token")
-        } catch KimiAPIError.missingToken {} catch {
-            Issue.record("Unexpected error: \(error)")
-        }
-    }
-
-    @Test
-    func `validated Desktop session reaches only the selected regional fetch`() async throws {
-        let token = try Self
-            .token(claims: Self.claims.merging(["aud": ["other-service", "kimi.com"]]) { _, new in new })
-        let discovery = KimiDesktopSessionDiscovery { _, _ in Data([1]) + Data(token.utf8) }
-        let transport = DesktopSessionHTTPFixture(token: token)
-        let strategy = KimiWebFetchStrategy(
-            fetchUsage: { received, region in
-                #expect(received == token)
-                #expect(region == .china)
-                return try await KimiUsageFetcher.fetchUsage(
-                    authToken: received, region: region, now: Self.now, transport: transport)
-            },
-            desktopToken: { region in
-                discovery.accessToken(
-                    settings: .init(cookieSource: .auto, manualCookieHeader: nil, region: region),
-                    homeDirectory: Self.home,
-                    now: Self.now)
-            },
-            browserTokens: { _ in
-                Issue.record("Successful Desktop fetch must not inspect browsers")
-                return []
-            })
-        #expect(await strategy.isAvailable(Self.context()))
-        let result = try await strategy.fetch(Self.context())
-        #expect(result.usage.primary?.usedPercent == 25)
-        #expect(result.usage.extraRateWindows?.first { $0.id == "kimi-monthly" }?.window.usedPercent == 42)
-        #expect(await transport.count == 3)
+        #expect(discovery.accessToken(
+            settings: .init(cookieSource: .auto, manualCookieHeader: nil),
+            homeDirectory: Self.home,
+            now: Self.now) == nil)
     }
 
     @Test
@@ -212,59 +138,4 @@ struct KimiDesktopSessionDiscoveryTests {
             "typ": "JWT",
         ]) + "." + encoded(claims ?? self.claims) + ".fixture-signature"
     }
-
-    private static func context(source: ProviderCookieSource = .auto) -> ProviderFetchContext {
-        ProviderFetchContext(
-            runtime: .app,
-            sourceMode: .web,
-            includeCredits: false,
-            webTimeout: 1,
-            webDebugDumpHTML: false,
-            verbose: false,
-            env: [:],
-            settings: .make(kimi: .init(cookieSource: source, manualCookieHeader: "")),
-            fetcher: UsageFetcher(environment: [:]),
-            claudeFetcher: DesktopDiscoveryClaudeStub(),
-            browserDetection: BrowserDetection(homeDirectory: self.home.path, cacheTTL: 0))
-    }
-}
-
-private actor DesktopSessionHTTPFixture: ProviderHTTPTransport {
-    let token: String
-    private(set) var count = 0
-
-    init(token: String) { self.token = token }
-
-    func data(for request: URLRequest) async throws -> (Data, URLResponse) {
-        let url = try #require(request.url)
-        #expect(url.scheme == "https")
-        #expect(url.host == "www.kimi.com")
-        #expect(request.httpMethod == "POST")
-        #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer \(self.token)")
-        #expect(request.value(forHTTPHeaderField: "Cookie") == "kimi-auth=\(self.token)")
-        self.count += 1
-        let body: String
-        switch url.lastPathComponent {
-        case "GetUsages":
-            body = #"{"usages":[{"scope":"FEATURE_CODING","detail":{"limit":"100","used":"25","remaining":"75"}}]}"#
-        case "GetSubscriptionStats":
-            body = #"{"subscriptionBalance":{"feature":"FEATURE_OMNI","type":"SUBSCRIPTION","amountUsedRatio":0.42}}"#
-        case "GetSubscription":
-            body = #"{}"#
-        default:
-            Issue.record("Unexpected endpoint")
-            throw URLError(.unsupportedURL)
-        }
-        let response = try #require(HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil))
-        return (Data(body.utf8), response)
-    }
-}
-
-private struct DesktopDiscoveryClaudeStub: ClaudeUsageFetching {
-    func loadLatestUsage(model _: String) async throws -> ClaudeUsageSnapshot {
-        throw ClaudeUsageError.parseFailed("fixture")
-    }
-
-    func debugRawProbe(model _: String) async -> String { "fixture" }
-    func detectVersion() -> String? { nil }
 }

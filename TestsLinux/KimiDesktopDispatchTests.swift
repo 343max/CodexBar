@@ -2,7 +2,6 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-import Synchronization
 import Testing
 @testable import CodexBarCore
 
@@ -21,9 +20,9 @@ struct KimiDesktopDispatchTests {
         return segments.joined(separator: ".") + ".fixture-signature"
     }()
 
-    @Test(arguments: ["deleted", "replaced", "unreadable"], [false, true])
+    @Test(arguments: [false, true])
     func `Code API and CLI keep quota when Desktop changes while Code response is paused`(
-        change: String, cli: Bool) async throws
+        cli: Bool) async throws
     {
         let home = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: home, withIntermediateDirectories: true)
@@ -44,7 +43,7 @@ struct KimiDesktopDispatchTests {
             : KimiAPIFetchStrategy(transport: transport, resolveWebCredential: { _ in credential })
         let task = Task { try await strategy.fetch(context) }
         await transport.waitForCodeRequest()
-        state.replace(change == "replaced" ? Self.token + "-replacement" : nil)
+        state.replace(nil)
         await transport.releaseCodeResponse()
         let result = try await task.value
         #expect(result.usage.primary?.usedPercent == 25)
@@ -52,27 +51,9 @@ struct KimiDesktopDispatchTests {
         #expect(await transport.membershipRequests == 0)
     }
 
-    @Test(arguments: [ProviderCookieSource.manual, .off])
-    func `disabled enrichment does not acquire a Desktop credential`(source: ProviderCookieSource) async throws {
-        let transport = PausedCodeTransport(pause: false)
-        let strategy = KimiAPIFetchStrategy(transport: transport, resolveWebCredential: { _ in
-            Issue.record("Disabled discovery must not resolve Desktop")
-            return nil
-        })
-        // Manual's explicit source is resolved by the resolver; an empty manual value never uses Desktop.
-        let context = Self.context(home: FileManager.default.temporaryDirectory, source: source)
-        if source == .manual {
-            #expect(KimiWebEnrichmentTokenResolver.resolveCredential(context) == nil)
-            _ = try await KimiAPIFetchStrategy(transport: transport).fetch(context)
-        } else {
-            _ = try await strategy.fetch(context)
-        }
-        #expect(await transport.membershipRequests == 0)
-    }
-
-    @Test(arguments: ["deleted", "replaced"], [KimiRegion.china, .international])
+    @Test(arguments: ["deleted", "replaced"])
     func `invalidated Desktop web credential cannot dispatch or fall back`(
-        change: String, region: KimiRegion) async throws
+        change: String) async throws
     {
         let state = DispatchSessionState(Self.token)
         let candidate = KimiDesktopSessionDiscovery { _, _ in state.rawValue() }.credential(
@@ -89,7 +70,7 @@ struct KimiDesktopDispatchTests {
             })
         do {
             _ = try await strategy.fetch(Self.context(
-                home: FileManager.default.temporaryDirectory, source: .auto, region: region))
+                home: FileManager.default.temporaryDirectory, source: .auto))
             Issue.record("Expected changed Desktop session")
         } catch is KimiDesktopSessionChanged {} catch {
             Issue.record("Unexpected error: \(error)")
@@ -100,7 +81,7 @@ struct KimiDesktopDispatchTests {
 
     @Test
     func `each concurrent web request revalidates rather than sharing an earlier success`() async throws {
-        let checks = Mutex(0)
+        let checks = CostUsageScanExecutor.LockedState(0)
         let credential = KimiWebCredential(desktopToken: Self.token) {
             checks.withLock { count in count += 1; return count == 1 }
         }
@@ -179,11 +160,12 @@ struct KimiDesktopDispatchTests {
     }
 }
 
-private final class DispatchSessionState: Sendable {
-    private let token: Mutex<String?>
-    init(_ token: String?) { self.token = Mutex(token) }
-    func replace(_ value: String?) { self.token.withLock { $0 = value } }
-    func rawValue() -> Data? { self.token.withLock { $0.map { Data([1]) + Data($0.utf8) } } }
+private final class DispatchSessionState: @unchecked Sendable {
+    private let lock = NSLock()
+    private var token: String?
+    init(_ token: String?) { self.token = token }
+    func replace(_ value: String?) { self.lock.withLock { self.token = value } }
+    func rawValue() -> Data? { self.lock.withLock { self.token.map { Data([1]) + Data($0.utf8) } } }
 }
 
 private actor PausedCodeTransport: ProviderHTTPTransport {

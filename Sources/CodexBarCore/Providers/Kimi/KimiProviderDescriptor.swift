@@ -171,18 +171,11 @@ struct KimiAPIFetchStrategy: ProviderFetchStrategy {
 
     init(
         transport: any ProviderHTTPTransport = ProviderHTTPClient.shared,
-        resolveWebAuthToken: (@Sendable (ProviderFetchContext) -> String?)? = nil,
         resolveWebCredential: @escaping @Sendable (ProviderFetchContext) -> KimiWebCredential? =
             KimiWebEnrichmentTokenResolver.resolveCredential)
     {
         self.transport = transport
-        if let resolveWebAuthToken {
-            self.resolveWebCredential = { context in
-                resolveWebAuthToken(context).map { KimiWebCredential(token: $0) }
-            }
-        } else {
-            self.resolveWebCredential = resolveWebCredential
-        }
+        self.resolveWebCredential = resolveWebCredential
     }
 
     func isAvailable(_ context: ProviderFetchContext) async -> Bool {
@@ -200,7 +193,7 @@ struct KimiAPIFetchStrategy: ProviderFetchStrategy {
             apiKey: apiKey,
             region: context.settings?.kimi?.region ?? .china,
             baseURL: baseURL,
-            webCredential: self.enrichmentToken(context),
+            webCredential: self.enrichmentCredential(context),
             transport: self.transport)
         return self.makeResult(
             usage: snapshot.toUsageSnapshot(),
@@ -211,7 +204,7 @@ struct KimiAPIFetchStrategy: ProviderFetchStrategy {
         KimiCodeAPIFallbackPolicy.shouldFallback(on: error, context: context)
     }
 
-    private func enrichmentToken(_ context: ProviderFetchContext) -> KimiWebCredential? {
+    private func enrichmentCredential(_ context: ProviderFetchContext) -> KimiWebCredential? {
         guard let settings = context.settings?.kimi, settings.cookieSource != .off else { return nil }
         return self.resolveWebCredential(context)
     }
@@ -225,18 +218,11 @@ struct KimiCLICredentialFetchStrategy: ProviderFetchStrategy {
 
     init(
         transport: any ProviderHTTPTransport = ProviderHTTPClient.shared,
-        resolveWebAuthToken: (@Sendable (ProviderFetchContext) -> String?)? = nil,
         resolveWebCredential: @escaping @Sendable (ProviderFetchContext) -> KimiWebCredential? =
             KimiWebEnrichmentTokenResolver.resolveCredential)
     {
         self.transport = transport
-        if let resolveWebAuthToken {
-            self.resolveWebCredential = { context in
-                resolveWebAuthToken(context).map { KimiWebCredential(token: $0) }
-            }
-        } else {
-            self.resolveWebCredential = resolveWebCredential
-        }
+        self.resolveWebCredential = resolveWebCredential
     }
 
     func isAvailable(_ context: ProviderFetchContext) async -> Bool {
@@ -264,7 +250,7 @@ struct KimiCLICredentialFetchStrategy: ProviderFetchStrategy {
                 region: context.settings?.kimi?.region ?? .china,
                 baseURL: baseURL,
                 identityHeaders: identityHeaders,
-                webCredential: self.enrichmentToken(context),
+                webCredential: self.enrichmentCredential(context),
                 transport: self.transport)
         } catch {
             throw Self.normalizedCodeAPIError(error)
@@ -283,17 +269,13 @@ struct KimiCLICredentialFetchStrategy: ProviderFetchStrategy {
         return KimiAPIError.invalidCodeCredential
     }
 
-    private func enrichmentToken(_ context: ProviderFetchContext) -> KimiWebCredential? {
+    private func enrichmentCredential(_ context: ProviderFetchContext) -> KimiWebCredential? {
         guard let settings = context.settings?.kimi, settings.cookieSource != .off else { return nil }
         return self.resolveWebCredential(context)
     }
 }
 
 enum KimiWebEnrichmentTokenResolver {
-    static func resolve(_ context: ProviderFetchContext) -> String? {
-        self.resolveCredential(context)?.token
-    }
-
     static func resolveCredential(_ context: ProviderFetchContext) -> KimiWebCredential? {
         guard let settings = context.settings?.kimi, settings.cookieSource != .off else { return nil }
         if let override = KimiCookieHeader.resolveCookieOverride(context: context) {
@@ -339,8 +321,7 @@ struct KimiWebFetchStrategy: ProviderFetchStrategy {
     private let browserTokens: @Sendable (KimiRegion) -> [String]
 
     init(
-        fetchUsage: (@Sendable (String, KimiRegion) async throws -> KimiUsageSnapshot)? = nil,
-        desktopToken: (@Sendable (KimiRegion) -> String?)? = nil,
+        fetchUsage: (@Sendable (KimiWebCredential, KimiRegion) async throws -> KimiUsageSnapshot)? = nil,
         transport: any ProviderHTTPTransport = ProviderHTTPClient.shared,
         desktopCredential: @escaping @Sendable (KimiRegion) -> KimiWebCredential? = { region in
             #if os(macOS)
@@ -358,18 +339,10 @@ struct KimiWebFetchStrategy: ProviderFetchStrategy {
             #endif
         })
     {
-        if let fetchUsage {
-            self.fetchUsage = { try await fetchUsage($0.token, $1) }
-        } else {
-            self
-                .fetchUsage = { try await KimiUsageFetcher.fetchUsage(credential: $0, region: $1, transport: transport)
-                }
+        self.fetchUsage = fetchUsage ?? {
+            try await KimiUsageFetcher.fetchUsage(credential: $0, region: $1, transport: transport)
         }
-        if let desktopToken {
-            self.desktopCredential = { region in desktopToken(region).map { KimiWebCredential(token: $0) } }
-        } else {
-            self.desktopCredential = desktopCredential
-        }
+        self.desktopCredential = desktopCredential
         self.browserTokens = browserTokens
     }
 
@@ -404,7 +377,7 @@ struct KimiWebFetchStrategy: ProviderFetchStrategy {
             desktopCredential = self.desktopCredential(context.settings?.kimi?.region ?? .china)
         }
         let snapshot = try await Self.fetchWithFallback(
-            desktopToken: desktopCredential?.token,
+            desktopCredential: desktopCredential,
             browserTokens: {
                 if KimiBrowserImportPolicy.allowsImport(context) {
                     return self.browserTokens(context.settings?.kimi?.region ?? .china)
@@ -412,27 +385,23 @@ struct KimiWebFetchStrategy: ProviderFetchStrategy {
                 return []
             },
             environmentToken: Self.resolveToken(environment: context.env),
-            fetchUsage: { token in
-                let credential = desktopCredential.flatMap { $0.token == token ? $0 : nil }
-                    ?? KimiWebCredential(token: token)
-                return try await self.fetchUsage(credential, context.settings?.kimi?.region ?? .china)
-            })
+            fetchUsage: { try await self.fetchUsage($0, context.settings?.kimi?.region ?? .china) })
         return self.makeResult(usage: snapshot.toUsageSnapshot(), sourceLabel: "Kimi web cookie")
     }
 
     static func fetchWithFallback(
-        desktopToken: String?,
+        desktopCredential: KimiWebCredential?,
         browserTokens: () -> [String],
         environmentToken: String?,
-        fetchUsage: (String) async throws -> KimiUsageSnapshot) async throws -> KimiUsageSnapshot
+        fetchUsage: (KimiWebCredential) async throws -> KimiUsageSnapshot) async throws -> KimiUsageSnapshot
     {
         try Task.checkCancellation()
         var seen = Set<String>()
         var invalidToken = false
-        if let desktopToken {
-            seen.insert(desktopToken)
+        if let desktopCredential {
+            seen.insert(desktopCredential.token)
             do {
-                return try await fetchUsage(desktopToken)
+                return try await fetchUsage(desktopCredential)
             } catch KimiAPIError.invalidToken {
                 invalidToken = true
             }
@@ -441,7 +410,7 @@ struct KimiWebFetchStrategy: ProviderFetchStrategy {
         for token in browserTokens() + [environmentToken].compactMap(\.self) where seen.insert(token).inserted {
             try Task.checkCancellation()
             do {
-                return try await fetchUsage(token)
+                return try await fetchUsage(KimiWebCredential(token: token))
             } catch KimiAPIError.invalidToken {
                 invalidToken = true
             }

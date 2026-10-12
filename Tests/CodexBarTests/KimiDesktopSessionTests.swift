@@ -1,10 +1,10 @@
-#if os(macOS) && CODEXBAR_KIMI_DESKTOP_CANDIDATE
+#if os(macOS)
 import Darwin
 import Foundation
 import Testing
 @testable import CodexBarCore
 
-struct KimiDesktopNativeCandidateTests {
+struct KimiDesktopSessionTests {
     @Test(arguments: ["default-temp", "physical-home", "linked-storage", "redirected-after-read"])
     func `native factory reads current session and respects logout`(kind: String) async throws {
         var home = FileManager.default.temporaryDirectory
@@ -36,13 +36,13 @@ struct KimiDesktopNativeCandidateTests {
         }
         let settings = KimiProviderSettings(cookieSource: .auto, manualCookieHeader: nil)
         let now = Date(timeIntervalSince1970: 1_800_000_000)
-        let session = KimiDesktopSessionDiscovery.candidate.accessToken(
+        let session = KimiDesktopSessionDiscovery.live.accessToken(
             settings: settings, homeDirectory: home, now: now)
         let expected =
             "eyJhbGciOiJIUzI1NiJ9.eyJ0eXAiOiJhY2Nlc3MiLCJhdWQiOiJraW1pLmNvbSIsImV4cCI6MTgwMDA" +
             "wMzYwMH0.fixture-signature"
         #expect(session == (kind == "linked-storage" ? nil : expected))
-        let credential = KimiDesktopSessionDiscovery.candidate.credential(
+        let credential = KimiDesktopSessionDiscovery.live.credential(
             settings: settings, homeDirectory: home, now: { now })
         #expect(credential?.token == session)
         let deletion =
@@ -56,7 +56,7 @@ struct KimiDesktopNativeCandidateTests {
             try FileManager.default.moveItem(at: directory, to: target)
             try FileManager.default.createSymbolicLink(at: directory, withDestinationURL: target)
         }
-        #expect(KimiDesktopSessionDiscovery.candidate.accessToken(
+        #expect(KimiDesktopSessionDiscovery.live.accessToken(
             settings: settings, homeDirectory: home, now: now) == nil)
         if let credential {
             var request = URLRequest(url: KimiRegion.china.webBaseURL.appendingPathComponent(

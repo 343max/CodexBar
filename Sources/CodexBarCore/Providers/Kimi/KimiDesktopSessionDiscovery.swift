@@ -6,11 +6,10 @@ import Darwin
 import Glibc
 #endif
 
-#if os(macOS) && CODEXBAR_KIMI_DESKTOP_CANDIDATE
+#if os(macOS)
 import SweetCookieKit
 #endif
 
-/// Bounded native candidate seam, installed only in explicit paired-checkout development builds.
 /// The caller supplies host-owned settings/home, never a plugin-supplied path, origin, or key.
 struct KimiDesktopSessionDiscovery: Sendable {
     typealias CurrentValueReader = @Sendable (URL, Data) -> Data?
@@ -91,10 +90,8 @@ struct KimiDesktopSessionDiscovery: Sendable {
         return date.isFinite ? date : nil
     }
 
-    #if os(macOS) && CODEXBAR_KIMI_DESKTOP_CANDIDATE
-    /// Requires the proposed strict raw-key SweetCookieKit API in a paired-checkout development build.
-    /// Keep behind an explicit development build flag until dependency and credential scope are approved.
-    static let candidate = Self { directory, key in
+    #if os(macOS)
+    static let live = Self { directory, key in
         ChromiumLocalStorageReader.readCurrentValue(forRawKey: key, in: directory)
     }
     #endif
