@@ -809,17 +809,19 @@ struct MenuBarLayoutRendererTests {
         var last = first
         var fastest = Duration.seconds(10)
 
-        // Best-of-three keeps the frozen 50 ms budget while ignoring one-off CI preemption.
+        // Thread CPU time keeps the frozen 50 ms budget on rendering work; wall-clock time failed on
+        // preempted CI runners. Best-of-three still absorbs one-off cache misses.
         for _ in 0..<3 {
-            let startedAt = ContinuousClock.now
+            let startedAt = clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID)
             for _ in 0..<1000 {
                 last = renderer.render(layout: layout, data: data, icon: icon, options: options)
             }
-            fastest = min(fastest, ContinuousClock.now - startedAt)
+            let elapsed = clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID) - startedAt
+            fastest = min(fastest, .nanoseconds(Int64(elapsed)))
         }
 
         #expect(first.attributedTitle === last.attributedTitle)
-        #expect(fastest < .milliseconds(50), "Fastest cached batch took \(fastest)")
+        #expect(fastest < .milliseconds(50), "Fastest cached batch used \(fastest) of thread CPU time")
     }
 
     @Test
