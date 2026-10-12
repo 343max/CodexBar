@@ -246,6 +246,34 @@ struct BrowserCookiePromptContractTests {
     }
 
     @Test
+    func `a sibling no UI failure cannot record an interactive denial`() throws {
+        try self.withFakeKeychain {
+            try KeychainAccessPreflight.withCheckGenericPasswordOverrideForTesting { _, _ in .allowed } operation: {
+                try ProviderInteractionContext.$current.withValue(.userInitiated) {
+                    try BrowserCookieAccessGate.withExplicitRetry {
+                        try BrowserCookieAccessGate.withRecordReadInteractionPolicy {
+                            if BrowserCookieKeychainAccessGate.isUserInteractionDisallowed {
+                                throw BrowserCookieError.accessDenied(browser: .chrome, details: "Synthetic")
+                            }
+                            // Another read fails while this action's interactive read is still pending.
+                            do {
+                                try BrowserCookieAccessGate.withRecordReadInteractionPolicy { () throws in
+                                    throw BrowserCookieError.accessDenied(browser: .chrome, details: "Synthetic")
+                                }
+                            } catch {
+                                BrowserCookieAccessGate.recordIfNeeded(error)
+                            }
+                            #expect(!BrowserCookieAccessGate.hasActiveDenial(for: .chrome))
+                        }
+                        BrowserCookieAccessGate.recordAllowed(for: .chrome)
+                        #expect(!BrowserCookieAccessGate.hasActiveDenial(for: .chrome))
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
     func `concurrent escaped imports share one atomic allowance`() {
         let keychain = FakeKeychain()
         self.withFakeKeychain {

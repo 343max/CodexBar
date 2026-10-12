@@ -24,20 +24,16 @@ public enum BrowserCookieAccessGate {
 
     private final class ExplicitRetryScope: @unchecked Sendable {
         let bypassingCooldown: Bool
-        private let claimedBrowser = OSAllocatedUnfairLock<Browser?>(initialState: nil)
+        private let cookieReadClaimed = OSAllocatedUnfairLock(initialState: false)
 
         init(bypassingCooldown: Bool) {
             self.bypassingCooldown = bypassingCooldown
         }
 
-        func contains(_ browser: Browser) -> Bool {
-            self.claimedBrowser.withLock { $0 == browser }
-        }
-
-        func claimCookieRead(for browser: Browser) -> Bool {
-            self.claimedBrowser.withLock { claimed in
-                guard claimed == nil else { return false }
-                claimed = browser
+        func claimCookieRead() -> Bool {
+            self.cookieReadClaimed.withLock { claimed in
+                guard !claimed else { return false }
+                claimed = true
                 return true
             }
         }
@@ -224,24 +220,23 @@ public enum BrowserCookieAccessGate {
                   !BrowserCookieKeychainAccessGate.isUserInteractionDisallowed,
                   self.shouldAttempt(browser),
                   ProviderInteractionContext.current == .userInitiated,
-                  self.explicitRetryScope?.claimCookieRead(for: browser) == true
+                  self.explicitRetryScope?.claimCookieRead() == true
             else { throw error }
             do {
                 return try operation()
             } catch {
-                self.recordIfNeeded(error)
+                self.recordIfNeeded(error, afterInteractiveRetry: true)
                 throw error
             }
         }
     }
 
-    public static func recordIfNeeded(_ error: Error, now: Date = Date()) {
+    public static func recordIfNeeded(_ error: Error, now: Date = Date(), afterInteractiveRetry: Bool = false) {
         guard let error = error as? BrowserCookieError else { return }
         guard case .accessDenied = error else { return }
         self.recordAccessFailure(for: error.browser)
-        if ProviderInteractionContext.current == .userInitiated,
-           self.explicitRetryScope?.contains(error.browser) == true
-        {
+        // A sibling can share a spent allowance without having made an interactive read.
+        if afterInteractiveRetry {
             self.recordDenied(for: error.browser, now: now)
         }
     }
@@ -463,7 +458,7 @@ public enum BrowserCookieAccessGate {
         try await operation()
     }
 
-    public static func recordIfNeeded(_ error: Error, now: Date = Date()) {}
+    public static func recordIfNeeded(_ error: Error, now: Date = Date(), afterInteractiveRetry: Bool = false) {}
     public static func recordDenied(for browser: Browser, now: Date = Date()) {}
     public static func hasActiveDenial(for browser: Browser, now: Date = Date()) -> Bool {
         false
