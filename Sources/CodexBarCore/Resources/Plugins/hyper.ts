@@ -76,7 +76,8 @@ defineProvider({
     } else {
       try {
         balance = JSON.parse(response.bodyText)?.balance;
-      } catch {
+      } catch (error) {
+        void error;
         throw ctx.fail.parseFailure("Charm Hyper credits response is not valid JSON.");
       }
     }

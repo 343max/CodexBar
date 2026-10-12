@@ -105,7 +105,8 @@ defineProvider({
           "optionalAccess",
           (_3) => _3.balance,
         ]);
-      } catch (e) {
+      } catch (error) {
+        void error;
         throw ctx.fail.parseFailure("Charm Hyper credits response is not valid JSON.");
       }
     }
