@@ -955,7 +955,8 @@ extension CostUsageStoreTests {
 
 extension CostUsageStoreTests {
     @Test(arguments: [
-        "f406dae284de4a55", // Before opt-in request observation; saved rows and cursors are unchanged.
+        "fc698834d6329beb", // Before opt-in request observation; saved rows and cursors are unchanged.
+        "f406dae284de4a55", // Current main before the Auto-review creator-account reparse.
         "379b799bb4b91683", // Current main before on-demand tool inspection.
         "7ce21041b7a36242", // Prior tool inspection build before upstream process cleanup.
         "0d8f9504f8e63d0f", // Current main before on-demand tool inspection.
@@ -1013,6 +1014,7 @@ extension CostUsageStoreTests {
         let fixture = try StoreFixture()
         defer { fixture.remove() }
         #expect(CostUsageStore.compatiblePredecessorParserHashes == [
+            "fc698834d6329beb",
             "f406dae284de4a55",
             "379b799bb4b91683",
             "7ce21041b7a36242",
