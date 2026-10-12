@@ -106,5 +106,6 @@ public enum ProviderManifest {
         SailResearchProviderDescriptor.descriptor,
         SofyaProviderDescriptor.descriptor,
         FalProviderDescriptor.descriptor,
+        FloraProviderDescriptor.descriptor,
     ]
 }

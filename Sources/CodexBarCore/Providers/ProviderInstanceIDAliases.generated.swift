@@ -104,6 +104,7 @@ extension ProviderInstanceID {
     public static let sailresearch = UsageProvider.sailresearch.instanceID
     public static let sofya = UsageProvider.sofya.instanceID
     public static let fal = UsageProvider.fal.instanceID
+    public static let flora = UsageProvider.flora.instanceID
 }
 
 // swiftformat:enable sortDeclarations

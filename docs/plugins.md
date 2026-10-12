@@ -598,3 +598,7 @@ These plugins omit undocumented reset dates, credit-bucket splits, and live requ
 [fal](fal.md) reads the account credit balance from the Platform API billing endpoint with a `Key`-scheme API key
 that holds billing read access. A successful response without the credits block is reported as a temporary provider
 outage rather than a parse failure, so the last good balance stays visible.
+
+[FLORA](flora.md) reads one workspace's available USD balance and UTC month-to-date spend with a bearer API key
+that holds billing permission. Its explicit workspace ID also supports keys whose workspace list is empty
+because they lack read permission. Unavailable spend keeps its documented reason instead of becoming zero.

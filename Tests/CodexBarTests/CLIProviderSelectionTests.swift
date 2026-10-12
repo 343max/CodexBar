@@ -40,6 +40,7 @@ struct CLIProviderSelectionTests {
             "|sailresearch|",
             "|sofya|",
             "|fal|",
+            "|flora|",
             "|both|",
             "|all]",
         ]

@@ -120,6 +120,7 @@ public enum UsageProvider: String, CaseIterable, Sendable, Codable {
     case sailresearch
     case sofya
     case fal
+    case flora
 }
 
 // swiftformat:enable sortDeclarations
