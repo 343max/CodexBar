@@ -174,7 +174,7 @@ See [CLI configuration](docs/cli-configuration.md) for the full flow.
 - [Raycast](docs/raycast.md) — Chrome or manual website session for monthly AI credits and renewal.
 - [Pi](docs/pi.md) — Local Pi/OMP transcripts for token history and API-rate cost estimates.
 - [v0](docs/v0.md) — Platform API key for billing and on-demand balances, plus rate limits.
-- [TypeSafe](docs/typesafe.md) — Chrome or manual console cookies for billing spend, balance, and credit expirations.
+- [TypeSafe](docs/typesafe.md) — Browser or manual console cookies for billing spend, balance, and credit expirations.
 - [GitKraken AI](docs/gitkraken.md) — Account access token for personal weekly credits, reset time, and organization pool sharing.
 - [DevPass](docs/devpass.md) — API key for plan credits, premium weekly allowances, and key-scoped spending.
 - [Atlas Cloud](docs/atlascloud.md) — API key for the account's available USD balance.
