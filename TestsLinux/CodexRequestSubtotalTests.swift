@@ -66,16 +66,26 @@ struct CodexRequestSubtotalTests {
         defer { try? FileManager.default.removeItem(at: root) }
         let vanished = root.appendingPathComponent("vanished.jsonl")
         try Data().write(to: vanished)
+        let content = """
+        {"type":"session_meta","payload":{"id":"fixture-session"}}
+        {"type":"token_usage_record","timestamp":"2026-08-31T12:00:00Z","payload":{\
+        "thread_id":"fixture-session","response_id":"fixture-response","model":"gpt-5",\
+        "usage":{"input_tokens":100,"cached_input_tokens":20,"output_tokens":10},\
+        "thread_token_usage":{"input_tokens":100,"cached_input_tokens":20,"output_tokens":10}}}
+
+        """
+        try Data(content.utf8).write(to: root.appendingPathComponent("available.jsonl"))
         var options = CostUsageScanner.Options()
         options.codexSessionsRoot = root
         var checks = 0
         let ledger = try CodexRequestLedger.load(
             startUnixMs: Self.start, endUnixMs: Self.end, options: options, checkCancellation: {
                 checks += 1
-                // Initial check, one inventory entry, then the per-file check before its first snapshot.
-                if checks == 3 { try FileManager.default.removeItem(at: vanished) }
+                // Remove an inventoried file before scanning the two-file source.
+                if checks == 4 { try FileManager.default.removeItem(at: vanished) }
             })
         #expect(ledger.partial)
+        #expect(try CodexRequestLedger.merge([ledger]).totalTokens == 110)
     }
 
     @Test
