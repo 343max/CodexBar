@@ -357,7 +357,10 @@ extension CostUsageScanner {
         var updated = usage
         updated.days = days
         updated.codexCostCacheComplete = true
-        updated.codexSession = nil
+        // Deduplicated copies drop presentation metadata but retain the leaf's pricing eligibility.
+        updated.codexSession = usage.codexSession?.hasCreatorAccount.map {
+            CostUsageCodexSessionMetadata(hasCreatorAccount: $0)
+        }
         updated.claudeRows = nil
         updated.codexReadRetryBufferPresence = nil
         updated.codexParserRevision = CostUsageFileUsage.currentCodexParserRevision
@@ -1195,6 +1198,16 @@ extension CostUsageScanner {
                 usage,
                 range: range,
                 priorityTurns: priorityTurns)
+        }
+        // Apply the free Auto-review policy to report copies; never overwrite saved request prices.
+        for (path, usage) in reportCache.files where usage.codexSession?.hasCreatorAccount == true {
+            for (index, row) in (usage.codexRows ?? []).enumerated() {
+                guard row.knownCostNanos == nil, row.eventIndex != nil, (row.unpricedTokens ?? 0) == 0,
+                      let timestamp = row.timestampUnixMs, timestamp >= 1_791_270_000_000, // 2026-10-06 00:00 PDT.
+                      CostUsagePricing.normalizeCodexModel(row.model) == "codex-auto-review"
+                else { continue }
+                reportCache.files[path]?.codexRows?[index].knownCostNanos = 0
+            }
         }
         var entries: [CostUsageDailyReport.Entry] = []
         var temporalBuckets = TemporalBuckets()
