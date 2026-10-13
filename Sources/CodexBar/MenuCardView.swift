@@ -344,25 +344,25 @@ private struct UsageMenuCardHeaderView: View {
             let subtitleAlignment: VerticalAlignment = usesErrorLayout ? .top : .firstTextBaseline
             HStack(alignment: subtitleAlignment, spacing: UsageMenuCardLayout.headerColumnSpacing) {
                 if usesErrorLayout {
-                    Text(self.model.subtitleText)
+                    Text(MenuInlineCodeText.attributed(self.model.subtitleText))
                         .font(.footnote)
-                        .lineLimit(4)
+                        .lineLimit(3)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.bottom, 4)
                         .hidden()
                         .overlay(alignment: .topLeading) {
-                            Text(liveSubtitle.text)
+                            Text(MenuInlineCodeText.attributed(liveSubtitle.text))
                                 .font(.footnote)
                                 .foregroundStyle(self.subtitleColor(for: liveSubtitle.style))
-                                .lineLimit(4)
+                                .lineLimit(3)
                                 .multilineTextAlignment(.leading)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         .clipped()
                         .layoutPriority(1)
                 } else {
-                    Text(liveSubtitle.text)
+                    Text(MenuInlineCodeText.attributed(liveSubtitle.text))
                         .font(.footnote)
                         .foregroundStyle(self.subtitleColor(for: liveSubtitle.style))
                         .lineLimit(1)
@@ -377,9 +377,11 @@ private struct UsageMenuCardHeaderView: View {
                         copyText: liveSubtitle.text,
                         isHighlighted: self.isHighlighted,
                         isInteractive: showsCopyButton)
-                        .opacity(showsCopyButton ? 1 : 0)
-                        .allowsHitTesting(showsCopyButton)
-                        .accessibilityHidden(!showsCopyButton)
+                        // Center the padded icon on the first footnote line, independent of wrapping.
+                            .offset(y: -6)
+                            .opacity(showsCopyButton ? 1 : 0)
+                            .allowsHitTesting(showsCopyButton)
+                            .accessibilityHidden(!showsCopyButton)
                 }
                 if let plan = self.model.planText {
                     Group {
@@ -405,6 +407,8 @@ private struct UsageMenuCardHeaderView: View {
                 Text(lastKnownUsageText)
                     .font(.footnote)
                     .foregroundStyle(MenuHighlightStyle.secondary(self.isHighlighted))
+                    .lineLimit(1)
+                    .truncationMode(.tail)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
