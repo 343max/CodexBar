@@ -19,6 +19,8 @@
 
 ### Fixed
 
+- Menu bar: show a single leading provider icon at full size beside two text rows while preserving inline icons for merged providers and tinted layouts (#4454). Thanks @deinspanjer!
+
 - OpenCode Go: cache unchanged local history scans with bounded memory and discover permitted browser sessions in Auto before falling back to marked estimates (#4410, #4445). Thanks @JackHo12 and @djbclark!
 
 - Codex costs: price ChatGPT-created Auto-review requests from October 6 at $0 so they no longer make otherwise complete costs appear as a lower bound; keep their tokens in totals and honor explicit custom prices (#4452, #4453). Thanks @gabrielrojasc!
