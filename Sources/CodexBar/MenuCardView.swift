@@ -338,6 +338,7 @@ private struct UsageMenuCardHeaderView: View {
                     .lineLimit(1).truncationMode(.middle)
             }
             let liveSubtitle = self.liveSubtitle
+            let displayed = liveSubtitle.displayed(reservesStaleRow: self.model.lastKnownUsageText != nil)
             // Keep the geometry AppKit measured for this hosted row. A new error stays one line
             // until the next rebuild; a recovered error keeps its reserved height until then.
             let usesErrorLayout = self.model.subtitleStyle == .error
@@ -352,7 +353,7 @@ private struct UsageMenuCardHeaderView: View {
                         .padding(.bottom, 4)
                         .hidden()
                         .overlay(alignment: .topLeading) {
-                            Text(MenuInlineCodeText.attributed(liveSubtitle.text))
+                            Text(MenuInlineCodeText.attributed(displayed.subtitle))
                                 .font(.footnote)
                                 .foregroundStyle(self.subtitleColor(for: liveSubtitle.style))
                                 .lineLimit(3)
@@ -362,7 +363,7 @@ private struct UsageMenuCardHeaderView: View {
                         .clipped()
                         .layoutPriority(1)
                 } else {
-                    Text(MenuInlineCodeText.attributed(liveSubtitle.text))
+                    Text(MenuInlineCodeText.attributed(displayed.subtitle))
                         .font(.footnote)
                         .foregroundStyle(self.subtitleColor(for: liveSubtitle.style))
                         .lineLimit(1)
@@ -403,8 +404,10 @@ private struct UsageMenuCardHeaderView: View {
                     .layoutPriority(2)
                 }
             }
-            if let lastKnownUsageText = self.model.lastKnownUsageText {
-                Text(lastKnownUsageText)
+            // The reserved row keeps its measured height; a recovery hides it until the next rebuild.
+            if let reservedStaleText = self.model.lastKnownUsageText {
+                Text(displayed.staleRow ?? reservedStaleText)
+                    .opacity(displayed.staleRow == nil ? 0 : 1)
                     .font(.footnote)
                     .foregroundStyle(MenuHighlightStyle.secondary(self.isHighlighted))
                     .lineLimit(1)
@@ -415,7 +418,10 @@ private struct UsageMenuCardHeaderView: View {
     }
 
     private var liveSubtitle: MenuCardLiveSubtitle {
-        let fallback = MenuCardLiveSubtitle(text: self.model.subtitleText, style: self.model.subtitleStyle)
+        let fallback = MenuCardLiveSubtitle(
+            text: self.model.subtitleText,
+            style: self.model.subtitleStyle,
+            lastKnownUsageText: self.model.lastKnownUsageText)
         guard self.model.usesLiveSubtitle else { return fallback }
         return self.refreshMonitor?.subtitle(for: self.model.provider, fallback: fallback) ?? fallback
     }

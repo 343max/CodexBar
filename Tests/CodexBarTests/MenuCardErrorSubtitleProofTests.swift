@@ -47,6 +47,56 @@ struct MenuCardErrorSubtitleProofTests {
         }
     }
 
+    @Test
+    func `live refreshes keep the stale usage notice in sync`() throws {
+        let now = Date()
+        let capturedAt = now.addingTimeInterval(-7 * 24 * 3600)
+        let healthy = try Self.model(now: now, capturedAt: now, error: nil, usesLiveSubtitle: true)
+        let failed = try Self.model(
+            now: now,
+            capturedAt: capturedAt,
+            error: "Synthetic `claude` error.",
+            lastKnownUsageCapturedAt: capturedAt,
+            usesLiveSubtitle: true)
+        let stale = try #require(failed.lastKnownUsageText)
+        var live = healthy
+        let monitor = MenuCardRefreshMonitor(resolveModel: { _ in live }, isProviderRefreshActive: { _ in false })
+
+        // Healthy when hosted, failed while open: no reserved row, so the notice joins the error text.
+        live = failed
+        let opened = monitor.subtitle(for: .claude, fallback: .init(text: "", style: .info))
+        #expect(opened.lastKnownUsageText == stale)
+        let joined = opened.displayed(reservesStaleRow: healthy.lastKnownUsageText != nil)
+        #expect(joined.subtitle == "Synthetic `claude` error. \(stale)")
+        #expect(joined.staleRow == nil)
+
+        // Failed when hosted, recovered while open: the reserved row empties instead of showing old text.
+        live = healthy
+        let recovered = monitor.subtitle(for: .claude, fallback: .init(text: "", style: .info))
+            .displayed(reservesStaleRow: failed.lastKnownUsageText != nil)
+        #expect(recovered.staleRow == nil)
+        #expect(recovered.subtitle == healthy.subtitleText)
+
+        // Failed when hosted and still failed: the reserved row keeps the live notice; the error stays separate.
+        live = failed
+        let still = monitor.subtitle(for: .claude, fallback: .init(text: "", style: .info))
+            .displayed(reservesStaleRow: true)
+        #expect(still.staleRow == stale)
+        #expect(still.subtitle == "Synthetic `claude` error.")
+    }
+
+    @Test
+    func `manual refresh keeps the hosted stale notice while refreshing`() {
+        let monitor = MenuCardRefreshMonitor(resolveModel: { _ in nil }, isProviderRefreshActive: { _ in false })
+        monitor.beginManualRefresh(frozenModels: [:], provider: .claude)
+        let refreshing = monitor.subtitle(
+            for: .claude,
+            fallback: .init(text: "Error", style: .error, lastKnownUsageText: "Showing last-known usage."))
+        #expect(refreshing.style == .loading)
+        #expect(refreshing.lastKnownUsageText == "Showing last-known usage.")
+        monitor.endManualRefresh(for: .claude)
+    }
+
     private static func headerSize(
         _ model: UsageMenuCardView.Model,
         monitor: MenuCardRefreshMonitor) throws -> CGSize
