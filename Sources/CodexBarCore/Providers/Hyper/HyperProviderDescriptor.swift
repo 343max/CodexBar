@@ -1,5 +1,3 @@
-import Foundation
-
 public enum HyperProviderDescriptor {
     public static let descriptor: ProviderDescriptor = Self.spec.makeDescriptor(credentials: Self.credentials)
     public static let spec = PluginProviderSpec(

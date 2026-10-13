@@ -29,6 +29,9 @@ counts remain details rather than appearing as a reset clock. This does not chan
 
 CodexBar imports cookies in the shared supported-browser order, including Safari, Chrome variants, Firefox, Zen, Edge, Arc, and Brave. The shared access gate bounds Keychain prompts. Use **Manual** with a pasted `Cookie:` header when browser import is unavailable.
 
+Automatic refresh validates each browser's sessions before reading the next browser. A working session stops
+traversal; missing or rejected sessions continue in the order above.
+
 Safari cookie import may require granting CodexBar Full Disk Access in **System Settings → Privacy & Security**.
 
 ### Manual cookie import (optional)

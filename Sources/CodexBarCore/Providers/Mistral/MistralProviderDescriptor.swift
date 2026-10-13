@@ -143,9 +143,9 @@ struct MistralWebFetchStrategy: ProviderFetchStrategy {
             } else {
                 Set([session.sourceLabel].compactMap(\.self))
             }
-            let sessions: [MistralCookieImporter.SessionInfo]
+            let sessions: AnySequence<MistralCookieImporter.SessionInfo>
             do {
-                sessions = try MistralCookieImporter.importSessions(
+                sessions = try MistralCookieImporter.sessionCandidates(
                     browserDetection: context.browserDetection,
                     excludingSourceLabels: excludedSourceLabels)
             } catch MistralCookieImportError.noCookies {
@@ -169,7 +169,7 @@ struct MistralWebFetchStrategy: ProviderFetchStrategy {
 
     #if os(macOS)
     static func fetchUsageFromSessions(
-        _ sessions: [MistralCookieImporter.SessionInfo],
+        _ sessions: some Sequence<MistralCookieImporter.SessionInfo>,
         timeout: TimeInterval,
         transport: ProviderHTTPTransport = ProviderHTTPClient.shared) async throws
         -> (usage: UsageSnapshot, session: MistralCookieImporter.SessionInfo)

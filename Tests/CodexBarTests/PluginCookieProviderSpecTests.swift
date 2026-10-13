@@ -1,52 +1,11 @@
-import AppKit
+import Foundation
 import SweetCookieKit
-import SwiftUI
 import Testing
 @testable import CodexBar
 @testable import CodexBarCore
 
 @MainActor
 struct PluginCookieProviderSpecTests {
-    @Test
-    func `render synthetic cookie guidance when requested`() throws {
-        guard let directory = ProcessInfo.processInfo.environment["CODEXBAR_BROWSER_PROOF_DIR"] else { return }
-        let fixture = try ProviderSettingsDescriptorTests().makeSettingsFixture(suite: #function)
-        fixture.settings.debugDisableKeychainAccess = false
-        let implementation = try #require(ProviderCatalog.implementation(for: .raycast))
-        let picker = try #require(implementation.settingsPickers(
-            context: fixture.settingsContext(provider: .raycast)).first)
-        let before = ProviderSettingsPickerDescriptor(
-            id: picker.id,
-            title: picker.title,
-            subtitle: "Automatic imports Chrome cookies from www.raycast.com. " +
-                "Supported browsers: Chrome. Use Manual for other browsers.",
-            binding: picker.binding,
-            options: picker.options,
-            isVisible: nil,
-            onChange: nil)
-        let output = URL(fileURLWithPath: directory, isDirectory: true)
-        try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
-        for (name, descriptor) in [("before", before), ("after", picker)] {
-            let view = NSHostingView(rootView: VStack(alignment: .leading, spacing: 12) {
-                Text("Raycast · synthetic cookie settings").font(.headline).padding(.horizontal, 20)
-                Form {
-                    Section("Connection") { ProviderSettingsPickerRowView(picker: descriptor) }
-                }.formStyle(.grouped).frame(height: 300)
-            }.frame(width: 620, height: 360).background(Color(nsColor: .windowBackgroundColor)))
-            view.frame = NSRect(x: 0, y: 0, width: 620, height: 360)
-            let window = NSWindow(contentRect: view.frame, styleMask: [.borderless], backing: .buffered, defer: false)
-            window.appearance = NSAppearance(named: .aqua)
-            window.contentView = view
-            defer { window.contentView = nil }
-            window.layoutIfNeeded()
-            view.layoutSubtreeIfNeeded()
-            let bitmap = try #require(view.bitmapImageRepForCachingDisplay(in: view.bounds))
-            view.cacheDisplay(in: view.bounds, to: bitmap)
-            try #require(bitmap.representation(using: .png, properties: [:]))
-                .write(to: output.appendingPathComponent("cookies-\(name).png"))
-        }
-    }
-
     @Test
     func `automatic cookie guidance names the provider browser policy and manual alternative`() throws {
         let fixture = try ProviderSettingsDescriptorTests().makeSettingsFixture(suite: #function)

@@ -632,7 +632,7 @@ struct GrokWebFetchStrategy: ProviderFetchStrategy {
            Self.canImportBrowserCookies(runtime: context.runtime, env: context.env)
         {
             do {
-                let sessions = try GrokCookieImporter.importSessions(
+                let sessions = try GrokCookieImporter.sessionCandidates(
                     browserDetection: context.browserDetection)
                 let (snapshot, sourceLabel, cookieHeader) = try await Self.fetchFirstValidCookieSession(
                     sessions,
@@ -665,7 +665,7 @@ struct GrokWebFetchStrategy: ProviderFetchStrategy {
 
     #if os(macOS)
     static func fetchFirstValidCookieSession(
-        _ sessions: [GrokCookieImporter.SessionInfo],
+        _ sessions: some Sequence<GrokCookieImporter.SessionInfo>,
         credentials: GrokCredentials? = nil,
         cacheObservation: CookieHeaderCache.ConditionalMutationObservation? = nil,
         fetch: ((String, GrokCredentials?) async throws -> GrokWebBillingSnapshot)? = nil) async throws

@@ -63,7 +63,7 @@ struct GrokProviderImplementation: ProviderImplementation {
                 allowsOff: true,
                 subtitles: {
                     .init(
-                        auto: L("Automatic imports grok.com cookies from your browser."),
+                        auto: L("Automatic imports browser cookies."),
                         manual: L("Paste a Cookie header from %@.", "a grok.com request"),
                         off: L("%@ cookies are disabled.", "Grok"))
                 },

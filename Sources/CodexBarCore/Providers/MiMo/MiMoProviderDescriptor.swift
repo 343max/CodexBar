@@ -149,14 +149,7 @@ struct MiMoWebFetchStrategy: ProviderFetchStrategy {
             }
         }
 
-        let sessions = try MiMoCookieImporter.importSessions(browserDetection: context.browserDetection)
-        guard !sessions.isEmpty else {
-            if let lastError {
-                throw lastError
-            }
-            throw MiMoSettingsError.missingCookie()
-        }
-
+        let sessions = try MiMoCookieImporter.sessionCandidates(browserDetection: context.browserDetection)
         for session in sessions {
             do {
                 let snapshot = try await MiMoUsageFetcher.fetchUsage(
