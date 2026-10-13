@@ -323,7 +323,7 @@ class ProcessCleanupTests(unittest.TestCase):
                     else:
                         # Successful fixtures include interpreter startup and ownership polling;
                         # exact deadline behavior is covered separately with a virtual clock.
-                        timeout = 5 if expected in (0, 23) else 2
+                        timeout = 15 if expected in (0, 23) else 2
                         self.assertEqual(runner.run_command(command, timeout=timeout), expected)
                 elapsed = time.monotonic() - started
                 self.assertTrue(acknowledged, "fixture identities were not observed before drain")
@@ -1134,7 +1134,7 @@ class AnchorSemanticsTests(unittest.TestCase):
             process = subprocess.Popen([sys.executable, __file__, "--fixture", "success", directory],
                                        start_new_session=True)
             try:
-                wait_until(lambda: (root / "ready").exists())
+                wait_until(lambda: (root / "ready").exists(), timeout=10)
                 self.assertIsNone(runner.unreaped_exit_code(process))
                 identity = runner.test_process(process.pid)
                 self.assertIsNotNone(identity)
