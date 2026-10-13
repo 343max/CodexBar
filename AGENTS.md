@@ -20,8 +20,8 @@
 - Add/extend XCTest cases under `Tests/CodexBarTests/*Tests.swift` (`FeatureNameTests` with `test_caseDescription` methods).
 - Swift Testing: prefer backticked sentence names; no camelCase.
 - Model names in tests/code: released models or clearly fictitious names only; never expose unreleased names.
-- Always run `make test` before handoff; add focused `swift test --filter ...` runs for parser/provider fixes when possible.
-- After any code change, run `make check` and fix all reported format/lint issues before handoff.
+- Iterate with focused runs (`make test-fast FILTER='SuiteName'` or `swift test --filter ...`) covering the touched suites. For a local full run use `./Scripts/test.sh --direct-workers 8` (parallel isolated groups, ~10 min) instead of serial `make test` (~45 min). The full suite is not a handoff gate: run it in the background or leave it to PR CI; never block on it in the foreground.
+- While iterating, format/lint only touched files; run `make check` once before commit/handoff and fix reported issues.
 - Prefer CLI/focused tests over app-bundle live tests when behavior can be verified without relaunching CodexBar.
 - Never run tests/checks or ad-hoc validation that can display macOS Keychain prompts. Live provider probes, browser-cookie imports, `codexbar usage` against real accounts, and real SecItem reads must be explicitly requested; otherwise use parser tests, stubs, test stores, or `KeychainNoUIQuery`.
 - App-group migration tests must inject dictionary-backed defaults, both snapshot URLs, a synthetic home, and a contained recording FileManager. UUID defaults suites and Keychain isolation flags do not isolate defaults search domains or filesystem access. Ordinary SettingsStore tests must not discover shared defaults or run app-group migration.
@@ -30,7 +30,7 @@
 ## CI Efficiency
 - Follow [the direct-test and SwiftPM cache contracts](docs/DEVELOPMENT.md#macos-direct-test-groups) when changing CI or test execution; preserve full test inventory, deadlines, failure handling, cache verification, and clean fallback.
 - Reuse incremental builds during iteration; never copy compiled products between worktrees. Clean `.build` for diagnosed contamination, a cold-build comparison, or maintainer-requested cleanup.
-- Run focused tests during development and all required checks on the final code. Repeat successful full checks when relevant inputs or the environment change, a failure or unresolved concern requires it, or a maintainer requests it; do not repeat them solely to prepare a report.
+- Run focused tests during development; the final code needs focused tests plus `make check`, with the full suite from PR CI or a background run. Repeat successful full checks when relevant inputs or the environment change, a failure or unresolved concern requires it, or a maintainer requests it; do not repeat them solely to prepare a report.
 
 ## Commit & PR Guidelines
 - Commit messages: short imperative clauses (e.g., “Improve usage probe”, “Fix icon dimming”); keep commits scoped.

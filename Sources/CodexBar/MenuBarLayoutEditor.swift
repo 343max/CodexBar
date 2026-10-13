@@ -57,6 +57,8 @@ enum MenuBarLayoutPaletteTokens {
                 .progressBar(window: .weekly),
                 .progressBar(window: .scopedWeekly),
                 .progressBar(window: .automatic),
+                .tokensPerMinute,
+                .tokensSparkline,
                 .pace(window: .session),
                 .pace(window: .weekly),
                 .pace(window: .automatic),
@@ -93,6 +95,8 @@ enum MenuBarLayoutPaletteTokens {
     ] + Self.time + [
         .balance,
         .costToday,
+        .tokensPerMinute,
+        .tokensSparkline,
         .costWindow,
         .separatorDot,
         .space,
@@ -631,6 +635,10 @@ struct MenuBarLayoutEditor: View {
                         activate: {
                             self.write(MenuBarLayoutEditorMutations.append(token, to: self.layout))
                         })
+                        .help(token == .tokensPerMinute
+                            ? L("Latest tokens per minute (OpenAI Admin API)")
+                            : token == .tokensSparkline
+                            ? L("Last hour of tokens per minute (OpenAI Admin API)") : "")
                 }
                 if group.includesLineBreak {
                     MenuBarLayoutEditorChip(
@@ -1004,6 +1012,10 @@ struct MenuBarLayoutPreview: View {
             runsOut: L("Runs out in %@", "1d 16h"),
             // Provider-specific by design: only OpenRouter previews the Balance palette token.
             balance: provider == .openrouter ? "$12.34" : nil,
+            tokensPerMinute: 49_000_000,
+            tokensSparkline: .init(
+                values: [30, 65, 40, 50, 35, 80, 45, 60, 151, 55, 70, 45, 60, 49].map { $0 * 1_000_000 },
+                latest: 49_000_000),
             costToday: "$1.25",
             cost30d: "$20.00",
             metrics: MenuBarLayoutRenderMetrics(
@@ -1012,6 +1024,7 @@ struct MenuBarLayoutPreview: View {
                 automaticPaceDelta: samplePaceDelta(session),
                 // 1d 16h == 40h, matching the sample `runsOut` text above.
                 runsOutMinutes: 2400,
+                // Provider-specific by design: Balance predicates mirror the OpenRouter preview amounts.
                 balanceRemainingUSD: provider == .openrouter ? 12.34 : nil,
                 balanceUsedUSD: provider == .openrouter ? 7.66 : nil,
                 costTodayUSD: 1.25,
@@ -1153,6 +1166,8 @@ extension MenuBarLayoutToken {
         case .runsOut: L("menu_bar_layout_token_runs_out")
         case .runsOutCompact: "\(L("menu_bar_layout_token_runs_out")) (compact)"
         case .balance: L("Balance")
+        case .tokensPerMinute: L("Tokens / min")
+        case .tokensSparkline: L("Tokens / min graph")
         case .costToday: L("menu_bar_layout_token_cost_today")
         case .costWindow: L("menu_bar_layout_token_cost_window")
         case .separatorDot: "·"
@@ -1201,6 +1216,8 @@ extension MenuBarLayoutToken {
         case .resetAbsolute, .windowResetAbsolute: "clock"
         case .runsOut, .runsOutCompact: "hourglass.bottomhalf.filled"
         case .balance: "creditcard"
+        case .tokensPerMinute: "speedometer"
+        case .tokensSparkline: "chart.bar.xaxis"
         case .costToday: "dollarsign.circle"
         case .costWindow: "calendar.badge.clock"
         case .separatorDot: "smallcircle.filled.circle"

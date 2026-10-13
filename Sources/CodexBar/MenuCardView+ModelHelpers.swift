@@ -347,6 +347,7 @@ extension UsageMenuCardView.Model {
             self.providerDetails.isEmpty &&
             self.openAIAPIUsage == nil &&
             self.inlineUsageDashboard == nil &&
+            self.throughput == nil &&
             self.limitResetCredits == nil &&
             self.cloudCredits == nil &&
             self.creditsRemaining == nil &&
@@ -361,6 +362,7 @@ extension UsageMenuCardView.Model {
             !self.providerDetails.isEmpty ||
             self.openAIAPIUsage != nil ||
             self.inlineUsageDashboard != nil ||
+            self.throughput != nil ||
             self.limitResetCredits != nil ||
             self.cloudCredits != nil ||
             self.placeholder != nil
@@ -372,6 +374,7 @@ extension UsageMenuCardView.Model {
             !self.usageNotes.isEmpty ||
             !self.providerDetails.isEmpty ||
             self.inlineUsageDashboard != nil ||
+            self.throughput != nil ||
             self.limitResetCredits != nil
     }
 
@@ -381,6 +384,7 @@ extension UsageMenuCardView.Model {
 
     var creditsOnlyInlineUsageDashboard: Bool {
         self.creditsText != nil &&
+            self.throughput == nil &&
             self.inlineUsageDashboard != nil &&
             self.metrics.isEmpty &&
             self.usageNotes.isEmpty &&
@@ -424,6 +428,9 @@ extension UsageMenuCardView.Model {
               self.accountIdentityFingerprint == candidate.accountIdentityFingerprint,
               !includeMetrics || self.metrics.count == candidate.metrics.count,
               self.usageNotes == candidate.usageNotes,
+              self.throughput?.summaryLine == candidate.throughput?.summaryLine,
+              self.throughput?.presentation?.action == candidate.throughput?.presentation?.action,
+              self.throughput?.presentation?.limitLine == candidate.throughput?.presentation?.limitLine,
               self.providerDetails == candidate.providerDetails,
               (self.openAIAPIUsage == nil) == (candidate.openAIAPIUsage == nil),
               self.creditsShowProgress == candidate.creditsShowProgress,

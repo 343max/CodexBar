@@ -147,6 +147,14 @@ All provider fields are optional unless noted.
 - `region`: provider-specific region (e.g. `zai`, `minimax`). Kimi accepts `china` (default, `kimi.com`) or `international` (`kimi.ai`); see [Kimi setup](kimi.md). This selects API, web, cookie discovery, and dashboard hosts. Automatic CLI credential reuse is limited to China because the credential file has no issuing-host metadata.
 - `workspaceID`: provider-specific workspace/deployment/project ID (e.g. Azure OpenAI deployment, OpenAI API project,
   `opencode`, Notion space).
+- `modelRateLimits`: optional per-model organization rate limits for the provider-level key (`apiKey` or environment
+  key), currently used by OpenAI Live Usage. Token accounts never inherit these limits.
+  Each row has `model`, positive integer `tokensPerMinute`, and optional positive integer `requestsPerMinute`.
+  Model IDs are trimmed; empty IDs and non-positive TPM rows are dropped, non-positive RPM becomes absent,
+  and the last valid row for a duplicate ID wins. Empty arrays are omitted when encoding. Only these manual limits drive
+  organization utilization; API project caps are separate context. Exact IDs match first, then the longest model
+  ID followed by a hyphen (covering dated snapshots).
+  Example: `"modelRateLimits": [{"model": "gpt-5", "tokensPerMinute": 40000000, "requestsPerMinute": 15000}]`.
 - `tokenAccounts`: multi-account tokens for providers in `TokenAccountSupportCatalog`.
 - `claudeSwapEnabled`: allow the Claude provider to read account usage from claude-swap.
 - `claudeSwapExecutablePath`: path to the `cswap` executable.
@@ -232,6 +240,29 @@ and never paste real cookie values or readable DevTools screenshots into public 
       "lastUsed": 1735220000
     }
   ]
+}
+```
+
+Each OpenAI token account can store `tokenAccounts.accounts[].modelRateLimits`: omitted means not set; `[]` means
+explicitly no limits (kept so clears sync and older CodexBar versions cannot erase limits during sync). Rows use
+the same validation as provider-level `modelRateLimits`. Limits belong only to that account; there is no
+inheritance. Settings edits the selected account's limits, and switching accounts switches the list.
+
+```json
+{
+  "id": "openai",
+  "modelRateLimits": [{"model": "gpt-5", "tokensPerMinute": 40000000}],
+  "tokenAccounts": {
+    "version": 1,
+    "activeIndex": 0,
+    "accounts": [{
+      "id": "00000000-0000-0000-0000-000000000001",
+      "label": "Other organization",
+      "token": "<OPENAI_ADMIN_KEY>",
+      "addedAt": 1735123456,
+      "modelRateLimits": [{"model": "gpt-5", "tokensPerMinute": 80000000}]
+    }]
+  }
 }
 ```
 
@@ -321,6 +352,8 @@ iCloud projection syncs onward; reset notifications, the additional menu setting
 unless explicitly exported and imported. Import does not modify `config.json` or iCloud's remote-update suppression.
 
 ### Menu bar controls
+
+The layout editor includes an optional **Tokens / min** value token (for example `49M/min`) using the provider’s latest reported complete minute. OpenAI supplies it through the **Tokens per minute** provider setting. It uses the same unavailable placeholder as other value tokens when no throughput is available. The optional **Tokens / min graph** token shows the last hour as a compact graph, using the maximum minute in each column and excluding minutes that are still reporting. Drag either token into your layout to enable it; default layouts include neither. The graph uses the status item’s own provider data and the standard unavailable placeholder when there are no reported minutes.
 
 Switching from **Icon & percent** back to **Meters** or **Critters** redraws the selected style immediately, even when usage has not changed.
 
