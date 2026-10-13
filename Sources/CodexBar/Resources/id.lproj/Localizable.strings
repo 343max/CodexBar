@@ -1554,6 +1554,7 @@
 "5-hour usage" = "Penggunaan 5 jam";
 "7-day usage" = "Penggunaan 7 hari";
 "Total usage" = "Total penggunaan";
+"claude_oauth_keychain_access_disabled" = "Akses Keychain dinonaktifkan, sehingga CodexBar tidak dapat membaca informasi masuk Claude.";
 "claude_oauth_keychain_access_revoked" = "Akses Rantai Kunci Claude dicabut akibat rotasi token Claude Code. Klik Segarkan untuk memberikan akses lagi, atau ubah sumber penggunaan Claude ke CLI/Web.";
 "claude_showing_last_known_usage" = "Menampilkan penggunaan terakhir yang diketahui, diambil %@.";
 "claude_limited_usage_detail" = "Rincian penggunaan terbatas";
@@ -2519,6 +2520,10 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Wajib. ID ws_… workspace yang dapat ditagih oleh kunci. Atau atur FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Plan renewal / expiry" = "Perpanjangan / kedaluwarsa paket";
+
+"Hidden by the global optional credits, spending & billing setting." = "Disembunyikan oleh pengaturan global kredit opsional, pengeluaran, dan penagihan.";
 
 "Provider order updated" = "Urutan penyedia diperbarui";
 "Undo" = "Urungkan";

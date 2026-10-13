@@ -105,8 +105,43 @@ struct MenuBarLayoutRendererTests {
             icon: nil,
             options: self.options())
 
-        #expect(output.attributedTitle.string == "10%\u{2009}9%\u{2009}17%")
+        #expect(output.attributedTitle.string == "T 10%\u{2009}C 9%\u{2009}TP 17%")
         #expect(output.accessibilityLabel == "Total 10%, Cursor 9%, Third Party 17%")
+    }
+
+    @Test
+    func `Cursor semantic percentages reuse explicit lane tags`() {
+        let renderer = MenuBarLayoutRenderer()
+        let expected: [(PercentWindow, String, String)] = [
+            (.session, "T 25%", "Total 25%"),
+            (.weekly, "C 60%", "Cursor 60%"),
+            (.automatic, "50%", "\(L("Usage")) 50%"),
+        ]
+        for (window, value, accessibility) in expected {
+            let output = renderer.render(
+                layout: MenuBarLayout(lines: [[.percent(window: window)]]),
+                data: self.data(provider: .cursor),
+                icon: nil,
+                options: self.options())
+            #expect(output.attributedTitle.string == value)
+            // Cursor's lanes reset monthly, so the tagged weekly slot must not be announced as "Weekly".
+            #expect(output.accessibilityLabel == accessibility)
+        }
+    }
+
+    @Test
+    func `providers without short labels keep bare lane percentages`() {
+        let renderer = MenuBarLayoutRenderer()
+        for descriptor in ProviderDescriptorRegistry.all where descriptor.menuBarMetrics.laneShortLabels.isEmpty {
+            let data = self.data(provider: descriptor.id)
+            let output = renderer.render(
+                layout: MenuBarLayout(lines: [[.lanePercent(lane: .primary), .lanePercent(lane: .secondary)]]),
+                data: data,
+                icon: nil,
+                options: self.options())
+            #expect(output.attributedTitle.string == "10%\u{2009}9%")
+            #expect(output.accessibilityLabel == "\(data.laneLabels.primary) 10%, \(data.laneLabels.secondary) 9%")
+        }
     }
 
     @Test
@@ -128,8 +163,61 @@ struct MenuBarLayoutRendererTests {
             icon: nil,
             options: self.options())
 
-        #expect(output.attributedTitle.string == "10%\u{2009}9%\u{2009}17%\u{2009}Grok Bot 42%")
+        #expect(output.attributedTitle.string == "T 10%\u{2009}C 9%\u{2009}TP 17%\u{2009}GB 42%")
         #expect(output.accessibilityLabel == "Total 10%, Cursor 9%, Third Party 17%, Grok Bot 42%")
+    }
+
+    @Test
+    func `Cursor semantic tokens follow real resolver windows`() {
+        // Cursor's resolver leaves session empty and backs weekly with the secondary (monthly Cursor) lane.
+        let renderer = MenuBarLayoutRenderer()
+        let data = self.data(provider: .cursor, omitsSession: true, weeklyUsedPercent: 9)
+        let expected: [(PercentWindow, String, String)] = [
+            (.session, "T –", "Total unavailable"),
+            (.weekly, "C 9%", "Cursor 9%"),
+        ]
+        for (window, value, accessibility) in expected {
+            let output = renderer.render(
+                layout: MenuBarLayout(lines: [[.percent(window: window)]]),
+                data: data,
+                icon: nil,
+                options: self.options())
+            #expect(output.attributedTitle.string == value)
+            #expect(output.accessibilityLabel == accessibility)
+        }
+
+        let reset = renderer.render(
+            layout: MenuBarLayout(lines: [[.windowResetCountdown(window: .weekly)]]),
+            data: data,
+            icon: nil,
+            options: self.options())
+        #expect(reset.accessibilityLabel.hasPrefix("Cursor: "))
+
+        let bar = renderer.render(
+            layout: MenuBarLayout(lines: [[.progressBar(window: .weekly)]]),
+            data: data,
+            icon: nil,
+            options: self.options())
+        #expect(bar.attributedTitle.string.hasPrefix("C "))
+        #expect(bar.accessibilityLabel == "Cursor 9%")
+    }
+
+    @Test
+    func `named extras without short labels keep their full title`() {
+        let id = "antigravity-quota-summary-gemini-weekly"
+        let output = MenuBarLayoutRenderer().render(
+            layout: MenuBarLayout(lines: [[.extraPercent(id: id)]]),
+            data: self.data(
+                provider: .antigravity,
+                extraRateWindows: [MenuBarLayoutRenderExtra(NamedRateWindow(
+                    id: id,
+                    title: "Gemini weekly",
+                    window: RateWindow(usedPercent: 30, windowMinutes: nil, resetsAt: nil, resetDescription: nil)))]),
+            icon: nil,
+            options: self.options())
+
+        #expect(output.attributedTitle.string == "Gemini weekly 30%")
+        #expect(output.accessibilityLabel == "Gemini weekly 30%")
     }
 
     @Test
@@ -141,7 +229,7 @@ struct MenuBarLayoutRendererTests {
             icon: nil,
             options: self.options())
 
-        #expect(output.attributedTitle.string == "10%\u{2009}Grok Bot –")
+        #expect(output.attributedTitle.string == "T 10%\u{2009}GB –")
         #expect(output.accessibilityLabel == "Total 10%, Grok Bot unavailable")
     }
 
@@ -159,7 +247,7 @@ struct MenuBarLayoutRendererTests {
                 data: self.data(provider: .cursor, extraRateWindows: [extra]),
                 icon: nil,
                 options: self.options(showUsed: false))
-            #expect(output.attributedTitle.string == "90%\nGrok Bot \(Int(100 - used))%")
+            #expect(output.attributedTitle.string == "T 90%\nGB \(Int(100 - used))%")
             let other = renderer.render(
                 layout: layout,
                 data: self.data(provider: .codex, extraRateWindows: [extra]),
@@ -169,7 +257,7 @@ struct MenuBarLayoutRendererTests {
         }
         let missing = renderer.render(
             layout: layout, data: self.data(provider: .cursor), icon: nil, options: self.options())
-        #expect(missing.attributedTitle.string == "10%\nGrok Bot –")
+        #expect(missing.attributedTitle.string == "T 10%\nGB –")
     }
 
     @Test(arguments: [0.0, 42.0])
@@ -187,47 +275,8 @@ struct MenuBarLayoutRendererTests {
                 data: self.data(provider: .cursor, extraRateWindows: [extra]),
                 icon: nil,
                 options: self.options())
-            #expect(rendered.attributedTitle.string == (known ? "Grok Bot \(Int(used))%" : "Grok Bot –"))
-        }
-    }
-
-    @Test
-    func `synthetic Grok Bot before and after proof`() throws {
-        guard let directory = ProcessInfo.processInfo.environment["CODEXBAR_GROK_LAYOUT_SCREENSHOT_DIR"] else { return }
-        let extra = MenuBarLayoutRenderExtra(NamedRateWindow(
-            id: "cursor-grok-bot",
-            title: "Grok Bot",
-            window: RateWindow(usedPercent: 42, windowMinutes: nil, resetsAt: nil, resetDescription: nil)))
-        for includeExtra in [false, true] {
-            let name = includeExtra ? "after" : "before"
-            let tokens: [MenuBarLayoutToken] = [
-                .lanePercent(lane: .primary), .lanePercent(lane: .secondary), .lanePercent(lane: .tertiary),
-            ] + (includeExtra ? [.extraPercent(id: "cursor-grok-bot")] : [])
-            let rendered = MenuBarLayoutRenderer().render(
-                layout: MenuBarLayout(lines: [tokens]),
-                data: self.data(provider: .cursor, extraRateWindows: [extra]),
-                icon: nil,
-                options: self.options())
-            let image = NSImage(size: NSSize(width: 480, height: 110))
-            image.lockFocus()
-            NSColor.white.setFill()
-            NSRect(x: 0, y: 0, width: 480, height: 110).fill()
-            let caption = "\(name.capitalized): Cursor \(includeExtra ? "+ Grok Bot" : "standard lanes")"
-                + " · Synthetic data"
-            (caption as NSString).draw(at: NSPoint(x: 16, y: 80), withAttributes: [
-                .font: NSFont.systemFont(ofSize: 14), .foregroundColor: NSColor.black,
-            ])
-            let transform = NSAffineTransform()
-            transform.scale(by: 2)
-            transform.concat()
-            let text = NSMutableAttributedString(attributedString: rendered.attributedTitle)
-            text.addAttribute(.foregroundColor, value: NSColor.black, range: NSRange(location: 0, length: text.length))
-            text.draw(at: NSPoint(x: 8, y: 16))
-            image.unlockFocus()
-            let tiff = try #require(image.tiffRepresentation)
-            let bitmap = try #require(NSBitmapImageRep(data: tiff))
-            let png = try #require(bitmap.representation(using: .png, properties: [:]))
-            try png.write(to: URL(fileURLWithPath: directory).appendingPathComponent("grok-layout-\(name).png"))
+            #expect(rendered.attributedTitle.string == (known ? "GB \(Int(used))%" : "GB –"))
+            #expect(rendered.accessibilityLabel == (known ? "Grok Bot \(Int(used))%" : "Grok Bot unavailable"))
         }
     }
 
@@ -1989,6 +2038,8 @@ struct MenuBarLayoutRendererTests {
         automaticBalanceFallback: String? = nil,
         accountLabel: String? = "user@example.com",
         extraRateWindows: [MenuBarLayoutRenderExtra] = [],
+        omitsSession: Bool = false,
+        weeklyUsedPercent: Double = 60,
         metrics: MenuBarLayoutRenderMetrics? = nil)
         -> MenuBarLayoutRenderData
     {
@@ -2014,13 +2065,13 @@ struct MenuBarLayoutRendererTests {
                 resetsAt: nil,
                 resetDescription: nil)),
             extraRateWindows: extraRateWindows,
-            session: MenuBarLayoutRenderWindow(RateWindow(
+            session: omitsSession ? nil : MenuBarLayoutRenderWindow(RateWindow(
                 usedPercent: 25,
                 windowMinutes: 300,
                 resetsAt: self.now.addingTimeInterval(60 * 60),
                 resetDescription: nil)),
             weekly: MenuBarLayoutRenderWindow(RateWindow(
-                usedPercent: 60,
+                usedPercent: weeklyUsedPercent,
                 windowMinutes: 10080,
                 resetsAt: self.now.addingTimeInterval(3 * 24 * 60 * 60),
                 resetDescription: nil)),
