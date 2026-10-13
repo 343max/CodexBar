@@ -188,6 +188,8 @@ public struct CostUsageTokenSnapshot: Sendable, Equatable {
     /// non-reversible fingerprint, not account identity, and is not emitted by CLI payloads.
     public let credentialScopeFingerprint: String?
     public let daily: [CostUsageDailyReport.Entry]
+    /// Whether this read produced the complete project and session projection, including a confirmed empty result.
+    public let detailsAreComplete: Bool
     public let projects: [CostUsageProjectBreakdown]
     public let sessions: [CostUsageSessionBreakdown]
     /// Hour-aligned buckets for spend charts and legacy quota history.
@@ -215,6 +217,7 @@ public struct CostUsageTokenSnapshot: Sendable, Equatable {
         daily: [CostUsageDailyReport.Entry],
         projects: [CostUsageProjectBreakdown] = [],
         sessions: [CostUsageSessionBreakdown] = [],
+        detailsAreComplete: Bool = false,
         hourly: [CostUsageHourlyEntry] = [],
         quotaSlices: [CostUsageTimedEntry] = [],
         updatedAt: Date)
@@ -235,6 +238,7 @@ public struct CostUsageTokenSnapshot: Sendable, Equatable {
         self.costProvenance = costProvenance
         self.credentialScopeFingerprint = credentialScopeFingerprint
         self.daily = daily
+        self.detailsAreComplete = detailsAreComplete
         self.projects = projects
         self.sessions = sessions
         self.hourly = hourly

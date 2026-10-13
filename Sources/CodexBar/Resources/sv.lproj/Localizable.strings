@@ -2529,6 +2529,7 @@
 "Only enabled providers" = "Endast aktiverade leverantörer";
 "Restore default order" = "Återställ standardordning";
 "Also restores the provider order in the menu bar. Can be undone." = "Återställer även leverantörsordningen i menyraden. Kan ångras.";
+"Local Codex details; excluded from combined totals." = "Lokala Codex-detaljer; ingår inte i de sammanlagda totalerna.";
 
 "Auto uses an API key when configured, otherwise browser cookies." = "Auto uses an API key when configured, otherwise browser cookies.";
 "Stored in the CodexBar config file. You can also set COMMAND_CODE_API_KEY." = "Stored in the CodexBar config file. You can also set COMMAND_CODE_API_KEY.";

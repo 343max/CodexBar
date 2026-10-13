@@ -639,6 +639,12 @@ this is display masking and does not remove metadata from local history or sanit
 
 ### Usage & Spend account rows
 
+Projects, Chats, and Sessions stay available for configured, visible native Codex accounts, including while a scan
+has no rows. When OpenCodex replaces combined totals, these tabs still show local Codex details without adding them
+to the combined totals. Bounded refreshes retain the last complete detail snapshot in memory for the same account,
+cache identity, history window, and bucket time zone; a completed empty scan clears the old rows. This retention
+does not add another persisted history format.
+
 Settings → Usage & Spend performs a separate fixed 30-day scan for every visible Codex account. Each request freezes
 the account source, exact Codex home, authentication fingerprint, and cache identity before scanning. A missing or
 invalid home is omitted; it never falls back to ambient `~/.codex` or to the global Codex token snapshot.
