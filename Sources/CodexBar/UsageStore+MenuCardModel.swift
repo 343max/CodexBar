@@ -49,7 +49,8 @@ extension UsageStore {
     func menuCardInput(
         for provider: UsageProvider,
         context: UsageMenuCardContext,
-        now: Date = Date()) -> UsageMenuCardView.Model.Input
+        now: Date = Date(),
+        optionalUsageOverride: Bool? = nil) -> UsageMenuCardView.Model.Input
     {
         let account = context.account
         let isSettings = context.isSettings
@@ -133,7 +134,7 @@ extension UsageStore {
                 ? self.settings.isCostUsageEffectivelyEnabled(for: provider)
                 : descriptor.tokenCost.showsCostMenuSection && self.settings.costSummaryShowsSubmenu(for: provider),
             costComparisonPeriodsEnabled: !isSettings && self.settings.costComparisonPeriodsEnabled,
-            showOptionalCreditsAndExtraUsage: self.settings.showOptionalCreditsAndExtraUsage,
+            showOptionalCreditsAndExtraUsage: optionalUsageOverride ?? self.settings.showOptionalCreditsAndExtraUsage,
             copilotBudgetExtrasEnabled: self.settings.copilotBudgetExtrasEnabled,
             showsAllUsageLanes: isSettings,
             sourceLabel: account?.sourceLabel ?? (!isSettings && isLive ? self.sourceLabel(for: provider) : nil),

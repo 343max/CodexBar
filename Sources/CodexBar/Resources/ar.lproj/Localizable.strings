@@ -2522,6 +2522,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "تجديد الخطة / انتهاؤها";
+
+"Hidden by the global optional credits, spending & billing setting." = "مخفي بواسطة الإعداد العام للأرصدة الاختيارية والإنفاق والفوترة.";
+
 "Provider order updated" = "تم تحديث ترتيب المزوّدين";
 "Undo" = "تراجع";
 "Clear filters" = "مسح عوامل التصفية";

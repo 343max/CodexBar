@@ -174,7 +174,7 @@ struct UsageMenuCardView: View {
         let planText: String?
         var planEmphasis: PlanEmphasis = .none
         var metrics: [Metric]
-        let usageNotes: [String]
+        var usageNotes: [String]
         var subscriptionNotes: [String] = []
         var providerDetails: [ProviderDetailSection] = []
         /// Provider-owned titles remain stable when the displayed sections are localized or redacted.
@@ -189,7 +189,7 @@ struct UsageMenuCardView: View {
         var creditsHintCopyText: String?
         var limitResetCredits: LimitResetCreditsPresentation?
         var cloudCredits: ProviderCostSection?
-        let providerCost: ProviderCostSection?
+        var providerCost: ProviderCostSection?
         let tokenUsage: TokenUsageSection?
         let placeholder: String?
         let progressColor: Color
@@ -648,6 +648,11 @@ private struct UsageMenuCardUsageContentView: View {
             } else {
                 self.metricRows(self.model.metrics)
             }
+            if !self.model.quotaSubscriptionNotes.isEmpty,
+               self.model.showsOverviewSupplementalContent(compact: self.compactMetrics)
+            {
+                UsageNotesContent(notes: self.model.quotaSubscriptionNotes)
+            }
             if let resetCredits = self.model.limitResetCredits {
                 if !self.model.metrics.isEmpty, self.showsSectionDividers {
                     Divider()
@@ -675,11 +680,11 @@ private struct UsageMenuCardUsageContentView: View {
     private var supplementalContent: some View {
         if let dashboard = self.model.inlineUsageDashboard {
             InlineUsageDashboardContent(model: dashboard)
-            if !self.model.subscriptionNotes.isEmpty {
+            if self.model.quotaSubscriptionNotes.isEmpty, !self.model.subscriptionNotes.isEmpty {
                 UsageNotesContent(notes: self.model.subscriptionNotes)
             }
-        } else if !self.model.usageNotes.isEmpty {
-            UsageNotesContent(notes: self.model.usageNotes)
+        } else if !self.model.supplementalUsageNotes.isEmpty {
+            UsageNotesContent(notes: self.model.supplementalUsageNotes)
         } else if let placeholder = self.model.placeholder, self.model.metrics.isEmpty,
                   self.model.limitResetCredits == nil, self.model.cloudCredits == nil
         {

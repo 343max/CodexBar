@@ -91,6 +91,28 @@ struct UsageStoreMenuCardModelTests {
     }
 
     @Test
+    func `settings catalogue exposes globally gated extra usage without changing rendered preferences`() {
+        let store = self.makeStore()
+        store.settings.showOptionalCreditsAndExtraUsage = false
+        store.snapshots[.claude] = self.snapshot().with(providerCost: ProviderCostSnapshot(
+            used: 12, limit: 100, currencyCode: "USD", updatedAt: Date()))
+
+        let displayed = store.menuCardModel(for: .claude, context: .settings)
+        let catalogue = UsageMenuCardView.Model.make(store.menuCardInput(
+            for: .claude, context: .settings, optionalUsageOverride: true))
+        #expect(displayed.providerCost == nil)
+        #expect(catalogue.usageItemDescriptors.contains { $0.id == .claudeExtraUsage && $0.requiresOptionalUsage })
+        #expect(!store.settings.showOptionalCreditsAndExtraUsage)
+
+        store.settings.setUsageItemVisible(false, itemID: .claudeExtraUsage, for: .claude)
+        store.settings.showOptionalCreditsAndExtraUsage = true
+        #expect(store.menuCardModel(for: .claude).providerCost == nil)
+        #expect(store.menuCardModel(for: .claude, context: .settings).providerCost == nil)
+        store.settings.setUsageItemVisible(true, itemID: .claudeExtraUsage, for: .claude)
+        #expect(store.menuCardModel(for: .claude).providerCost != nil)
+    }
+
+    @Test
     func `settings keeps diagnostic cost policy separate from menu display choices`() {
         let store = self.makeStore()
         store.settings.costUsageEnabled = true

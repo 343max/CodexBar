@@ -2522,6 +2522,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "Renovació / venciment del pla";
+
+"Hidden by the global optional credits, spending & billing setting." = "Ocult per la configuració global de crèdits opcionals, despesa i facturació.";
+
 "Provider order updated" = "Ordre dels proveïdors actualitzat";
 "Undo" = "Desfer";
 "Clear filters" = "Esborrar filtres";

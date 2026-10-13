@@ -2486,6 +2486,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "요금제 갱신 / 만료";
+
+"Hidden by the global optional credits, spending & billing setting." = "선택적 크레딧, 지출 및 결제 정보의 전체 설정에 따라 숨겨져 있습니다.";
+
 "Provider order updated" = "공급자 순서가 변경되었습니다";
 "Undo" = "실행 취소";
 "Clear filters" = "필터 지우기";

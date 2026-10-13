@@ -2518,6 +2518,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "プランの更新 / 有効期限";
+
+"Hidden by the global optional credits, spending & billing setting." = "オプションのクレジット、支出、請求情報の全体設定により非表示になっています。";
+
 "Provider order updated" = "プロバイダーの順序を更新しました";
 "Undo" = "取り消す";
 "Clear filters" = "フィルターを解除";

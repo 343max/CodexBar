@@ -2522,6 +2522,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "การต่ออายุ / วันหมดอายุแพ็กเกจ";
+
+"Hidden by the global optional credits, spending & billing setting." = "ซ่อนโดยการตั้งค่าส่วนกลางสำหรับเครดิตเสริม ค่าใช้จ่าย และข้อมูลการเรียกเก็บเงิน";
+
 "Provider order updated" = "อัปเดตลำดับผู้ให้บริการแล้ว";
 "Undo" = "เลิกทำ";
 "Clear filters" = "ล้างตัวกรอง";

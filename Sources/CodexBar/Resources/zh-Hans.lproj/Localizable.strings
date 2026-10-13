@@ -2511,6 +2511,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "套餐续订 / 到期";
+
+"Hidden by the global optional credits, spending & billing setting." = "已被可选额度、支出和账单详情的全局设置隐藏。";
+
 "Provider order updated" = "供应商顺序已更新";
 "Undo" = "撤销";
 "Clear filters" = "清除筛选";

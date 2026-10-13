@@ -2517,6 +2517,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "Verlenging / vervaldatum van abonnement";
+
+"Hidden by the global optional credits, spending & billing setting." = "Verborgen door de algemene instelling voor optionele tegoeden, uitgaven en factureringsgegevens.";
+
 "Provider order updated" = "Volgorde van aanbieders bijgewerkt";
 "Undo" = "Ongedaan maken";
 "Clear filters" = "Filters wissen";

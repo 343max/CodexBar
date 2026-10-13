@@ -2517,6 +2517,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "Planförnyelse / utgångsdatum";
+
+"Hidden by the global optional credits, spending & billing setting." = "Dolt av den globala inställningen för valfria krediter, utgifter och faktureringsuppgifter.";
+
 "Provider order updated" = "Leverantörsordningen uppdaterad";
 "Undo" = "Ångra";
 "Clear filters" = "Rensa filter";

@@ -2516,6 +2516,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "Renovación / vencimiento del plan";
+
+"Hidden by the global optional credits, spending & billing setting." = "Oculto por el ajuste global de créditos opcionales, gastos y facturación.";
+
 "Provider order updated" = "Orden de proveedores actualizado";
 "Undo" = "Deshacer";
 "Clear filters" = "Borrar filtros";

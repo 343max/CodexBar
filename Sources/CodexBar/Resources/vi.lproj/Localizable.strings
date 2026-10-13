@@ -2519,6 +2519,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "Gia hạn / hết hạn gói";
+
+"Hidden by the global optional credits, spending & billing setting." = "Bị ẩn bởi cài đặt chung cho tín dụng tùy chọn, chi tiêu và thanh toán.";
+
 "Provider order updated" = "Đã cập nhật thứ tự nhà cung cấp";
 "Undo" = "Hoàn tác";
 "Clear filters" = "Xóa bộ lọc";

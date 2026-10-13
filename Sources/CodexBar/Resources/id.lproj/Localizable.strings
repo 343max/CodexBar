@@ -2521,6 +2521,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "Perpanjangan / kedaluwarsa paket";
+
+"Hidden by the global optional credits, spending & billing setting." = "Disembunyikan oleh pengaturan global kredit opsional, pengeluaran, dan penagihan.";
+
 "Provider order updated" = "Urutan penyedia diperbarui";
 "Undo" = "Urungkan";
 "Clear filters" = "Hapus filter";

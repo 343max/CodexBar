@@ -2496,6 +2496,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "方案續訂 / 到期";
+
+"Hidden by the global optional credits, spending & billing setting." = "已被選用額度、支出和帳單詳情的全域設定隱藏。";
+
 "Provider order updated" = "供應商順序已更新";
 "Undo" = "復原";
 "Clear filters" = "清除篩選";

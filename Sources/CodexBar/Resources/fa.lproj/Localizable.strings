@@ -2522,6 +2522,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "تمدید / انقضای طرح";
+
+"Hidden by the global optional credits, spending & billing setting." = "با تنظیم عمومی اعتبارهای اختیاری، هزینه‌ها و صورتحساب پنهان شده است.";
+
 "Provider order updated" = "ترتیب ارائه‌دهندگان به‌روزرسانی شد";
 "Undo" = "واگرد";
 "Clear filters" = "پاک کردن فیلترها";

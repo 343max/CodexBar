@@ -2518,6 +2518,10 @@
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
 
+"Plan renewal / expiry" = "Поновлення / завершення плану";
+
+"Hidden by the global optional credits, spending & billing setting." = "Приховано глобальним налаштуванням додаткових кредитів, витрат і оплати.";
+
 "Provider order updated" = "Порядок провайдерів оновлено";
 "Undo" = "Скасувати";
 "Clear filters" = "Очистити фільтри";
