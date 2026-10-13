@@ -643,6 +643,9 @@ Settings → Usage & Spend performs a separate fixed 30-day scan for every visib
 the account source, exact Codex home, authentication fingerprint, and cache identity before scanning. A missing or
 invalid home is omitted; it never falls back to ambient `~/.codex` or to the global Codex token snapshot.
 
+Refreshing many accounts retains each account's successful history and reports failed scans instead of silently
+omitting them.
+
 These account rows intentionally exclude pi and OMP sessions because their history is machine-local rather than owned
 by one Codex account. The normal Codex cost menu and CLI scan continue to include supported pi-compatible history. The
 dashboard labels its values as local estimates and keeps currencies separate.
