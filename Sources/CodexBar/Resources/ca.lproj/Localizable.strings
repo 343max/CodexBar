@@ -1417,6 +1417,7 @@
 "menu_bar_layout_preset_icon_only" = "Només icona";
 "menu_bar_layout_preset_percent_reset" = "Percentatge i reinici";
 "menu_bar_layout_preset_compact_stacked" = "Apilat compacte";
+"menu_bar_layout_preset_bars_stacked" = "Barres de progrés apilades";
 "menu_bar_layout_preset_custom" = "Personalitzat";
 "menu_bar_layout_live_preview" = "Previsualització en directe";
 "menu_bar_layout_default_preview" = "Previsualització de la disposició per defecte";

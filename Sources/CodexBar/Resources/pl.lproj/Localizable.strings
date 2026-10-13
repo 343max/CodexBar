@@ -1414,6 +1414,7 @@
 "menu_bar_layout_preset_icon_only" = "Tylko ikona";
 "menu_bar_layout_preset_percent_reset" = "Procent i reset";
 "menu_bar_layout_preset_compact_stacked" = "Kompaktowy stos";
+"menu_bar_layout_preset_bars_stacked" = "Paski postępu ułożone";
 "menu_bar_layout_preset_custom" = "Niestandardowe";
 "menu_bar_layout_live_preview" = "Podgląd na żywo";
 "menu_bar_layout_default_preview" = "Podgląd układu domyślnego";

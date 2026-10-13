@@ -1411,6 +1411,7 @@
 "menu_bar_layout_preset_icon_only" = "Somente ícone";
 "menu_bar_layout_preset_percent_reset" = "Percentual e redefinição";
 "menu_bar_layout_preset_compact_stacked" = "Empilhado compacto";
+"menu_bar_layout_preset_bars_stacked" = "Barras de progresso empilhadas";
 "menu_bar_layout_preset_custom" = "Personalizado";
 "menu_bar_layout_live_preview" = "Prévia ao vivo";
 "menu_bar_layout_default_preview" = "Prévia do layout padrão";

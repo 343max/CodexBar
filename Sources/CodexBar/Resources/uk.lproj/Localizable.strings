@@ -1410,6 +1410,7 @@
 "menu_bar_layout_preset_icon_only" = "Лише значок";
 "menu_bar_layout_preset_percent_reset" = "Відсоток і скидання";
 "menu_bar_layout_preset_compact_stacked" = "Компактно у два рядки";
+"menu_bar_layout_preset_bars_stacked" = "Індикатори прогресу штабелем";
 "menu_bar_layout_preset_custom" = "Користувацький";
 "menu_bar_layout_live_preview" = "Попередній перегляд";
 "menu_bar_layout_default_preview" = "Перегляд типового макета";

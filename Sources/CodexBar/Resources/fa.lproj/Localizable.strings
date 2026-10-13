@@ -1414,6 +1414,7 @@
 "menu_bar_layout_preset_icon_only" = "فقط نماد";
 "menu_bar_layout_preset_percent_reset" = "درصد و بازنشانی";
 "menu_bar_layout_preset_compact_stacked" = "پشتهٔ فشرده";
+"menu_bar_layout_preset_bars_stacked" = "نوارهای پیشرفت انباشته";
 "menu_bar_layout_preset_custom" = "عرف";
 "menu_bar_layout_live_preview" = "پیش‌نمایش زنده";
 "menu_bar_layout_default_preview" = "پیش‌نمایش چیدمان پیش‌فرض";

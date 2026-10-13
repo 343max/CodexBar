@@ -1411,6 +1411,7 @@
 "menu_bar_layout_preset_icon_only" = "Chỉ biểu tượng";
 "menu_bar_layout_preset_percent_reset" = "Phần trăm và đặt lại";
 "menu_bar_layout_preset_compact_stacked" = "Xếp chồng gọn";
+"menu_bar_layout_preset_bars_stacked" = "Thanh tiến độ xếp chồng";
 "menu_bar_layout_preset_custom" = "Tùy chỉnh";
 "menu_bar_layout_live_preview" = "Xem trước trực tiếp";
 "menu_bar_layout_default_preview" = "Xem trước bố cục mặc định";

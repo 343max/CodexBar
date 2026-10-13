@@ -1012,6 +1012,82 @@ struct MenuBarLayoutRendererTests {
         #expect(output.attributedTitle.string == "▮▮▮")
     }
 
+    @Test(arguments: [PercentWindow.session, .weekly, .scopedWeekly, .automatic])
+    func `progress bar renders a graphical attachment with a window label`(window: PercentWindow) throws {
+        let renderer = MenuBarLayoutRenderer()
+        let token = MenuBarLayoutToken.progressBar(window: window)
+        #expect(MenuBarLayoutPaletteTokens.usage(provider: .codex, snapshot: nil).contains(token))
+        let output = renderer.render(
+            layout: MenuBarLayout(lines: [[token]]),
+            data: self.data(),
+            icon: nil,
+            options: self.options(showUsed: true))
+
+        // Attachment payloads appear as U+FFFC in `string`; the visible bar is an image attachment.
+        let text = output.attributedTitle.string
+        #expect(text.contains("\u{FFFC}"))
+        #expect(output.attributedTitle.length >= 1)
+        let attachmentIndex = try #require(text.firstIndex(of: "\u{FFFC}"))
+        let attachment = output.attributedTitle.attribute(
+            .attachment,
+            at: text.distance(from: text.startIndex, to: attachmentIndex),
+            effectiveRange: nil) as? NSTextAttachment
+        #expect(attachment?.image != nil)
+
+        switch window {
+        case .session:
+            #expect(text.hasPrefix("5h "))
+            #expect(output.accessibilityLabel.contains("25%"))
+        case .weekly:
+            #expect(text.hasPrefix("W "))
+            #expect(output.accessibilityLabel.contains("60%"))
+        case .automatic:
+            #expect(text == "\u{FFFC}")
+            #expect(output.accessibilityLabel.contains("50%"))
+        case .scopedWeekly:
+            #expect(text.hasPrefix("F "))
+            #expect(output.accessibilityLabel.contains("80%"))
+        }
+    }
+
+    @Test
+    func `progress bar placeholder appears when its window is missing`() {
+        let renderer = MenuBarLayoutRenderer()
+        let output = renderer.render(
+            layout: MenuBarLayout(lines: [[.progressBar(window: .session)]]),
+            data: Self.missingData,
+            icon: nil,
+            options: self.options())
+
+        #expect(output.attributedTitle.string == "–")
+        #expect(output.accessibilityLabel.contains("unavailable"))
+    }
+
+    @Test
+    func `progress bar keeps balance text instead of drawing an automatic bar`() {
+        let renderer = MenuBarLayoutRenderer()
+        let output = renderer.render(
+            layout: MenuBarLayout(lines: [[.progressBar(window: .automatic)]]),
+            data: self.data(automaticUsedPercent: 80, provider: .deepseek, automaticText: "¥100.00"),
+            icon: nil,
+            options: self.options(showUsed: true))
+
+        #expect(output.attributedTitle.string == "¥100.00")
+        #expect(!output.attributedTitle.string.contains("\u{FFFC}"))
+    }
+
+    @Test
+    func `progress bar degrades to percent in older layout projections`() {
+        let token = MenuBarLayoutToken.progressBar(window: .session)
+        #expect(!token.hasReleasedRepresentation)
+        #expect(!token.hasV3Representation)
+        #expect(!token.hasLegacyRepresentation)
+        #expect(MenuBarLayout(lines: [[.icon, token, .resetCountdown]]).legacyCompatible()
+            == MenuBarLayout(lines: [[.icon, .percent(window: .session), .resetCountdown]]))
+        #expect(MenuBarLayout(lines: [[.icon, token]]).releasedCompatible()
+            == MenuBarLayout(lines: [[.icon, .percent(window: .session)]]))
+    }
+
     @Test
     func `absolute reset falls back to provider text`() {
         let renderer = MenuBarLayoutRenderer()

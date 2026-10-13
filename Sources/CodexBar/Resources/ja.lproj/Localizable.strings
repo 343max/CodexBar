@@ -1411,6 +1411,7 @@
 "menu_bar_layout_preset_icon_only" = "アイコンのみ";
 "menu_bar_layout_preset_percent_reset" = "割合とリセット";
 "menu_bar_layout_preset_compact_stacked" = "コンパクトな2段表示";
+"menu_bar_layout_preset_bars_stacked" = "進度バーのスタック";
 "menu_bar_layout_preset_custom" = "カスタム";
 "menu_bar_layout_live_preview" = "ライブプレビュー";
 "menu_bar_layout_default_preview" = "デフォルトレイアウトのプレビュー";

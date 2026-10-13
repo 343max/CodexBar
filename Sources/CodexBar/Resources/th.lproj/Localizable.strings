@@ -1414,6 +1414,7 @@
 "menu_bar_layout_preset_icon_only" = "ไอคอนเท่านั้น";
 "menu_bar_layout_preset_percent_reset" = "เปอร์เซ็นต์และรีเซ็ต";
 "menu_bar_layout_preset_compact_stacked" = "ซ้อนแบบกะทัดรัด";
+"menu_bar_layout_preset_bars_stacked" = "แถบความคืบหน้าแบบซ้อน";
 "menu_bar_layout_preset_custom" = "กําหนดเอง";
 "menu_bar_layout_live_preview" = "ตัวอย่างสด";
 "menu_bar_layout_default_preview" = "ตัวอย่างเค้าโครงเริ่มต้น";

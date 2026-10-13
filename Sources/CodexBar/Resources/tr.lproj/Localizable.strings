@@ -1412,6 +1412,7 @@
 "menu_bar_layout_preset_icon_only" = "Yalnızca simge";
 "menu_bar_layout_preset_percent_reset" = "Yüzde ve sıfırlama";
 "menu_bar_layout_preset_compact_stacked" = "Kompakt yığın";
+"menu_bar_layout_preset_bars_stacked" = "İstiflenmiş ilerleme çubukları";
 "menu_bar_layout_preset_custom" = "Özel";
 "menu_bar_layout_live_preview" = "Canlı önizleme";
 "menu_bar_layout_default_preview" = "Varsayılan düzen önizlemesi";

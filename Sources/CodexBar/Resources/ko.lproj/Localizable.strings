@@ -1380,6 +1380,7 @@
 "menu_bar_layout_preset_icon_only" = "아이콘만";
 "menu_bar_layout_preset_percent_reset" = "백분율 + 재설정";
 "menu_bar_layout_preset_compact_stacked" = "압축 스택";
+"menu_bar_layout_preset_bars_stacked" = "진행률 막대 겹침";
 "menu_bar_layout_preset_custom" = "사용자 설정";
 "menu_bar_layout_live_preview" = "실시간 미리보기";
 "menu_bar_layout_default_preview" = "기본 레이아웃 미리보기";

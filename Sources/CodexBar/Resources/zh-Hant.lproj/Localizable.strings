@@ -1441,6 +1441,7 @@
 "menu_bar_layout_preset_icon_only" = "僅圖示";
 "menu_bar_layout_preset_percent_reset" = "百分比與重設";
 "menu_bar_layout_preset_compact_stacked" = "緊湊堆疊";
+"menu_bar_layout_preset_bars_stacked" = "進度條堆疊";
 "menu_bar_layout_preset_custom" = "自訂";
 "menu_bar_layout_live_preview" = "即時預覽";
 "menu_bar_layout_default_preview" = "預設佈局預覽";

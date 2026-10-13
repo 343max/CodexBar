@@ -1410,6 +1410,7 @@
 "menu_bar_layout_preset_icon_only" = "Só icona";
 "menu_bar_layout_preset_percent_reset" = "Porcentaxe e reinicio";
 "menu_bar_layout_preset_compact_stacked" = "Amontoado compacto";
+"menu_bar_layout_preset_bars_stacked" = "Barras de progreso apiladas";
 "menu_bar_layout_preset_custom" = "Personalizado";
 "menu_bar_layout_live_preview" = "Vista previa en directo";
 "menu_bar_layout_default_preview" = "Vista previa do deseño predeterminado";

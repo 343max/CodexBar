@@ -1409,6 +1409,7 @@
 "menu_bar_layout_preset_icon_only" = "Endast ikon";
 "menu_bar_layout_preset_percent_reset" = "Procent och återställning";
 "menu_bar_layout_preset_compact_stacked" = "Kompakt staplad";
+"menu_bar_layout_preset_bars_stacked" = "Framstegsmarkörer staplade";
 "menu_bar_layout_preset_custom" = "Anpassat";
 "menu_bar_layout_live_preview" = "Liveförhandsvisning";
 "menu_bar_layout_default_preview" = "Förhandsvisning av standardlayout";

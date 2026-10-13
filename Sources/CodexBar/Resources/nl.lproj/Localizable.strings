@@ -1410,6 +1410,7 @@
 "menu_bar_layout_preset_icon_only" = "Alleen pictogram";
 "menu_bar_layout_preset_percent_reset" = "Percentage en reset";
 "menu_bar_layout_preset_compact_stacked" = "Compact gestapeld";
+"menu_bar_layout_preset_bars_stacked" = "Voortgangsbalken gestapeld";
 "menu_bar_layout_preset_custom" = "Aangepast";
 "menu_bar_layout_live_preview" = "Livevoorvertoning";
 "menu_bar_layout_default_preview" = "Voorbeeld van standaardindeling";

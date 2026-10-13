@@ -1421,6 +1421,7 @@
 "menu_bar_layout_preset_icon_only" = "Icon only";
 "menu_bar_layout_preset_percent_reset" = "Percent + reset";
 "menu_bar_layout_preset_compact_stacked" = "Compact stacked";
+"menu_bar_layout_preset_bars_stacked" = "Progress bars stacked";
 "menu_bar_layout_preset_custom" = "Custom";
 "menu_bar_layout_live_preview" = "Live preview";
 "menu_bar_layout_default_preview" = "Default layout preview";

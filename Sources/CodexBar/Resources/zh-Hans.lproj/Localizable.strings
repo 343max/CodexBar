@@ -1416,6 +1416,7 @@
 "menu_bar_layout_preset_icon_only" = "仅图标";
 "menu_bar_layout_preset_percent_reset" = "百分比与重置";
 "menu_bar_layout_preset_compact_stacked" = "紧凑堆叠";
+"menu_bar_layout_preset_bars_stacked" = "进度条堆叠";
 "menu_bar_layout_preset_custom" = "自定义";
 "menu_bar_layout_live_preview" = "实时预览";
 "menu_bar_layout_default_preview" = "默认布局预览";

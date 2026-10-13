@@ -1414,6 +1414,7 @@
 "menu_bar_layout_preset_icon_only" = "الأيقونة فقط";
 "menu_bar_layout_preset_percent_reset" = "النسبة وإعادة الضبط";
 "menu_bar_layout_preset_compact_stacked" = "مكدّس مضغوط";
+"menu_bar_layout_preset_bars_stacked" = "أشرطة التقدم المكدسة";
 "menu_bar_layout_preset_custom" = "العرف";
 "menu_bar_layout_live_preview" = "معاينة مباشرة";
 "menu_bar_layout_default_preview" = "معاينة التخطيط الافتراضي";
