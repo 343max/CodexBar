@@ -15,8 +15,7 @@ public enum ParallelProviderDescriptor {
         noDataMessage: "No cost history data.",
         webSource: .init(
             settingsSection: .init(ParallelProviderSettingsKey.self, cookieSettings: CookieProviderSettings.self),
-            browserCookieOrder: BrowserCookieImportSupport.chromeOnly(
-                reason: "Parallel imports only Chrome to avoid unrelated browser prompts."),
+            browserCookieOrder: ProviderBrowserCookieDefaults.defaultImportOrder,
             browserSupportExemption: { _, _, settings in settings?.parallel?.cookieSource == .manual },
             resolveValues: { $0.settings?.parallel?.cookieSource == .off ? nil : .init() },
             field: .init(

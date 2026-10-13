@@ -12,8 +12,8 @@ read_when:
 # Parallel
 
 Enable **Parallel** in Settings → Providers and sign in to
-[platform.parallel.ai](https://platform.parallel.ai/login) in Chrome. CodexBar imports the session cookies for
-`platform.parallel.ai` from Chrome only, to avoid prompts from other browsers. To skip the import, switch the
+[platform.parallel.ai](https://platform.parallel.ai/login) in any supported browser. Automatic imports the
+`platform.parallel.ai` session in the shared browser order. To skip the import, switch the
 cookie source to **Manual** and paste the `Cookie` header from a signed-in `platform.parallel.ai` request.
 **Off** disables the provider's cookie access.
 
