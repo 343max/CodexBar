@@ -22,6 +22,7 @@
 
 ### Fixed
 
+- Devin: use the official transparent hexagonal mark in the app, website, and CLI dashboard (#4458). Thanks @codertesla!
 - JetBrains AI: read current quota from newer JbaiQuota and Junie log records while preserving same-IDE freshness and XML fallback (#4457). Thanks @taihua!
 - Agent sessions: preserve macOS CLI sessions and their provider/source labels when prompts mention application paths (#4474). Thanks @Shenrui-Ma!
 
