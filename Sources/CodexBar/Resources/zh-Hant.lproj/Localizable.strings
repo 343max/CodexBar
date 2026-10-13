@@ -1441,6 +1441,7 @@
 "menu_bar_layout_preset_icon_only" = "僅圖示";
 "menu_bar_layout_preset_percent_reset" = "百分比與重設";
 "menu_bar_layout_preset_compact_stacked" = "緊湊堆疊";
+"menu_bar_layout_preset_bars_stacked" = "進度條堆疊";
 "menu_bar_layout_preset_custom" = "自訂";
 "menu_bar_layout_live_preview" = "即時預覽";
 "menu_bar_layout_default_preview" = "預設佈局預覽";
@@ -2493,3 +2494,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "必填。金鑰可計費的工作區 ws_… ID。或設定 FLORA_WORKSPACE_ID。";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "供應商順序已更新";
+"Undo" = "復原";
+"Clear filters" = "清除篩選";
+"Change provider order" = "更改供應商順序";
+"Provider sorting" = "供應商排序";
+"Only enabled providers" = "只顯示已啟用";
+"Restore default order" = "恢復預設順序";
+"Also restores the provider order in the menu bar. Can be undone." = "同時恢復選單列中的供應商順序。可以復原。";

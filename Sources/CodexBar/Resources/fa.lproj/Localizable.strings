@@ -1414,6 +1414,7 @@
 "menu_bar_layout_preset_icon_only" = "فقط نماد";
 "menu_bar_layout_preset_percent_reset" = "درصد و بازنشانی";
 "menu_bar_layout_preset_compact_stacked" = "پشتهٔ فشرده";
+"menu_bar_layout_preset_bars_stacked" = "نوارهای پیشرفت انباشته";
 "menu_bar_layout_preset_custom" = "عرف";
 "menu_bar_layout_live_preview" = "پیش‌نمایش زنده";
 "menu_bar_layout_default_preview" = "پیش‌نمایش چیدمان پیش‌فرض";
@@ -2519,3 +2520,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "الزامی. شناسه ws_… فضای کاری که کلید می‌تواند صورت‌حساب آن را ببیند. یا FLORA_WORKSPACE_ID را تنظیم کنید.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "ترتیب ارائه‌دهندگان به‌روزرسانی شد";
+"Undo" = "واگرد";
+"Clear filters" = "پاک کردن فیلترها";
+"Change provider order" = "تغییر ترتیب ارائه‌دهندگان";
+"Provider sorting" = "مرتب‌سازی ارائه‌دهندگان";
+"Only enabled providers" = "فقط ارائه‌دهندگان فعال";
+"Restore default order" = "بازیابی ترتیب پیش‌فرض";
+"Also restores the provider order in the menu bar. Can be undone." = "ترتیب ارائه‌دهندگان در نوار منو را نیز بازیابی می‌کند. قابل واگرد است.";

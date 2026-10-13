@@ -1417,6 +1417,7 @@
 "menu_bar_layout_preset_icon_only" = "Només icona";
 "menu_bar_layout_preset_percent_reset" = "Percentatge i reinici";
 "menu_bar_layout_preset_compact_stacked" = "Apilat compacte";
+"menu_bar_layout_preset_bars_stacked" = "Barres de progrés apilades";
 "menu_bar_layout_preset_custom" = "Personalitzat";
 "menu_bar_layout_live_preview" = "Previsualització en directe";
 "menu_bar_layout_default_preview" = "Previsualització de la disposició per defecte";
@@ -2519,3 +2520,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Obligatori. L'ID ws_… de l'espai de treball que la clau pot facturar. O defineix FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Ordre dels proveïdors actualitzat";
+"Undo" = "Desfer";
+"Clear filters" = "Esborrar filtres";
+"Change provider order" = "Canviar l’ordre dels proveïdors";
+"Provider sorting" = "Ordenació dels proveïdors";
+"Only enabled providers" = "Només proveïdors actius";
+"Restore default order" = "Restablir l’ordre per defecte";
+"Also restores the provider order in the menu bar. Can be undone." = "També restableix l’ordre dels proveïdors a la barra de menús. Es pot desfer.";

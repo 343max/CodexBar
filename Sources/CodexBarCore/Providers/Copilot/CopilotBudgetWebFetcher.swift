@@ -791,13 +791,13 @@ enum CopilotGitHubCookieImporter {
             load: { browser in
                 let query = BrowserCookieQuery(domains: ["github.com", "www.github.com"])
                 let sources = try loadRecords(browser, query, nil)
-        return sources.compactMap { source -> SessionInfo? in
-            guard !source.records.isEmpty else { return nil }
-            let cookies = BrowserCookieClient.makeHTTPCookies(source.records, origin: query.origin)
-            guard cookies.contains(where: { self.sessionCookieNames.contains($0.name) }) else {
-                return nil
-            }
-            return SessionInfo(cookies: cookies, sourceLabel: source.label)
+                return sources.compactMap { source -> SessionInfo? in
+                    guard !source.records.isEmpty else { return nil }
+                    let cookies = BrowserCookieClient.makeHTTPCookies(source.records, origin: query.origin)
+                    guard cookies.contains(where: { self.sessionCookieNames.contains($0.name) }) else {
+                        return nil
+                    }
+                    return SessionInfo(cookies: cookies, sourceLabel: source.label)
                 }
             })
     }

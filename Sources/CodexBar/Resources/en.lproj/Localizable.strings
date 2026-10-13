@@ -1421,6 +1421,7 @@
 "menu_bar_layout_preset_icon_only" = "Icon only";
 "menu_bar_layout_preset_percent_reset" = "Percent + reset";
 "menu_bar_layout_preset_compact_stacked" = "Compact stacked";
+"menu_bar_layout_preset_bars_stacked" = "Progress bars stacked";
 "menu_bar_layout_preset_custom" = "Custom";
 "menu_bar_layout_live_preview" = "Live preview";
 "menu_bar_layout_default_preview" = "Default layout preview";
@@ -2519,3 +2520,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Provider order updated";
+"Undo" = "Undo";
+"Clear filters" = "Clear filters";
+"Change provider order" = "Change provider order";
+"Provider sorting" = "Provider sorting";
+"Only enabled providers" = "Only enabled providers";
+"Restore default order" = "Restore default order";
+"Also restores the provider order in the menu bar. Can be undone." = "Also restores the provider order in the menu bar. Can be undone.";

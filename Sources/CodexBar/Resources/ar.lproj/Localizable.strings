@@ -1414,6 +1414,7 @@
 "menu_bar_layout_preset_icon_only" = "الأيقونة فقط";
 "menu_bar_layout_preset_percent_reset" = "النسبة وإعادة الضبط";
 "menu_bar_layout_preset_compact_stacked" = "مكدّس مضغوط";
+"menu_bar_layout_preset_bars_stacked" = "أشرطة التقدم المكدسة";
 "menu_bar_layout_preset_custom" = "العرف";
 "menu_bar_layout_live_preview" = "معاينة مباشرة";
 "menu_bar_layout_default_preview" = "معاينة التخطيط الافتراضي";
@@ -2519,3 +2520,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "مطلوب. معرّف ws_… لمساحة العمل التي يمكن للمفتاح فوترتها. أو اضبط FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "تم تحديث ترتيب المزوّدين";
+"Undo" = "تراجع";
+"Clear filters" = "مسح عوامل التصفية";
+"Change provider order" = "تغيير ترتيب المزوّدين";
+"Provider sorting" = "ترتيب المزوّدين";
+"Only enabled providers" = "المزوّدون المفعّلون فقط";
+"Restore default order" = "استعادة الترتيب الافتراضي";
+"Also restores the provider order in the menu bar. Can be undone." = "يستعيد أيضاً ترتيب المزوّدين في شريط القوائم. يمكن التراجع عن هذا الإجراء.";

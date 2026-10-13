@@ -1409,6 +1409,7 @@
 "menu_bar_layout_preset_icon_only" = "Solo icono";
 "menu_bar_layout_preset_percent_reset" = "Porcentaje y reinicio";
 "menu_bar_layout_preset_compact_stacked" = "Apilado compacto";
+"menu_bar_layout_preset_bars_stacked" = "Barras de progreso apiladas";
 "menu_bar_layout_preset_custom" = "Personalizado";
 "menu_bar_layout_live_preview" = "Vista previa en directo";
 "menu_bar_layout_default_preview" = "Vista previa del diseño predeterminado";
@@ -2513,3 +2514,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Obligatorio. El ID ws_… del espacio de trabajo que la clave puede facturar. O define FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Orden de proveedores actualizado";
+"Undo" = "Deshacer";
+"Clear filters" = "Borrar filtros";
+"Change provider order" = "Cambiar el orden de proveedores";
+"Provider sorting" = "Orden de proveedores";
+"Only enabled providers" = "Solo proveedores activos";
+"Restore default order" = "Restaurar el orden predeterminado";
+"Also restores the provider order in the menu bar. Can be undone." = "También restaura el orden de proveedores en la barra de menús. Se puede deshacer.";

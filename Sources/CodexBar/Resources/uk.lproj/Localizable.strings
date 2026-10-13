@@ -1410,6 +1410,7 @@
 "menu_bar_layout_preset_icon_only" = "Лише значок";
 "menu_bar_layout_preset_percent_reset" = "Відсоток і скидання";
 "menu_bar_layout_preset_compact_stacked" = "Компактно у два рядки";
+"menu_bar_layout_preset_bars_stacked" = "Індикатори прогресу штабелем";
 "menu_bar_layout_preset_custom" = "Користувацький";
 "menu_bar_layout_live_preview" = "Попередній перегляд";
 "menu_bar_layout_default_preview" = "Перегляд типового макета";
@@ -2515,3 +2516,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Обов’язково. ID ws_… робочого простору, до білінгу якого має доступ ключ. Або задайте FLORA_WORKSPACE_ID.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Порядок провайдерів оновлено";
+"Undo" = "Скасувати";
+"Clear filters" = "Очистити фільтри";
+"Change provider order" = "Змінити порядок провайдерів";
+"Provider sorting" = "Сортування провайдерів";
+"Only enabled providers" = "Лише активні провайдери";
+"Restore default order" = "Відновити типовий порядок";
+"Also restores the provider order in the menu bar. Can be undone." = "Також відновлює порядок провайдерів у рядку меню. Дію можна скасувати.";

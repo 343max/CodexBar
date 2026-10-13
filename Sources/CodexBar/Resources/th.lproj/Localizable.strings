@@ -1414,6 +1414,7 @@
 "menu_bar_layout_preset_icon_only" = "ไอคอนเท่านั้น";
 "menu_bar_layout_preset_percent_reset" = "เปอร์เซ็นต์และรีเซ็ต";
 "menu_bar_layout_preset_compact_stacked" = "ซ้อนแบบกะทัดรัด";
+"menu_bar_layout_preset_bars_stacked" = "แถบความคืบหน้าแบบซ้อน";
 "menu_bar_layout_preset_custom" = "กําหนดเอง";
 "menu_bar_layout_live_preview" = "ตัวอย่างสด";
 "menu_bar_layout_default_preview" = "ตัวอย่างเค้าโครงเริ่มต้น";
@@ -2519,3 +2520,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "จำเป็น ID ws_… ของเวิร์กสเปซที่คีย์เรียกเก็บเงินได้ หรือตั้งค่า FLORA_WORKSPACE_ID";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "อัปเดตลำดับผู้ให้บริการแล้ว";
+"Undo" = "เลิกทำ";
+"Clear filters" = "ล้างตัวกรอง";
+"Change provider order" = "เปลี่ยนลำดับผู้ให้บริการ";
+"Provider sorting" = "การเรียงผู้ให้บริการ";
+"Only enabled providers" = "เฉพาะผู้ให้บริการที่เปิดใช้";
+"Restore default order" = "คืนค่าลำดับเริ่มต้น";
+"Also restores the provider order in the menu bar. Can be undone." = "คืนค่าลำดับผู้ให้บริการในแถบเมนูด้วย สามารถเลิกทำได้";

@@ -1412,6 +1412,7 @@
 "menu_bar_layout_preset_icon_only" = "Yalnızca simge";
 "menu_bar_layout_preset_percent_reset" = "Yüzde ve sıfırlama";
 "menu_bar_layout_preset_compact_stacked" = "Kompakt yığın";
+"menu_bar_layout_preset_bars_stacked" = "İstiflenmiş ilerleme çubukları";
 "menu_bar_layout_preset_custom" = "Özel";
 "menu_bar_layout_live_preview" = "Canlı önizleme";
 "menu_bar_layout_default_preview" = "Varsayılan düzen önizlemesi";
@@ -2518,3 +2519,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Zorunlu. Anahtarın faturalayabildiği çalışma alanının ws_… kimliği. Ya da FLORA_WORKSPACE_ID değerini ayarlayın.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Sağlayıcı sırası güncellendi";
+"Undo" = "Geri al";
+"Clear filters" = "Filtreleri temizle";
+"Change provider order" = "Sağlayıcı sırasını değiştir";
+"Provider sorting" = "Sağlayıcı sıralaması";
+"Only enabled providers" = "Yalnızca etkin sağlayıcılar";
+"Restore default order" = "Varsayılan sırayı geri yükle";
+"Also restores the provider order in the menu bar. Can be undone." = "Menü çubuğundaki sağlayıcı sırasını da geri yükler. Geri alınabilir.";

@@ -1416,6 +1416,7 @@
 "menu_bar_layout_preset_icon_only" = "仅图标";
 "menu_bar_layout_preset_percent_reset" = "百分比与重置";
 "menu_bar_layout_preset_compact_stacked" = "紧凑堆叠";
+"menu_bar_layout_preset_bars_stacked" = "进度条堆叠";
 "menu_bar_layout_preset_custom" = "自定义";
 "menu_bar_layout_live_preview" = "实时预览";
 "menu_bar_layout_default_preview" = "默认布局预览";
@@ -2508,3 +2509,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "必填。密钥可计费的工作区的 ws_… ID。或设置 FLORA_WORKSPACE_ID。";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "供应商顺序已更新";
+"Undo" = "撤销";
+"Clear filters" = "清除筛选";
+"Change provider order" = "更改供应商顺序";
+"Provider sorting" = "供应商排序";
+"Only enabled providers" = "仅显示已启用";
+"Restore default order" = "恢复默认顺序";
+"Also restores the provider order in the menu bar. Can be undone." = "同时恢复菜单栏中的供应商顺序。可以撤销。";

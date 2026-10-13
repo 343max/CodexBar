@@ -1413,6 +1413,7 @@
 "menu_bar_layout_preset_icon_only" = "Nur Symbol";
 "menu_bar_layout_preset_percent_reset" = "Prozent und Zurücksetzung";
 "menu_bar_layout_preset_compact_stacked" = "Kompakt gestapelt";
+"menu_bar_layout_preset_bars_stacked" = "Fortschrittsbalken gestapelt";
 "menu_bar_layout_preset_custom" = "Benutzerdefiniert";
 "menu_bar_layout_live_preview" = "Live-Vorschau";
 "menu_bar_layout_default_preview" = "Vorschau des Standardlayouts";
@@ -2513,3 +2514,12 @@
 "Required. The ws_… ID of the workspace the key can bill. Or set FLORA_WORKSPACE_ID." = "Erforderlich. Die ws_…-ID des Workspace, den der Schlüssel abrechnen darf. Oder FLORA_WORKSPACE_ID setzen.";
 "ak_…" = "ak_…";
 "ws_…" = "ws_…";
+
+"Provider order updated" = "Anbieterreihenfolge aktualisiert";
+"Undo" = "Rückgängig";
+"Clear filters" = "Filter löschen";
+"Change provider order" = "Anbieterreihenfolge ändern";
+"Provider sorting" = "Anbietersortierung";
+"Only enabled providers" = "Nur aktivierte Anbieter";
+"Restore default order" = "Standardreihenfolge wiederherstellen";
+"Also restores the provider order in the menu bar. Can be undone." = "Stellt auch die Anbieterreihenfolge in der Menüleiste wieder her. Kann rückgängig gemacht werden.";

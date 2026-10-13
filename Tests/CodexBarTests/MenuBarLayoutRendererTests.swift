@@ -578,6 +578,90 @@ struct MenuBarLayoutRendererTests {
         #expect(bounds.height <= 22)
     }
 
+    @Test(arguments: [false, true], [-2, 0, 2])
+    func `single provider icon spans two text rows`(explicitSpace: Bool, adjustment: Int) throws {
+        let icon = NSImage(size: NSSize(width: 16, height: 16))
+        icon.isTemplate = true
+        let top: [MenuBarLayoutToken] = explicitSpace
+            ? [.icon, .space, .percent(window: .session)]
+            : [.icon, .percent(window: .session)]
+        let output = MenuBarLayoutRenderer().render(
+            layout: MenuBarLayout(lines: [top, [.percent(window: .weekly)]]),
+            data: self.data(),
+            icon: icon,
+            options: self.options(verticalAdjustment: adjustment))
+
+        let leadingIcon = try #require(output.leadingIcon)
+        #expect(leadingIcon.isTemplate)
+        #expect(leadingIcon.size == NSSize(width: 16, height: adjustment == 0 ? 16 : 20))
+        if adjustment == 0 {
+            #expect(leadingIcon === icon)
+        }
+        #expect(output.attributedTitle.string == "\(explicitSpace ? " " : "\u{2009}")5h 25%\nW 60%")
+        #expect(!output.attributedTitle.string.contains("\u{FFFC}"))
+        let expectedAccessibility = "\(L("%@ icon", "Codex")), \(L("Session")) 25%, "
+            + "\(L("menu_bar_layout_line", 2)), \(L("Weekly")) 60%"
+        #expect(output.accessibilityLabel == expectedAccessibility)
+        let bounds = output.attributedTitle.boundingRect(
+            with: NSSize(width: 200, height: CGFloat.greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading])
+        #expect(bounds.height <= 22)
+        #expect(output.statusImage == nil)
+    }
+
+    @Test(arguments: [-2, 2])
+    func `shifted two row quota warning icons preserve their red overlay`(adjustment: Int) throws {
+        let base = NSImage(size: NSSize(width: 16, height: 16))
+        base.isTemplate = true
+        let warning = StatusItemController.quotaWarningFlashImage(base: base)
+        let output = MenuBarLayoutRenderer().render(
+            layout: MenuBarLayout(lines: [[.icon, .percent(window: .session)], [.percent(window: .weekly)]]),
+            data: self.data(),
+            icon: warning,
+            options: self.options(verticalAdjustment: adjustment))
+
+        let leadingIcon = try #require(output.leadingIcon)
+        #expect(!leadingIcon.isTemplate)
+        let bitmap = try Self.statusBitmap(image: leadingIcon, scale: 1)
+        let center = try #require(bitmap.colorAt(x: 8, y: 10))
+        #expect(center.alphaComponent > 0)
+        #expect(center.redComponent > center.blueComponent)
+    }
+
+    @Test(arguments: [
+        MenuBarLayout(lines: [[.icon, .percent(window: .session)], [.icon, .percent(window: .weekly)]]),
+        MenuBarLayout(lines: [[.icon], [.percent(window: .weekly)]]),
+        MenuBarLayout(lines: [[.icon, .space], [.percent(window: .weekly)]]),
+        MenuBarLayout(lines: [[.percent(window: .session)], [.icon, .percent(window: .weekly)]]),
+        MenuBarLayout(lines: [[.space, .icon, .percent(window: .session)], [.percent(window: .weekly)]]),
+    ])
+    func `two row icons preserve inline ownership when no single leading mark spans text`(layout: MenuBarLayout) {
+        let icon = NSImage(size: NSSize(width: 16, height: 16))
+        icon.isTemplate = true
+        let output = MenuBarLayoutRenderer().render(
+            layout: layout, data: self.data(), icon: icon, options: self.options())
+
+        #expect(output.leadingIcon == nil)
+        #expect(output.attributedTitle.string.contains("\u{FFFC}"))
+    }
+
+    @Test(arguments: ["highContrast", "forceStackedStyle", "colorByProvider", "missingIcon"])
+    func `two row leading icons retain rendering overrides`(override: String) {
+        let icon = NSImage(size: NSSize(width: 16, height: 16))
+        icon.isTemplate = true
+        let output = MenuBarLayoutRenderer().render(
+            layout: MenuBarLayout(lines: [[.icon, .percent(window: .session)], [.percent(window: .weekly)]]),
+            data: self.data(),
+            icon: override == "missingIcon" ? nil : icon,
+            options: self.options(
+                colorByProvider: override == "colorByProvider",
+                highContrast: override == "highContrast",
+                forceStackedStyle: override == "forceStackedStyle"))
+
+        #expect(output.leadingIcon == nil)
+        #expect(output.attributedTitle.string.hasPrefix(override == "missingIcon" ? "–" : "\u{FFFC}"))
+    }
+
     @Test
     func `forceStackedStyle applies stacked typography to a single line render`() {
         let renderer = MenuBarLayoutRenderer()
@@ -926,6 +1010,82 @@ struct MenuBarLayoutRendererTests {
                 now: self.now))
 
         #expect(output.attributedTitle.string == "▮▮▮")
+    }
+
+    @Test(arguments: [PercentWindow.session, .weekly, .scopedWeekly, .automatic])
+    func `progress bar renders a graphical attachment with a window label`(window: PercentWindow) throws {
+        let renderer = MenuBarLayoutRenderer()
+        let token = MenuBarLayoutToken.progressBar(window: window)
+        #expect(MenuBarLayoutPaletteTokens.usage(provider: .codex, snapshot: nil).contains(token))
+        let output = renderer.render(
+            layout: MenuBarLayout(lines: [[token]]),
+            data: self.data(),
+            icon: nil,
+            options: self.options(showUsed: true))
+
+        // Attachment payloads appear as U+FFFC in `string`; the visible bar is an image attachment.
+        let text = output.attributedTitle.string
+        #expect(text.contains("\u{FFFC}"))
+        #expect(output.attributedTitle.length >= 1)
+        let attachmentIndex = try #require(text.firstIndex(of: "\u{FFFC}"))
+        let attachment = output.attributedTitle.attribute(
+            .attachment,
+            at: text.distance(from: text.startIndex, to: attachmentIndex),
+            effectiveRange: nil) as? NSTextAttachment
+        #expect(attachment?.image != nil)
+
+        switch window {
+        case .session:
+            #expect(text.hasPrefix("5h "))
+            #expect(output.accessibilityLabel.contains("25%"))
+        case .weekly:
+            #expect(text.hasPrefix("W "))
+            #expect(output.accessibilityLabel.contains("60%"))
+        case .automatic:
+            #expect(text == "\u{FFFC}")
+            #expect(output.accessibilityLabel.contains("50%"))
+        case .scopedWeekly:
+            #expect(text.hasPrefix("F "))
+            #expect(output.accessibilityLabel.contains("80%"))
+        }
+    }
+
+    @Test
+    func `progress bar placeholder appears when its window is missing`() {
+        let renderer = MenuBarLayoutRenderer()
+        let output = renderer.render(
+            layout: MenuBarLayout(lines: [[.progressBar(window: .session)]]),
+            data: Self.missingData,
+            icon: nil,
+            options: self.options())
+
+        #expect(output.attributedTitle.string == "–")
+        #expect(output.accessibilityLabel.contains("unavailable"))
+    }
+
+    @Test
+    func `progress bar keeps balance text instead of drawing an automatic bar`() {
+        let renderer = MenuBarLayoutRenderer()
+        let output = renderer.render(
+            layout: MenuBarLayout(lines: [[.progressBar(window: .automatic)]]),
+            data: self.data(automaticUsedPercent: 80, provider: .deepseek, automaticText: "¥100.00"),
+            icon: nil,
+            options: self.options(showUsed: true))
+
+        #expect(output.attributedTitle.string == "¥100.00")
+        #expect(!output.attributedTitle.string.contains("\u{FFFC}"))
+    }
+
+    @Test
+    func `progress bar degrades to percent in older layout projections`() {
+        let token = MenuBarLayoutToken.progressBar(window: .session)
+        #expect(!token.hasReleasedRepresentation)
+        #expect(!token.hasV3Representation)
+        #expect(!token.hasLegacyRepresentation)
+        #expect(MenuBarLayout(lines: [[.icon, token, .resetCountdown]]).legacyCompatible()
+            == MenuBarLayout(lines: [[.icon, .percent(window: .session), .resetCountdown]]))
+        #expect(MenuBarLayout(lines: [[.icon, token]]).releasedCompatible()
+            == MenuBarLayout(lines: [[.icon, .percent(window: .session)]]))
     }
 
     @Test
