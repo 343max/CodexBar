@@ -176,7 +176,7 @@ struct ParallelPluginTests {
         #expect(!descriptor.metadata.defaultEnabled)
         #expect(descriptor.metadata.balanceOnly)
         #expect(descriptor.fetchPlan.sourceModes == [.auto, .web])
-        #expect(descriptor.metadata.browserCookieOrder == [.chrome])
+        #expect(descriptor.metadata.browserCookieOrder == ProviderBrowserCookieDefaults.defaultImportOrder)
     }
 
     private static func expectFailure(
