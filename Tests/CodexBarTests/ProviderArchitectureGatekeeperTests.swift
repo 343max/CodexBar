@@ -233,9 +233,7 @@ struct ProviderArchitectureGatekeeperTests {
         #expect(BedrockProviderDescriptor.descriptor.tokenCost.menuHintLines == [
             .literal("AWS Cost Explorer billing can lag."),
         ])
-        #expect(OpenAIAPIProviderDescriptor.descriptor.tokenCost.menuHintLines == [
-            .literal("Reported by OpenAI Admin API organization usage."),
-        ])
+        #expect(OpenAIAPIProviderDescriptor.descriptor.tokenCost.menuHintLines.isEmpty)
         #expect(MistralProviderDescriptor.descriptor.tokenCost.menuHintLines == [
             .literal("Reported by Mistral billing usage."),
         ])

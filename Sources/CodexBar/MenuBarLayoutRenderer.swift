@@ -84,6 +84,8 @@ struct MenuBarLayoutRenderData: Hashable {
     let automaticPace: String?
     let runsOut: String?
     let balance: String?
+    var tokensPerMinute: Int?
+    var tokensSparkline: MenuBarTokensSparkline?
     let costToday: String?
     let cost30d: String?
     /// Numeric twins of the display strings above, for conditional predicates.
@@ -661,6 +663,9 @@ final class MenuBarLayoutRenderer {
         {
             return rendered
         }
+        if let rendered = self.renderThroughputItem(item, data: data, style: style, options: options) {
+            return rendered
+        }
         if let rendered = self.renderUsageMeterItem(
             item,
             data: data,
@@ -764,8 +769,8 @@ final class MenuBarLayoutRenderer {
                 self.missingValue,
                 accessibilityText: L("menu_bar_layout_conditional_unavailable"),
                 attributes: style.attributes)
-        case .providerName, .accountLabel, .lanePercent, .extraPercent:
-            preconditionFailure("Provider text tokens should render before the main switch")
+        case .providerName, .accountLabel, .lanePercent, .extraPercent, .tokensPerMinute, .tokensSparkline:
+            preconditionFailure("Provider text and throughput tokens should render before the main switch")
         case .usageBar, .progressBar:
             preconditionFailure("Usage meter tokens should render before the main switch")
         }
@@ -1182,6 +1187,53 @@ final class MenuBarLayoutRenderer {
 }
 
 extension MenuBarLayoutRenderer {
+    /// Tokens-per-minute text and graph, kept out of the class body's main switch.
+    private static func renderThroughputItem(
+        _ item: MenuBarLayoutToken,
+        data: MenuBarLayoutRenderData,
+        style: TokenStyle,
+        options: MenuBarLayoutRenderOptions)
+        -> (value: NSAttributedString, accessibilityText: String?)?
+    {
+        switch item {
+        case .tokensPerMinute:
+            self.optionalTextToken(
+                data.tokensPerMinute.map { ProviderThroughputSection.count($0) + "/min" },
+                unavailableLabel: L("%@ unavailable", L("Tokens / min")),
+                attributes: style.attributes)
+        case .tokensSparkline:
+            self.sparklineToken(data: data, style: style, options: options)
+        default:
+            nil
+        }
+    }
+
+    private static func sparklineToken(
+        data: MenuBarLayoutRenderData,
+        style: TokenStyle,
+        options: MenuBarLayoutRenderOptions)
+        -> (value: NSAttributedString, accessibilityText: String?)
+    {
+        guard let graph = data.tokensSparkline,
+              let image = graph.image(height: style.iconHeight, highlighted: options.isHighlighted)
+        else {
+            return self.textToken(
+                self.missingValue,
+                accessibilityText: L("%@ unavailable", L("Tokens / min graph")),
+                attributes: style.attributes)
+        }
+        let attachment = NSTextAttachment()
+        attachment.image = Self.attachmentImage(image, tint: style.foregroundColor)
+        attachment.bounds = NSRect(
+            x: 0,
+            y: ((style.font.capHeight - style.iconHeight) / 2).rounded(),
+            width: image.size.width,
+            height: style.iconHeight)
+        let value = NSMutableAttributedString(attachment: attachment)
+        value.addAttributes(style.attributes, range: NSRange(location: 0, length: value.length))
+        return (value, L("Tokens per minute, latest %@", graph.latest.map(ProviderThroughputSection.count) ?? "—"))
+    }
+
     /// Provider-declared menu bar tag for a lane; nil keeps the lane's percentage bare.
     private static func laneShortLabel(_ lane: MenuBarLayoutLane, provider: UsageProvider) -> String? {
         let labels = ProviderDescriptorRegistry.descriptor(for: provider).menuBarMetrics.laneShortLabels

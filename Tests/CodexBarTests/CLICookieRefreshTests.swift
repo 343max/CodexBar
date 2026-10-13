@@ -23,6 +23,16 @@ struct CLICookieRefreshTests {
 
     #if os(macOS)
     @Test
+    func `Muse AI participates in explicit and all provider cookie refresh`() throws {
+        let targets = try CodexBarCLI.cookieRefreshTargets(rawProvider: nil, refreshAll: true)
+        #expect(targets.contains { $0.id == .museai })
+        let explicit = try CodexBarCLI.cookieRefreshTargets(rawProvider: "museai", refreshAll: false)
+        #expect(explicit.map(\.id) == [.museai])
+        #expect(CodexBarCLI.cookieRefreshBrowserOrder(descriptor: explicit[0], config: nil)
+            == ProviderBrowserCookieDefaults.defaultImportOrder)
+    }
+
+    @Test
     func `all provider selection is descriptor driven`() throws {
         let targets = try CodexBarCLI.cookieRefreshTargets(rawProvider: nil, refreshAll: true)
 

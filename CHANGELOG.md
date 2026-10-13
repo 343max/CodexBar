@@ -4,8 +4,13 @@
 
 ### Added
 
+- Command Code: use a configured API key for billing usage on macOS and Linux, with browser cookies when no key is set and explicit source selection (#4462, #4460). Thanks @Shrub24!
+
 - Menu bar: add graphical progress-bar tokens for selected usage windows and a stacked-bars preset, with readable layouts when returning to older app versions (#4436). Thanks @happut!
 - Settings: filter the provider list to enabled services, search CLI aliases, and restore the default order with Undo (#4440). Thanks @Yuxin-Qiao!
+- OpenAI: add a Live Usage window with per-minute token throughput from the Admin Usage API, showing all models by default with a per-model filter; handles reporting delays with timestamped latest usage and pending minutes, and shows manual organization rate-limit headroom from Settings with project caps as context. Includes a shared, hover-inspectable last-hour inline menu chart with subtle pending placeholders and a fixed-height Live · Spend switch that remembers each provider instance’s choice locally, an optional Tokens/min menu bar token, and a draggable Tokens/min graph; limit utilization counts all input, including cached tokens, plus output, and excludes Batch API traffic, which has separate rate limits.
+- OpenAI: store manual organization rate limits per credential (provider key vs each token account), with Live Usage, the menu card, and Settings following the selected account.
+
 - Kimi: discover the current China Desktop session from Local Storage for web usage and monthly membership enrichment, with session checks before each request (#4416, #3536). Thanks @OttoPrua!
 - Providers: add fal account credit balances through its billing API, with explicit guidance for missing billing permissions (#4438). Thanks @giuseppebisemi!
 - Providers: add FLORA workspace balances, member limits, and available month-to-date spending through a bundled billing plugin (#4439). Thanks @giuseppebisemi!
@@ -19,14 +24,18 @@
 - Browser Local Storage imports pick the current record by LevelDB sequence, so a sign-out followed by a sign-in no longer hides the new session.
 - Browser imports: recognize Ego Lite through the shared catalog; Cursor account login continues to require a verified application identifier.
 - Menu bar: the Cost 30d layout item is now named Cost (History window), since it already shows the selected History window's total; saved layouts and conditional rules are unchanged (#4448). Thanks @benjschiller!
+- Cookie imports: 23 providers now find signed-in sessions in every supported browser instead of Chrome-only or other restricted lists; Keychain prompts stay bounded by the shared access gate (#4443). Thanks @lg!
 
 ### Fixed
 
+- CLI costs: show the partial-history notice in project reports, including empty project lists (#4472). Thanks @Shenrui-Ma!
+- Usage & Spend: retain every saved Codex account's result when refreshing more than three accounts (#4466). Thanks @Yuxin-Qiao!
 - Browser cookie imports: explain denied Files & Folders access instead of asking users who are already signed in to sign in again (#4482). Thanks @marklights54-byte!
 - Devin: use the official transparent hexagonal mark in the app, website, and CLI dashboard (#4458). Thanks @codertesla!
 - JetBrains AI: read current quota from newer JbaiQuota and Junie log records while preserving same-IDE freshness and XML fallback (#4457). Thanks @taihua!
 - Agent sessions: preserve macOS CLI sessions and their provider/source labels when prompts mention application paths (#4474). Thanks @Shenrui-Ma!
 
+- OpenAI: stop counting audio tokens twice in Admin API token totals; `input_tokens`/`output_tokens` already include audio.
 - Menu bar: show a single leading provider icon at full size beside two text rows while preserving inline icons for merged providers and tinted layouts (#4454). Thanks @deinspanjer!
 - Menu cards: separate stale Claude usage notices from errors, render inline commands without backticks, align error copy controls, and clarify when Keychain access is disabled.
 

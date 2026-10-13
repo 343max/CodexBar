@@ -153,6 +153,8 @@ struct MenuBarLayoutEditorTests {
             .progressBar(window: .weekly),
             .progressBar(window: .scopedWeekly),
             .progressBar(window: .automatic),
+            .tokensPerMinute,
+            .tokensSparkline,
             .pace(window: .session),
             .pace(window: .weekly),
             .pace(window: .automatic),

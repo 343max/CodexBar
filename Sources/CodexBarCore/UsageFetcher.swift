@@ -161,6 +161,7 @@ public struct UsageSnapshot: Codable, Sendable {
     /// Live-only ownership proof; a profile directory alone does not identify an account.
     public let browserSessionOwner: ProviderBrowserSessionOwner?
     public let opencodegoUsage: OpenCodeGoUsageSnapshot?
+    public let throughput: ProviderThroughputSnapshot?
     public let openAIAPIUsage: OpenAIAPIUsageSnapshot?
     public let codexResetCredits: CodexRateLimitResetCreditsSnapshot?
     /// Live-only display inventory. Grok redemption token identifiers are intentionally excluded.
@@ -191,6 +192,7 @@ public struct UsageSnapshot: Codable, Sendable {
         case extraRateWindows
         case providerCost
         case details
+        case throughput
         case openAIAPIUsage
         case codexResetCredits
         case mistralUsage
@@ -220,6 +222,7 @@ public struct UsageSnapshot: Codable, Sendable {
         deepseekPlatformBalanceOwner: DeepSeekPlatformBalanceOwner? = nil,
         browserSessionOwner: ProviderBrowserSessionOwner? = nil,
         opencodegoUsage: OpenCodeGoUsageSnapshot? = nil,
+        throughput: ProviderThroughputSnapshot? = nil,
         openAIAPIUsage: OpenAIAPIUsageSnapshot? = nil,
         codexResetCredits: CodexRateLimitResetCreditsSnapshot? = nil,
         grokResetCredits: GrokRateLimitResetCreditsSnapshot? = nil,
@@ -252,6 +255,7 @@ public struct UsageSnapshot: Codable, Sendable {
         self.deepseekPlatformBalanceOwner = deepseekPlatformBalanceOwner
         self.browserSessionOwner = browserSessionOwner
         self.opencodegoUsage = opencodegoUsage
+        self.throughput = throughput
         self.openAIAPIUsage = openAIAPIUsage
         self.codexResetCredits = codexResetCredits
         self.grokResetCredits = grokResetCredits
@@ -361,6 +365,7 @@ public struct UsageSnapshot: Codable, Sendable {
         self.deepseekPlatformBalanceOwner = nil // Live-only balance ownership
         self.browserSessionOwner = nil // Live-only browser session ownership
         self.opencodegoUsage = nil // Not persisted, fetched fresh each time
+        self.throughput = try container.decodeIfPresent(ProviderThroughputSnapshot.self, forKey: .throughput)
         self.openAIAPIUsage = try container.decodeIfPresent(OpenAIAPIUsageSnapshot.self, forKey: .openAIAPIUsage)
         self.codexResetCredits = try container.decodeIfPresent(
             CodexRateLimitResetCreditsSnapshot.self,
@@ -401,6 +406,7 @@ public struct UsageSnapshot: Codable, Sendable {
         if !self.details.isEmpty {
             try container.encode(self.details, forKey: .details)
         }
+        try container.encodeIfPresent(self.throughput, forKey: .throughput)
         try container.encodeIfPresent(self.openAIAPIUsage, forKey: .openAIAPIUsage)
         try container.encodeIfPresent(self.codexResetCredits, forKey: .codexResetCredits)
         try container.encodeIfPresent(self.mistralUsage, forKey: .mistralUsage)
@@ -604,6 +610,7 @@ public struct UsageSnapshot: Codable, Sendable {
             deepseekPlatformBalanceOwner: self.deepseekPlatformBalanceOwner,
             browserSessionOwner: browserSessionOwner.resolving(self.browserSessionOwner),
             opencodegoUsage: self.opencodegoUsage,
+            throughput: self.throughput,
             openAIAPIUsage: self.openAIAPIUsage,
             codexResetCredits: codexResetCredits.resolving(self.codexResetCredits),
             grokResetCredits: grokResetCredits.resolving(self.grokResetCredits),
