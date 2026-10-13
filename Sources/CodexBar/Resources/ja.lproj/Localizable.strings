@@ -2509,6 +2509,7 @@
 "Ahead of pace is +" = "ペース超過を + で表示";
 "Reserve is +" = "余裕を + で表示";
 
+"cost_reset_inferred_tooltip" = "推定: %@ はこの日付を報告しません。月間の支出上限は毎月1日 00:00 UTC にリセットされます。";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "請求の読み取り権限を持つキー（BILLING または READONLY プリセット）。または FAL_KEY を設定します。";
 

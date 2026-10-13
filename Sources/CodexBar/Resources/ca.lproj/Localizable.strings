@@ -2513,6 +2513,7 @@
 "Ahead of pace is +" = "Per sobre del ritme és +";
 "Reserve is +" = "La reserva és +";
 
+"cost_reset_inferred_tooltip" = "Inferit: %@ no informa d'aquesta data. Els límits de despesa mensuals es reinicien a les 00:00 UTC l'1 de cada mes.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Clau amb accés de lectura a la facturació (perfil BILLING o READONLY). O defineix FAL_KEY.";
 

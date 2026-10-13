@@ -2477,6 +2477,7 @@
 "Ahead of pace is +" = "기준 속도 초과는 +";
 "Reserve is +" = "여유분은 +";
 
+"cost_reset_inferred_tooltip" = "추정: %@에서 이 날짜를 제공하지 않습니다. 월간 지출 한도는 매월 1일 00:00 UTC에 재설정됩니다.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "결제 읽기 권한이 있는 키(BILLING 또는 READONLY 프리셋). 또는 FAL_KEY를 설정하세요.";
 

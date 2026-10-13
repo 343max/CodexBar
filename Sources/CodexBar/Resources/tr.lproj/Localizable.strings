@@ -2512,6 +2512,7 @@
 "Ahead of pace is +" = "Hızın üzerinde kullanım +";
 "Reserve is +" = "Rezerv +";
 
+"cost_reset_inferred_tooltip" = "Çıkarım: %@ bu tarihi bildirmez. Aylık harcama limitleri her ayın 1'inde 00:00 UTC'de sıfırlanır.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Faturalama okuma erişimi olan anahtar (BILLING veya READONLY ön ayarı). Ya da FAL_KEY değerini ayarlayın.";
 

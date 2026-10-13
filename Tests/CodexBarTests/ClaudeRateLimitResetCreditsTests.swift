@@ -68,7 +68,7 @@ struct ClaudeRateLimitResetCreditsTests {
         for status in [400, 403, 404, 422, 500, 503] {
             let queries = UsageRequestLog()
             let usage = try await Self.fetchWebUsage(cedarEmber: block, optInStatus: status, usageRequests: queries)
-            #expect(usage.primary.usedPercent == 11)
+            #expect(usage.primary?.usedPercent == 11)
             #expect(usage.resetCredits == nil)
             #expect(await queries.values == ["cedar_ember=1", ""])
         }
@@ -169,7 +169,7 @@ struct ClaudeRateLimitResetCreditsTests {
             }
         }
 
-        #expect(snapshot.primary.usedPercent == 7)
+        #expect(snapshot.primary?.usedPercent == 7)
         #expect(snapshot.providerCost != nil)
         #expect(snapshot.resetCredits == nil)
     }

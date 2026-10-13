@@ -2508,6 +2508,7 @@
 "Ahead of pace is +" = "Au-dessus du rythme : +";
 "Reserve is +" = "Réserve : +";
 
+"cost_reset_inferred_tooltip" = "Déduit : %@ ne communique pas cette date. Les plafonds de dépenses mensuels sont réinitialisés le 1er à 00:00 UTC.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Clé avec accès en lecture à la facturation (préréglage BILLING ou READONLY). Ou définissez FAL_KEY.";
 

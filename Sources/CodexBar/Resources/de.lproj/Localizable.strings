@@ -2507,6 +2507,7 @@
 "Ahead of pace is +" = "Über dem Solltempo ist +";
 "Reserve is +" = "Reserve ist +";
 
+"cost_reset_inferred_tooltip" = "Abgeleitet: %@ meldet dieses Datum nicht. Monatliche Ausgabenlimits werden am Ersten um 00:00 UTC zurückgesetzt.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Schlüssel mit Lesezugriff auf die Abrechnung (Vorlage BILLING oder READONLY). Oder FAL_KEY setzen.";
 

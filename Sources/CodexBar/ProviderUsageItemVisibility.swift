@@ -23,7 +23,8 @@ struct ProviderUsageItemID: Hashable, Sendable {
     static let subscription = Self(rawValue: "section:subscription")
 
     static func metric(_ metricID: String) -> Self {
-        Self(rawValue: "\(self.metricPrefix)\(metricID)")
+        if metricID == "claude-extra-usage" { return .claudeExtraUsage }
+        return Self(rawValue: "\(self.metricPrefix)\(metricID)")
     }
 
     static func detailSection(_ rawTitle: String) -> Self {

@@ -2512,6 +2512,7 @@
 "Ahead of pace is +" = "Di atas laju adalah +";
 "Reserve is +" = "Cadangan adalah +";
 
+"cost_reset_inferred_tooltip" = "Diperkirakan: %@ tidak melaporkan tanggal ini. Batas pengeluaran bulanan direset pada pukul 00:00 UTC setiap tanggal 1.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Kunci dengan akses baca penagihan (preset BILLING atau READONLY). Atau atur FAL_KEY.";
 

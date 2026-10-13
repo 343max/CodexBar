@@ -2513,6 +2513,7 @@
 "Ahead of pace is +" = "Oltre il ritmo è +";
 "Reserve is +" = "La riserva è +";
 
+"cost_reset_inferred_tooltip" = "Dedotto: %@ non comunica questa data. I limiti di spesa mensili si reimpostano alle 00:00 UTC del giorno 1.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Chiave con accesso in lettura alla fatturazione (preset BILLING o READONLY). Oppure imposta FAL_KEY.";
 

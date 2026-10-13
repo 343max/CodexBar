@@ -1426,7 +1426,7 @@ extension StatusItemController {
             tilt: 0,
             statusIndicator: indicator,
             hideCritters: self.settings.menuBarHidesCritters,
-            quotaLayoutPolicy: .provider(provider))
+            quotaLayoutPolicy: .provider(provider, snapshot: snapshot))
         image.isTemplate = true
         return image
     }

@@ -2512,6 +2512,7 @@
 "Ahead of pace is +" = "Powyżej tempa to +";
 "Reserve is +" = "Rezerwa to +";
 
+"cost_reset_inferred_tooltip" = "Szacowane: %@ nie podaje tej daty. Miesięczne limity wydatków są resetowane o 00:00 UTC pierwszego dnia miesiąca.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Klucz z dostępem do odczytu rozliczeń (preset BILLING lub READONLY). Lub ustaw FAL_KEY.";
 

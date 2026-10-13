@@ -2513,6 +2513,7 @@
 "Ahead of pace is +" = "ใช้เร็วกว่าที่ควรเป็นคือ +";
 "Reserve is +" = "โควตาสำรองคือ +";
 
+"cost_reset_inferred_tooltip" = "ประมาณการ: %@ ไม่รายงานวันที่นี้ วงเงินค่าใช้จ่ายรายเดือนจะรีเซ็ตเวลา 00:00 UTC ของวันที่ 1";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "คีย์ที่มีสิทธิ์อ่านข้อมูลการเรียกเก็บเงิน (พรีเซ็ต BILLING หรือ READONLY) หรือตั้งค่า FAL_KEY";
 

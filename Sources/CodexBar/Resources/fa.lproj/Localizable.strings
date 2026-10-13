@@ -2513,6 +2513,7 @@
 "Ahead of pace is +" = "جلوتر از آهنگ مصرف یعنی +";
 "Reserve is +" = "ذخیره یعنی +";
 
+"cost_reset_inferred_tooltip" = "استنباط‌شده: %@ این تاریخ را گزارش نمی‌کند. سقف هزینه ماهانه ساعت 00:00 UTC روز اول ماه ریست می‌شود.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "کلیدی با دسترسی خواندن صورت‌حساب (پیش‌تنظیم BILLING یا READONLY). یا FAL_KEY را تنظیم کنید.";
 

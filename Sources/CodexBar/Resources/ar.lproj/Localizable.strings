@@ -2513,6 +2513,7 @@
 "Ahead of pace is +" = "تجاوز الوتيرة هو +";
 "Reserve is +" = "الاحتياطي هو +";
 
+"cost_reset_inferred_tooltip" = "مستنتَج: لا يُبلغ %@ عن هذا التاريخ. تتم إعادة تعيين حدود الإنفاق الشهرية في الساعة 00:00 بالتوقيت العالمي المنسق (UTC) في اليوم الأول من الشهر.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "مفتاح بصلاحية قراءة الفوترة (الإعداد المسبق BILLING أو READONLY). أو اضبط FAL_KEY.";
 

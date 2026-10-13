@@ -2510,6 +2510,7 @@
 "Ahead of pace is +" = "Опережение темпа — +";
 "Reserve is +" = "Запас — +";
 
+"cost_reset_inferred_tooltip" = "Предположительно: %@ не сообщает эту дату. Месячные лимиты расходов сбрасываются 1-го числа в 00:00 UTC.";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "Ключ с доступом на чтение биллинга (пресет BILLING или READONLY). Или задайте FAL_KEY.";
 

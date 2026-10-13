@@ -2502,6 +2502,7 @@
 "Ahead of pace is +" = "超出节奏为 +";
 "Reserve is +" = "余量为 +";
 
+"cost_reset_inferred_tooltip" = "推断：%@ 不提供此日期。每月支出上限在每月 1 日 00:00 UTC 重置。";
 /* fal provider credentials */
 "Key with billing read access (BILLING or READONLY preset). Or set FAL_KEY." = "具有账单读取权限的密钥（BILLING 或 READONLY 预设）。或设置 FAL_KEY。";
 

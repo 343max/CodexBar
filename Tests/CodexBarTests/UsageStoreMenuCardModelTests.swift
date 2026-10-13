@@ -101,6 +101,7 @@ struct UsageStoreMenuCardModelTests {
         let catalogue = UsageMenuCardView.Model.make(store.menuCardInput(
             for: .claude, context: .settings, optionalUsageOverride: true))
         #expect(displayed.providerCost == nil)
+        #expect(!displayed.metrics.contains { $0.id == "claude-extra-usage" })
         #expect(catalogue.usageItemDescriptors.contains { $0.id == .claudeExtraUsage && $0.requiresOptionalUsage })
         #expect(!store.settings.showOptionalCreditsAndExtraUsage)
 
