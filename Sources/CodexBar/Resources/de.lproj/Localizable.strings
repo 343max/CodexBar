@@ -2528,3 +2528,6 @@
 "Only enabled providers" = "Nur aktivierte Anbieter";
 "Restore default order" = "Standardreihenfolge wiederherstellen";
 "Also restores the provider order in the menu bar. Can be undone." = "Stellt auch die Anbieterreihenfolge in der Menüleiste wieder her. Kann rückgängig gemacht werden.";
+
+"Auto uses an API key when configured, otherwise browser cookies." = "Auto uses an API key when configured, otherwise browser cookies.";
+"Stored in the CodexBar config file. You can also set COMMAND_CODE_API_KEY." = "Stored in the CodexBar config file. You can also set COMMAND_CODE_API_KEY.";

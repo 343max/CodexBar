@@ -2529,3 +2529,6 @@
 "Only enabled providers" = "Só provedores activos";
 "Restore default order" = "Restaurar a orde predeterminada";
 "Also restores the provider order in the menu bar. Can be undone." = "Tamén restaura a orde dos provedores na barra de menús. Pódese desfacer.";
+
+"Auto uses an API key when configured, otherwise browser cookies." = "Auto uses an API key when configured, otherwise browser cookies.";
+"Stored in the CodexBar config file. You can also set COMMAND_CODE_API_KEY." = "Stored in the CodexBar config file. You can also set COMMAND_CODE_API_KEY.";
