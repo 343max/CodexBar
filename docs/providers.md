@@ -8,7 +8,7 @@ read_when:
 
 # Providers
 
-CodexBar currently registers 102 provider IDs. Some companies expose multiple surfaces, such as Codex vs OpenAI API or
+CodexBar currently registers 103 provider IDs. Some companies expose multiple surfaces, such as Codex vs OpenAI API or
 OpenCode vs OpenCode Go, because the auth source and quota shape differ.
 
 ## Fetch strategies (current)
@@ -180,6 +180,7 @@ complete when the available scan window covers fewer days.
 | [Sofya](sofya.md) | API key for separate account plan and purchased credit balances, eligibility, and the reported monthly reset. |
 | [fal](fal.md) | API key with billing read access for the current account credit balance. |
 | [FLORA](flora.md) | API key with billing permission plus a workspace ID for the available USD balance and month-to-date spend. |
+| [Parallel](parallel.md) | Browser session on platform.parallel.ai for the prepaid credit balance and pending debit. |
 
 <!-- End generated provider additions -->
 

@@ -4,6 +4,7 @@
 
 ### Added
 
+- Providers: add Parallel prepaid credit balances through its signed-in browser session, with pending debits when reported and no guessed balance when the dashboard response changes (#4479). Thanks @giuseppebisemi!
 - Command Code: use a configured API key for billing usage on macOS and Linux, with browser cookies when no key is set and explicit source selection (#4462, #4460). Thanks @Shrub24!
 
 - Menu bar: add graphical progress-bar tokens for selected usage windows and a stacked-bars preset, with readable layouts when returning to older app versions (#4436). Thanks @happut!

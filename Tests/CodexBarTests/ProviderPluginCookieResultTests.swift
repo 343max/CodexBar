@@ -110,7 +110,7 @@ struct ProviderPluginCookieResultTests {
     }
 
     @Test(arguments: BundledPluginTestSupport.engines, [
-        UsageProvider.lithosai, .museai, .abacus, .helmcode, .qoder,
+        UsageProvider.lithosai, .museai, .abacus, .helmcode, .qoder, .parallel,
     ])
     func `suppressed plugin imports explain permission recovery instead of missing login`(
         engine: ProviderPluginEngineKind, provider: UsageProvider) async throws
@@ -204,7 +204,7 @@ struct ProviderPluginCookieResultTests {
         #expect(usage.primary?.usedPercent == 0)
     }
 
-    @Test(arguments: BundledPluginTestSupport.engines, [UsageProvider.museai, .abacus])
+    @Test(arguments: BundledPluginTestSupport.engines, [UsageProvider.museai, .abacus, .parallel])
     func `missing plugin session explains the automatic browser boundary`(
         engine: ProviderPluginEngineKind, provider: UsageProvider) async throws
     {

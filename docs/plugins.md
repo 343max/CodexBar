@@ -613,3 +613,7 @@ outage rather than a parse failure, so the last good balance stays visible.
 [FLORA](flora.md) reads one workspace's available USD balance and UTC month-to-date spend with a bearer API key
 that holds billing permission. Its explicit workspace ID also supports keys whose workspace list is empty
 because they lack read permission. Unavailable spend keeps its documented reason instead of becoming zero.
+
+[Parallel](parallel.md) reads the prepaid credit balance through the shared cookie host with a session-cookie POST
+to the platform dashboard's internal balance endpoint. Parallel API keys cannot read the balance, and its Account API
+needs OAuth, so the provider is web-only. A changed response shape fails parsing instead of reporting zero.
