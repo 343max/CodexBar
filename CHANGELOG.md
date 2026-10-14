@@ -2,6 +2,10 @@
 
 ## 0.75.1 — Unreleased
 
+### Fixed
+
+- Plugins: release temporary objects between QuickJS refreshes and free retired JavaScriptCore contexts and completed runtimes (#4512, #4486).
+
 ## 0.75.0 — 2026-10-13
 
 ### Highlights
