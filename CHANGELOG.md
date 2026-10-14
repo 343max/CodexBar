@@ -2,6 +2,10 @@
 
 ## 0.75.1 — Unreleased
 
+### Fixed
+
+- Claude: retain account emails from existing OAuth profile checks, even when the profile lacks organization details (#4493).
+
 ## 0.75.0 — 2026-10-13
 
 ### Highlights
