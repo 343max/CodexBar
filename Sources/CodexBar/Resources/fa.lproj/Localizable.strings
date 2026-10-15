@@ -2635,3 +2635,8 @@
 "API credit" = "اعتبار API";
 "Purchased credit" = "اعتبار خریداری‌شده";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform موجودی اعتبار و هزینه ماهانه Console را نشان می‌دهد، نه تاریخچه هزینه محلی توکن‌ها.";
+
+/* Claude desktop cookie source */
+"Claude desktop app" = "برنامهٔ دسکتاپ Claude";
+"Use Claude desktop app cookies" = "استفاده از کوکی‌های برنامهٔ دسکتاپ Claude";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "برای مصرف وب، از حساب واردشده در Claude.app به‌جای حساب مرورگر استفاده کنید.";

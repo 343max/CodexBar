@@ -236,6 +236,22 @@ the cookie import.
   (`default_claude_max_5x` / `default_claude_max_20x`), it is surfaced in the label as "Max 5x" / "Max 20x".
 
 ## Web API (cookies)
+
+### Claude desktop app cookies (opt-in, macOS)
+
+Choose **Usage source → Web** and **Claude cookies → Automatic**, then enable **Use Claude desktop app cookies**.
+Sign in to Claude.app first. This option is off by default. The equivalent provider config field is `"claudeDesktopCookiesEnabled": true`,
+also honored by CLI usage. The desktop app source reads `~/Library/Application Support/Claude/Cookies` (or
+`Network/Cookies`) through SweetCookieKit, using `Claude Safe Storage` / `Claude Key` for encrypted values.
+
+Desktop cookie imports are exclusive: a missing or unreadable desktop session never falls back to a browser account.
+Explicitly selected token accounts keep their own credentials; this option applies to automatic-cookie fetches.
+Usage source **Auto** keeps its existing runtime-specific source order; choose **Web** to follow only the desktop session.
+Cookies are reimported on each refresh so account switches made in Claude.app are observed; desktop sessions
+do not read or write the browser cookie cache. The normal shared access gate still forbids prompts from background/settings
+work, checks matching cookie hosts before Safe Storage access, permits at most one interactive read per manual
+action, and honors denial cooldowns. OAuth and Claude Code login sources are unchanged.
+
 - Optional subscription dates come from `GET /api/organizations/{org_id}/subscription_details` on `claude.ai`,
   using an existing manual or cached session cookie. They do not come from the quota response or OAuth expiry.
   `next_charge_at` / `next_charge_date` supply renewal; `plan_ending_at` / `plan_ending_before` supply paid-access

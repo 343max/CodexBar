@@ -33,8 +33,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/steipete/SweetCookieKit",
       "state" : {
-        "revision" : "95ee9806fefd502fe7b69f1660b438c35f1048ce",
-        "version" : "0.5.7"
+        "revision" : "87d6f850ac859d8416749b8b3543e2242043e291"
       }
     },
     {
