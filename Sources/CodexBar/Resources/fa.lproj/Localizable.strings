@@ -2633,3 +2633,22 @@
 "API credit" = "اعتبار API";
 "Purchased credit" = "اعتبار خریداری‌شده";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform موجودی اعتبار و هزینه ماهانه Console را نشان می‌دهد، نه تاریخچه هزینه محلی توکن‌ها.";
+
+/* App-managed HTTP server */
+"http_server_title" = "سرور HTTP";
+"http_server_enable" = "فعال‌سازی سرور HTTP";
+"http_server_bind" = "نشانی IPv4 برای اتصال";
+"http_server_port" = "درگاه";
+"http_server_token" = "توکن سرور";
+"http_server_show" = "نمایش";
+"http_server_generate" = "ایجاد";
+"http_server_cache" = "فاصلهٔ کش (ثانیه)";
+"http_server_timeout" = "مهلت درخواست (ثانیه؛ 0 غیرفعال می‌کند)";
+"http_server_all_accounts" = "گنجاندن همهٔ حساب‌ها در تصویر وضعیت";
+"http_server_identity" = "هویت در داشبورد";
+"http_server_redacted" = "پوشانده‌شده";
+"http_server_warning" = "اطلاعات مصرف، هزینه، حساب و پروژه را در دسترس می‌گذارد، نه اطلاعات ورود ارائه‌دهندگان را. HTTP توکن سرور را بدون رمزگذاری ارسال می‌کند. فقط از اتصال قابل‌اعتماد VPN یا Tailscale استفاده کنید.";
+"http_server_plain_http" = "اجازهٔ HTTP بدون رمزگذاری از بیرون این Mac";
+"http_server_dashboard" = "داشبورد";
+"http_server_wildcard" = "در دستگاه‌های دیگر، 0.0.0.0 را با نشانی IPv4 اتصال VPN یا Tailscale این Mac جایگزین کنید.";
+"http_server_footer" = "به‌طور پیش‌فرض خاموش است. همراه CodexBar شروع و با خروج از آن متوقف می‌شود. تنظیمات و توکن در این Mac می‌مانند و همگام‌سازی یا صادر نمی‌شوند. برای دسترسی از راه دور، Mac را بیدار نگه دارید.";

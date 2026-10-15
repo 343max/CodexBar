@@ -2633,3 +2633,22 @@
 "API credit" = "رصيد API";
 "Purchased credit" = "رصيد مشترى";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "يعرض Claude Platform رصيد الائتمان في Console والإنفاق الشهري، وليس سجل تكلفة الرموز المحلي.";
+
+/* App-managed HTTP server */
+"http_server_title" = "خادم HTTP";
+"http_server_enable" = "تفعيل خادم HTTP";
+"http_server_bind" = "عنوان IPv4 للاستماع";
+"http_server_port" = "المنفذ";
+"http_server_token" = "رمز الخادم";
+"http_server_show" = "إظهار";
+"http_server_generate" = "إنشاء";
+"http_server_cache" = "فاصل التخزين المؤقت (ثوانٍ)";
+"http_server_timeout" = "مهلة الطلب (ثوانٍ؛ 0 يعطّلها)";
+"http_server_all_accounts" = "تضمين جميع الحسابات في اللقطات";
+"http_server_identity" = "الهوية في لوحة المعلومات";
+"http_server_redacted" = "محجوبة";
+"http_server_warning" = "يتيح بيانات الاستخدام والتكاليف والحسابات والمشروعات، ولا يتيح بيانات اعتماد المزوّدين مطلقًا. يرسل HTTP رمز الخادم دون تشفير. استخدم اتصال VPN أو Tailscale موثوقًا فقط.";
+"http_server_plain_http" = "السماح باتصال HTTP غير مشفّر من خارج هذا الـ Mac";
+"http_server_dashboard" = "لوحة المعلومات";
+"http_server_wildcard" = "على الأجهزة الأخرى، استبدل 0.0.0.0 بعنوان IPv4 لاتصال VPN أو Tailscale على هذا الـ Mac.";
+"http_server_footer" = "معطّل افتراضيًا. يبدأ مع CodexBar ويتوقف عند إغلاقه. تبقى الإعدادات والرمز على هذا الـ Mac ولا تشملها المزامنة أو التصدير. أبقِ جهاز Mac مستيقظًا للوصول عن بُعد.";

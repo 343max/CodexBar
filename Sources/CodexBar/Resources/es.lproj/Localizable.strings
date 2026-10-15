@@ -2627,3 +2627,22 @@
 "API credit" = "Crédito de API";
 "Purchased credit" = "Crédito comprado";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform muestra el saldo de crédito y el gasto mensual de la Console, no el historial de costos local de tokens.";
+
+/* App-managed HTTP server */
+"http_server_title" = "Servidor HTTP";
+"http_server_enable" = "Activar servidor HTTP";
+"http_server_bind" = "Dirección IPv4 de escucha";
+"http_server_port" = "Puerto";
+"http_server_token" = "Token del servidor";
+"http_server_show" = "Mostrar";
+"http_server_generate" = "Generar";
+"http_server_cache" = "Intervalo de caché (segundos)";
+"http_server_timeout" = "Tiempo límite de solicitud (segundos; 0 lo desactiva)";
+"http_server_all_accounts" = "Incluir todas las cuentas en las instantáneas";
+"http_server_identity" = "Identidad en el panel";
+"http_server_redacted" = "Oculta";
+"http_server_warning" = "Expone uso, costes e información de cuentas y proyectos; nunca credenciales de proveedores. HTTP envía el token del servidor sin cifrar. Úsalo solo mediante una conexión VPN o Tailscale de confianza.";
+"http_server_plain_http" = "Permitir HTTP sin cifrar fuera de este Mac";
+"http_server_dashboard" = "Panel";
+"http_server_wildcard" = "En otros dispositivos, sustituye 0.0.0.0 por la dirección IPv4 de VPN o Tailscale de este Mac.";
+"http_server_footer" = "Desactivado por defecto. Se inicia con CodexBar y se detiene al cerrarlo. La configuración y el token permanecen en este Mac y se excluyen de la sincronización y las exportaciones. Mantén el Mac activo para el acceso remoto.";

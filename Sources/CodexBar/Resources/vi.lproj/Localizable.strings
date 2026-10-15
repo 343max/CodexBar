@@ -2630,3 +2630,22 @@
 "API credit" = "Tín dụng API";
 "Purchased credit" = "Tín dụng đã mua";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform hiển thị số dư tín dụng và chi tiêu hàng tháng trên Console, không phải lịch sử chi phí token cục bộ.";
+
+/* App-managed HTTP server */
+"http_server_title" = "Máy chủ HTTP";
+"http_server_enable" = "Bật máy chủ HTTP";
+"http_server_bind" = "Địa chỉ IPv4 lắng nghe";
+"http_server_port" = "Cổng";
+"http_server_token" = "Mã truy cập máy chủ";
+"http_server_show" = "Hiện";
+"http_server_generate" = "Tạo";
+"http_server_cache" = "Khoảng thời gian bộ nhớ đệm (giây)";
+"http_server_timeout" = "Thời gian chờ yêu cầu (giây; 0 để tắt)";
+"http_server_all_accounts" = "Bao gồm mọi tài khoản trong ảnh chụp";
+"http_server_identity" = "Danh tính trên bảng điều khiển";
+"http_server_redacted" = "Đã che";
+"http_server_warning" = "Chia sẻ mức sử dụng, chi phí, thông tin tài khoản và dự án, không bao giờ chia sẻ thông tin đăng nhập nhà cung cấp. HTTP gửi mã truy cập máy chủ không mã hóa. Chỉ dùng kết nối VPN hoặc Tailscale đáng tin cậy.";
+"http_server_plain_http" = "Cho phép HTTP không mã hóa bên ngoài máy Mac này";
+"http_server_dashboard" = "Bảng điều khiển";
+"http_server_wildcard" = "Trên thiết bị khác, thay 0.0.0.0 bằng địa chỉ IPv4 VPN hoặc Tailscale của máy Mac này.";
+"http_server_footer" = "Mặc định tắt. Khởi động cùng CodexBar và dừng khi thoát. Cài đặt và mã truy cập chỉ ở trên máy Mac này, không được đồng bộ hoặc xuất. Giữ máy Mac thức để truy cập từ xa.";

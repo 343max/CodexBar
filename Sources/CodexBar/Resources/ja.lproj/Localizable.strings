@@ -2629,3 +2629,22 @@
 "API credit" = "API クレジット";
 "Purchased credit" = "購入済みクレジット";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform は、ローカルのトークンコスト履歴ではなく、Console のクレジット残高と月間支出を表示します。";
+
+/* App-managed HTTP server */
+"http_server_title" = "HTTPサーバー";
+"http_server_enable" = "HTTPサーバーを有効にする";
+"http_server_bind" = "バインドするIPv4アドレス";
+"http_server_port" = "ポート";
+"http_server_token" = "サーバートークン";
+"http_server_show" = "表示";
+"http_server_generate" = "生成";
+"http_server_cache" = "キャッシュ間隔（秒）";
+"http_server_timeout" = "リクエストのタイムアウト（秒、0で無効）";
+"http_server_all_accounts" = "スナップショットにすべてのアカウントを含める";
+"http_server_identity" = "ダッシュボードの識別情報";
+"http_server_redacted" = "伏せ字";
+"http_server_warning" = "使用量、費用、アカウント、プロジェクトの情報を公開します。プロバイダーの認証情報は公開しません。HTTPはサーバートークンを暗号化せず送信します。信頼できるVPNまたはTailscale接続でのみ使用してください。";
+"http_server_plain_http" = "このMac以外からの暗号化されていないHTTPを許可";
+"http_server_dashboard" = "ダッシュボード";
+"http_server_wildcard" = "他のデバイスでは、0.0.0.0をこのMacのVPNまたはTailscaleのIPv4アドレスに置き換えてください。";
+"http_server_footer" = "デフォルトではオフです。CodexBarと共に起動し、終了時に停止します。設定とトークンはこのMacに保存され、同期や書き出しの対象外です。リモートアクセス中はMacをスリープさせないでください。";

@@ -2,6 +2,10 @@
 
 ## 0.76.1 — Unreleased
 
+### Added
+
+- Settings: manage an opt-in HTTP usage server with local token storage, VPN/Tailscale binding controls, and automatic start/stop with the Mac app (#4430). Thanks @gmkbenjamin!
+
 ## 0.76.0 — 2026-10-15
 
 ### Highlights

@@ -2626,3 +2626,22 @@
 "API credit" = "API-tegoed";
 "Purchased credit" = "Gekocht tegoed";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform toont het Console-tegoed en de maandelijkse uitgaven, niet de lokale tokenkostengeschiedenis.";
+
+/* App-managed HTTP server */
+"http_server_title" = "HTTP-server";
+"http_server_enable" = "HTTP-server inschakelen";
+"http_server_bind" = "IPv4-luisteradres";
+"http_server_port" = "Poort";
+"http_server_token" = "Servertoken";
+"http_server_show" = "Tonen";
+"http_server_generate" = "Genereren";
+"http_server_cache" = "Cache-interval (seconden)";
+"http_server_timeout" = "Time-out voor verzoeken (seconden; 0 schakelt uit)";
+"http_server_all_accounts" = "Alle accounts in momentopnamen opnemen";
+"http_server_identity" = "Identiteit op dashboard";
+"http_server_redacted" = "Afgeschermd";
+"http_server_warning" = "Deelt gebruik, kosten en account- en projectinformatie, nooit inloggegevens van providers. HTTP verstuurt het servertoken onversleuteld. Gebruik alleen een vertrouwde VPN- of Tailscale-verbinding.";
+"http_server_plain_http" = "Onversleutelde HTTP buiten deze Mac toestaan";
+"http_server_dashboard" = "Dashboard";
+"http_server_wildcard" = "Vervang op andere apparaten 0.0.0.0 door het VPN- of Tailscale-IPv4-adres van deze Mac.";
+"http_server_footer" = "Standaard uit. Start met CodexBar en stopt wanneer het afsluit. Instellingen en token blijven op deze Mac en worden niet gesynchroniseerd of geëxporteerd. Houd de Mac wakker voor externe toegang.";

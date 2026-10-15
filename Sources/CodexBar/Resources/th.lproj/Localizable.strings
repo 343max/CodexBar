@@ -2631,3 +2631,22 @@
 "API credit" = "เครดิต API";
 "Purchased credit" = "เครดิตที่ซื้อ";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform แสดงยอดเครดิตและการใช้จ่ายรายเดือนของ Console ไม่ใช่ประวัติต้นทุนโทเค็นในเครื่อง";
+
+/* App-managed HTTP server */
+"http_server_title" = "เซิร์ฟเวอร์ HTTP";
+"http_server_enable" = "เปิดใช้งานเซิร์ฟเวอร์ HTTP";
+"http_server_bind" = "ที่อยู่ IPv4 สำหรับรับการเชื่อมต่อ";
+"http_server_port" = "พอร์ต";
+"http_server_token" = "โทเค็นเซิร์ฟเวอร์";
+"http_server_show" = "แสดง";
+"http_server_generate" = "สร้าง";
+"http_server_cache" = "ช่วงเวลาแคช (วินาที)";
+"http_server_timeout" = "เวลารอคำขอ (วินาที; 0 เพื่อปิด)";
+"http_server_all_accounts" = "รวมทุกบัญชีในสแนปช็อต";
+"http_server_identity" = "ข้อมูลระบุตัวตนบนแดชบอร์ด";
+"http_server_redacted" = "ปกปิด";
+"http_server_warning" = "เปิดเผยการใช้งาน ค่าใช้จ่าย และข้อมูลบัญชีกับโครงการ แต่ไม่เปิดเผยข้อมูลรับรองของผู้ให้บริการ HTTP ส่งโทเค็นเซิร์ฟเวอร์โดยไม่เข้ารหัส ใช้เฉพาะการเชื่อมต่อ VPN หรือ Tailscale ที่เชื่อถือได้";
+"http_server_plain_http" = "อนุญาต HTTP ที่ไม่เข้ารหัสจากภายนอก Mac เครื่องนี้";
+"http_server_dashboard" = "แดชบอร์ด";
+"http_server_wildcard" = "บนอุปกรณ์อื่น ให้แทนที่ 0.0.0.0 ด้วยที่อยู่ IPv4 ของ VPN หรือ Tailscale ของ Mac เครื่องนี้";
+"http_server_footer" = "ปิดไว้โดยค่าเริ่มต้น เริ่มพร้อม CodexBar และหยุดเมื่อออกจากแอป การตั้งค่าและโทเค็นอยู่บน Mac เครื่องนี้และไม่รวมในการซิงค์หรือส่งออก ให้ Mac ตื่นอยู่เพื่อเข้าถึงจากระยะไกล";

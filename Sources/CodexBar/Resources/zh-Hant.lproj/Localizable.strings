@@ -2607,3 +2607,22 @@
 "API credit" = "API 額度";
 "Purchased credit" = "已購買額度";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform 顯示 Console 額度餘額和每月支出，而不是本地 token 成本歷史記錄。";
+
+/* App-managed HTTP server */
+"http_server_title" = "HTTP 伺服器";
+"http_server_enable" = "啟用 HTTP 伺服器";
+"http_server_bind" = "綁定 IPv4 位址";
+"http_server_port" = "連接埠";
+"http_server_token" = "伺服器權杖";
+"http_server_show" = "顯示";
+"http_server_generate" = "產生";
+"http_server_cache" = "快取間隔（秒）";
+"http_server_timeout" = "要求逾時（秒；0 表示停用）";
+"http_server_all_accounts" = "在快照中包含所有帳號";
+"http_server_identity" = "儀表板身分資訊";
+"http_server_redacted" = "已遮蔽";
+"http_server_warning" = "公開用量、費用、帳號和專案資訊，但絕不公開供應商憑證。HTTP 會以未加密方式傳送伺服器權杖。請僅透過受信任的 VPN 或 Tailscale 連線使用。";
+"http_server_plain_http" = "允許此 Mac 以外的未加密 HTTP 存取";
+"http_server_dashboard" = "儀表板";
+"http_server_wildcard" = "在其他裝置上，請將 0.0.0.0 替換為此 Mac 的 VPN 或 Tailscale IPv4 位址。";
+"http_server_footer" = "預設關閉。隨 CodexBar 啟動，並在結束時停止。設定和權杖僅保存在此 Mac 上，不會同步或匯出。遠端存取時請保持 Mac 喚醒。";

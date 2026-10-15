@@ -2632,3 +2632,22 @@
 "API credit" = "Kredyt API";
 "Purchased credit" = "Kupiony kredyt";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform pokazuje saldo kredytów i miesięczne wydatki w Console, a nie lokalną historię kosztów tokenów.";
+
+/* App-managed HTTP server */
+"http_server_title" = "Serwer HTTP";
+"http_server_enable" = "Włącz serwer HTTP";
+"http_server_bind" = "Adres IPv4 nasłuchiwania";
+"http_server_port" = "Port";
+"http_server_token" = "Token serwera";
+"http_server_show" = "Pokaż";
+"http_server_generate" = "Wygeneruj";
+"http_server_cache" = "Interwał pamięci podręcznej (sekundy)";
+"http_server_timeout" = "Limit czasu żądania (sekundy; 0 wyłącza)";
+"http_server_all_accounts" = "Uwzględniaj wszystkie konta w migawkach";
+"http_server_identity" = "Tożsamość w panelu";
+"http_server_redacted" = "Ukryta";
+"http_server_warning" = "Udostępnia użycie, koszty oraz informacje o kontach i projektach, nigdy dane logowania dostawców. HTTP przesyła token serwera bez szyfrowania. Używaj tylko zaufanego połączenia VPN lub Tailscale.";
+"http_server_plain_http" = "Zezwól na nieszyfrowany HTTP poza tym Makiem";
+"http_server_dashboard" = "Panel";
+"http_server_wildcard" = "Na innych urządzeniach zastąp 0.0.0.0 adresem IPv4 VPN lub Tailscale tego Maca.";
+"http_server_footer" = "Domyślnie wyłączony. Uruchamia się z CodexBar i zatrzymuje po jego zamknięciu. Ustawienia i token pozostają na tym Maku, bez synchronizacji i eksportu. Aby uzyskać dostęp zdalny, Mac musi pozostać aktywny.";
