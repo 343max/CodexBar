@@ -1309,8 +1309,8 @@ extension StatusItemController {
         if self.settings.unifiedIconSource == .highestUsage, self.shouldMergeIcons {
             let activeProviders = self.store.enabledFirstPartyProvidersForDisplay()
             let overviewProviders = self.settings.resolvedMergedOverviewProviders(
-                activeProviders: activeProviders,
-                maxVisibleProviders: SettingsStore.mergedOverviewProviderLimit)
+                activeProviders: self.overviewProviderIDs(enabledProviders: activeProviders),
+                maxVisibleProviders: SettingsStore.mergedOverviewProviderLimit).compactMap(\.firstPartyProvider)
             if let highest = self.store.providerWithHighestUsage(candidateProviders: overviewProviders) {
                 return highest.provider
             }
@@ -1323,8 +1323,8 @@ extension StatusItemController {
         if self.shouldMergeIcons, self.settings.mergedMenuLastSelectedWasOverview {
             let enabledProviders = self.store.enabledFirstPartyProvidersForDisplay()
             let overviewProviders = self.settings.resolvedMergedOverviewProviders(
-                activeProviders: enabledProviders,
-                maxVisibleProviders: SettingsStore.mergedOverviewProviderLimit)
+                activeProviders: self.overviewProviderIDs(enabledProviders: enabledProviders),
+                maxVisibleProviders: SettingsStore.mergedOverviewProviderLimit).compactMap(\.firstPartyProvider)
             if let provider = overviewProviders.first(where: { self.store.isEnabled($0) }) {
                 return provider
             }

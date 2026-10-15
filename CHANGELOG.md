@@ -2,6 +2,10 @@
 
 ## 0.76.1 — Unreleased
 
+### Added
+
+- Plugins: show quota gauges on user-plugin tabs and allow enabled plugins in the Overview provider picker (#4471). Thanks @soimy!
+
 ## 0.76.0 — 2026-10-15
 
 ### Highlights
