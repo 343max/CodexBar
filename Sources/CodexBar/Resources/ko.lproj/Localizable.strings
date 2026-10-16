@@ -1899,7 +1899,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "OpenAI 웹 데이터를 새로 고치기 전에 프로필을 새로 고치십시오.";
 "Refreshing account status…" = "계정 상태 새로고침 중…";
 "Remaining budget compared with an ideal steady burn rate." = "이상적인 꾸준한 연소율과 비교한 남은 예산입니다.";
-"Renews: %@" = "갱신: %@";
+"Plan renews: %@" = "요금제 갱신: %@";
 "Request quota" = "할당량 요청";
 "Requesting login…" = "로그인을 요청하는 중…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "필수입니다. 여기에 일반 API 키 또는 관리 API 키를 입력하세요. 관리 키는 공식 OpenRouter API에서 계정 활동도 활성화합니다.";
@@ -2480,6 +2480,8 @@
 "Pace sign" = "사용 속도 부호";
 "Ahead of pace is +" = "기준 속도 초과는 +";
 "Reserve is +" = "여유분은 +";
+"Back" = "뒤로";
+"Forward" = "앞으로";
 
 "cost_reset_inferred_tooltip" = "추정: %@에서 이 날짜를 제공하지 않습니다. 월간 지출 한도는 매월 1일 00:00 UTC에 재설정됩니다.";
 /* fal provider credentials */
@@ -2616,3 +2618,7 @@
 "http_server_dashboard" = "대시보드";
 "http_server_wildcard" = "다른 기기에서는 0.0.0.0을 이 Mac의 VPN 또는 Tailscale IPv4 주소로 바꾸세요.";
 "http_server_footer" = "기본적으로 꺼져 있습니다. CodexBar와 함께 시작되고 종료 시 중지됩니다. 설정과 토큰은 이 Mac에 보관되며 동기화 및 내보내기에서 제외됩니다. 원격 접근을 위해 Mac이 잠자기에 들어가지 않도록 하세요.";
+/* Claude desktop cookie source */
+"Claude desktop app" = "Claude 데스크톱 앱";
+"Use Claude desktop app cookies" = "Claude 데스크톱 앱 쿠키 사용";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "웹 사용량에는 브라우저 대신 Claude.app에 로그인한 계정을 사용합니다.";

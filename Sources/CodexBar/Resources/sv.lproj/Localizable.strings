@@ -1930,7 +1930,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "Uppdatera profilen innan du uppdaterar OpenAI webbdata.";
 "Refreshing account status…" = "Uppdaterar kontostatus...";
 "Remaining budget compared with an ideal steady burn rate." = "Återstående budget jämfört med en idealisk jämn förbränningshastighet.";
-"Renews: %@" = "Förnyar: %@";
+"Plan renews: %@" = "Abonnemanget förnyas: %@";
 "Request quota" = "Begär Kvot";
 "Requesting login…" = "Begär inloggning...";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "Krävs. Ange en vanlig API-nyckel eller en Management API-nyckel här. Hanteringsnycklar aktiverar även kontoaktivitet på den officiella OpenRouter API.";
@@ -2511,6 +2511,8 @@
 "Pace sign" = "Tecken för förbrukningstakt";
 "Ahead of pace is +" = "Över förbrukningstakten är +";
 "Reserve is +" = "Reserv är +";
+"Back" = "Bakåt";
+"Forward" = "Framåt";
 
 "cost_reset_inferred_tooltip" = "Antaget: %@ rapporterar inte detta datum. Månatliga utgiftsgränser återställs den 1:a kl. 00:00 UTC.";
 /* fal provider credentials */
@@ -2647,3 +2649,7 @@
 "http_server_dashboard" = "Översikt";
 "http_server_wildcard" = "Ersätt 0.0.0.0 på andra enheter med denna Macs IPv4-adress för VPN eller Tailscale.";
 "http_server_footer" = "Av som standard. Startar med CodexBar och stoppas när det avslutas. Inställningar och token stannar på denna Mac och varken synkroniseras eller exporteras. Håll Mac-datorn vaken för fjärråtkomst.";
+/* Claude desktop cookie source */
+"Claude desktop app" = "Claude-skrivbordsappen";
+"Use Claude desktop app cookies" = "Använd cookies från Claude-skrivbordsappen";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "För webbanvändning används kontot som är inloggat i Claude.app i stället för webbläsarkontot.";

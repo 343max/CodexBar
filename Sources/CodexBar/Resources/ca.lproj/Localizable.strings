@@ -1935,7 +1935,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "Actualitzeu el perfil abans d'actualitzar les dades web de OpenAI.";
 "Refreshing account status…" = "S'està actualitzant l'estat del compte...";
 "Remaining budget compared with an ideal steady burn rate." = "Pressupost restant en comparació amb una taxa de combustió constant ideal.";
-"Renews: %@" = "Renova: %@";
+"Plan renews: %@" = "El pla es renova: %@";
 "Request quota" = "Demana quota";
 "Requesting login…" = "S'està sol·licitant l'inici de sessió...";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "Obligatori. Introduïu una clau normal API o una clau de gestió API aquí. Les claus de gestió també permeten l'activitat del compte al OpenRouter API oficial.";
@@ -2516,6 +2516,8 @@
 "Pace sign" = "Signe del ritme";
 "Ahead of pace is +" = "Per sobre del ritme és +";
 "Reserve is +" = "La reserva és +";
+"Back" = "Enrere";
+"Forward" = "Endavant";
 
 "cost_reset_inferred_tooltip" = "Inferit: %@ no informa d'aquesta data. Els límits de despesa mensuals es reinicien a les 00:00 UTC l'1 de cada mes.";
 /* fal provider credentials */
@@ -2650,3 +2652,7 @@
 "http_server_dashboard" = "Tauler";
 "http_server_wildcard" = "Als altres dispositius, substitueix 0.0.0.0 per l’adreça IPv4 de VPN o Tailscale d’aquest Mac.";
 "http_server_footer" = "Desactivat per defecte. S’inicia amb CodexBar i s’atura en tancar-lo. La configuració i el testimoni es queden en aquest Mac i s’exclouen de la sincronització i les exportacions. Mantén el Mac despert per a l’accés remot.";
+/* Claude desktop cookie source */
+"Claude desktop app" = "Aplicació d’escriptori de Claude";
+"Use Claude desktop app cookies" = "Utilitza les galetes de l’aplicació d’escriptori de Claude";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "Per a l’ús web, fes servir el compte que ha iniciat sessió a Claude.app en lloc del navegador.";

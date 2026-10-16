@@ -1935,7 +1935,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "Refresh the profile before refreshing OpenAI web data.";
 "Refreshing account status…" = "Refreshing account status…";
 "Remaining budget compared with an ideal steady burn rate." = "Remaining budget compared with an ideal steady burn rate.";
-"Renews: %@" = "Renews: %@";
+"Plan renews: %@" = "Plan renews: %@";
 "Request quota" = "Request quota";
 "Requesting login…" = "Requesting login…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API.";
@@ -2516,6 +2516,8 @@
 "Pace sign" = "Pace sign";
 "Ahead of pace is +" = "Ahead of pace is +";
 "Reserve is +" = "Reserve is +";
+"Back" = "Back";
+"Forward" = "Forward";
 
 "cost_reset_inferred_tooltip" = "Inferred: %@ doesn't report this date. Monthly spend caps roll over at 00:00 UTC on the 1st.";
 /* fal provider credentials */
@@ -2653,3 +2655,7 @@
 "http_server_dashboard" = "Dashboard";
 "http_server_wildcard" = "On other devices, replace 0.0.0.0 with this Mac’s VPN or Tailscale IPv4 address.";
 "http_server_footer" = "Off by default. Starts with CodexBar and stops when it quits. Settings and token stay on this Mac and are excluded from sync and exports. Keep the Mac awake for remote access.";
+/* Claude desktop cookie source */
+"Claude desktop app" = "Claude desktop app";
+"Use Claude desktop app cookies" = "Use Claude desktop app cookies";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "For Web usage, follow the account signed into Claude.app instead of a browser.";
