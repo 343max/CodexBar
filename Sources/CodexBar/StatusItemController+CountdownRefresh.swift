@@ -173,7 +173,7 @@ extension StatusItemController {
         }
         let activeProviders = self.store.enabledFirstPartyProvidersForDisplay()
         return self.settings.resolvedMergedOverviewProviders(
-            activeProviders: activeProviders,
+            activeProviders: self.overviewProviderIDs(enabledProviders: activeProviders),
             maxVisibleProviders: SettingsStore.mergedOverviewProviderLimit).contains(.codex)
     }
 
