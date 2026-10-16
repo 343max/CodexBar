@@ -41,6 +41,16 @@
 "7d" = "7d";
 "A managed Codex login is already running. Wait for it to finish before adding " = "Xa hai un inicio de sesión xestionado de Codex en curso. Agarda a que remate antes de engadir ";
 "API key" = "Chave de API";
+
+/* Future AGI provider */
+"Secret key" = "Clave secreta";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "Requírese xunto coa clave API. Gárdase no ficheiro de configuración local. Tamén podes definir FI_SECRET_KEY.";
+"Paste secret key…" = "Pega a clave secreta…";
+"AI credits" = "Créditos de IA";
+"Gateway requests" = "Solicitudes á pasarela";
+"Future AGI cost history is not available." = "O historial de custos de Future AGI non está dispoñible.";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "Gárdase no ficheiro de configuración local de CodexBar. Tamén podes definir FI_API_KEY.";
+
 "API region" = "Rexión da API";
 "API token" = "Token de API";
 "API tokens" = "Tokens de API";

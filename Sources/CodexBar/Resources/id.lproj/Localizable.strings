@@ -41,6 +41,16 @@
 "7d" = "7 hari";
 "A managed Codex login is already running. Wait for it to finish before adding " = "Login Codex terkelola sudah berjalan. Tunggu hingga selesai sebelum menambahkan ";
 "API key" = "Kunci API";
+
+/* Future AGI provider */
+"Secret key" = "Kunci rahasia";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "Diperlukan bersama kunci API. Disimpan dalam file konfigurasi lokal. Atau atur FI_SECRET_KEY.";
+"Paste secret key…" = "Tempel kunci rahasia…";
+"AI credits" = "Kredit AI";
+"Gateway requests" = "Permintaan gateway";
+"Future AGI cost history is not available." = "Riwayat biaya Future AGI tidak tersedia.";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "Disimpan dalam file konfigurasi lokal CodexBar. Atau atur FI_API_KEY.";
+
 "API region" = "Wilayah API";
 "API token" = "Token API";
 "API tokens" = "Token API";
