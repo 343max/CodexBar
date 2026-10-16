@@ -1483,6 +1483,9 @@
 "menu_bar_layout_token_runs_out" = "預計用盡";
 "menu_bar_layout_token_cost_today" = "今日費用";
 "menu_bar_layout_token_cost_window" = "費用（歷史時段）";
+"menu_bar_layout_token_spend" = "支出 %";
+"menu_bar_layout_token_spend_pace" = "支出節奏";
+"menu_bar_layout_token_spend_budget" = "支出 / 預算";
 "menu_bar_layout_token_space" = "空格";
 "menu_bar_layout_token_line_break" = "換行";
 "menu_bar_layout_token_separator_accessibility" = "分隔點";
@@ -1645,6 +1648,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "工作階段即將用盡";
 "menu_bar_layout_conditional_default_either_high" = "工作階段或每週用量偏高";
 "menu_bar_layout_conditional_default_scoped_weekly" = "模型專屬每週已用超過 60%";
+"menu_bar_layout_conditional_default_spend_high" = "支出已用超過 90%";
 "Visible usage items" = "可見用量項目";
 "Restore Defaults" = "回復預設值";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "選擇要在此供應商的選單、設定預覽與概覽中顯示的用量列。";

@@ -24,6 +24,7 @@ struct MenuBarPane: View {
                 L("menu_bar_layout_token_session_pace"),
                 L("menu_bar_layout_token_weekly_pace"),
                 L("menu_bar_layout_token_auto_pace"),
+                L("menu_bar_layout_token_spend_pace"),
             ].joined(separator: ", ")
 
         Form {

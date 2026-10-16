@@ -1458,6 +1458,9 @@
 "menu_bar_layout_token_runs_out" = "预计用尽";
 "menu_bar_layout_token_cost_today" = "今日费用";
 "menu_bar_layout_token_cost_window" = "费用（历史窗口）";
+"menu_bar_layout_token_spend" = "花费 %";
+"menu_bar_layout_token_spend_pace" = "花费节奏";
+"menu_bar_layout_token_spend_budget" = "花费 / 预算";
 "menu_bar_layout_token_space" = "空格";
 "menu_bar_layout_token_line_break" = "换行";
 "menu_bar_layout_token_separator_accessibility" = "分隔点";
@@ -1595,6 +1598,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "会话即将用尽";
 "menu_bar_layout_conditional_default_either_high" = "会话或每周用量偏高";
 "menu_bar_layout_conditional_default_scoped_weekly" = "模型专属每周已用超过 60%";
+"menu_bar_layout_conditional_default_spend_high" = "花费已用超过 90%";
 
 /* Provider usage details */
 "Detailed usage" = "用量明细";

@@ -1422,6 +1422,9 @@
 "menu_bar_layout_token_runs_out" = "소진";
 "menu_bar_layout_token_cost_today" = "오늘 비용";
 "menu_bar_layout_token_cost_window" = "비용 (기록 범위)";
+"menu_bar_layout_token_spend" = "지출 %";
+"menu_bar_layout_token_spend_pace" = "지출 속도";
+"menu_bar_layout_token_spend_budget" = "지출 / 예산";
 "menu_bar_layout_token_space" = "공백";
 "menu_bar_layout_token_line_break" = "줄 바꿈";
 "menu_bar_layout_token_separator_accessibility" = "구분점";
@@ -1583,6 +1586,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "세션 거의 소진";
 "menu_bar_layout_conditional_default_either_high" = "세션 또는 주간 사용량 높음";
 "menu_bar_layout_conditional_default_scoped_weekly" = "모델별 주간 60% 초과 사용";
+"menu_bar_layout_conditional_default_spend_high" = "지출 90% 초과 사용";
 "Visible usage items" = "표시할 사용량 항목";
 "Restore Defaults" = "기본값 복원";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "이 제공업체의 메뉴, 설정 미리보기 및 개요에 표시할 사용량 행을 선택합니다.";

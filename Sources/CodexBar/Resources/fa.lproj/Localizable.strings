@@ -1456,6 +1456,9 @@
 "menu_bar_layout_token_runs_out" = "تمام می‌شود";
 "menu_bar_layout_token_cost_today" = "هزینهٔ امروز";
 "menu_bar_layout_token_cost_window" = "هزینه (پنجره تاریخچه)";
+"menu_bar_layout_token_spend" = "هزینه %";
+"menu_bar_layout_token_spend_pace" = "سرعت هزینه";
+"menu_bar_layout_token_spend_budget" = "هزینه / بودجه";
 "menu_bar_layout_token_space" = "فاصله";
 "menu_bar_layout_token_line_break" = "شکست خط";
 "menu_bar_layout_token_separator_accessibility" = "نقطهٔ جداکننده";
@@ -1618,6 +1621,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "نشست تقریباً تمام شده";
 "menu_bar_layout_conditional_default_either_high" = "نشست یا هفته در سطح بالا";
 "menu_bar_layout_conditional_default_scoped_weekly" = "پنجره هفتگی مدل بیش از ۶۰٪";
+"menu_bar_layout_conditional_default_spend_high" = "بیش از ۹۰٪ هزینه مصرف شده";
 "Visible usage items" = "موارد قابل مشاهده استفاده";
 "Restore Defaults" = "بازیابی پیش‌فرض‌ها";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "انتخاب کنید کدام ردیف‌های استفاده در منوی این ارائه‌دهنده، پیش‌نمایش تنظیمات و نمای کلی نمایش داده شوند.";

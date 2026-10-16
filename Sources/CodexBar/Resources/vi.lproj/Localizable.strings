@@ -1453,6 +1453,9 @@
 "menu_bar_layout_token_runs_out" = "Sắp hết";
 "menu_bar_layout_token_cost_today" = "Chi phí hôm nay";
 "menu_bar_layout_token_cost_window" = "Chi phí (Cửa sổ lịch sử)";
+"menu_bar_layout_token_spend" = "Chi phí %";
+"menu_bar_layout_token_spend_pace" = "Tốc độ chi phí";
+"menu_bar_layout_token_spend_budget" = "Chi phí / ngân sách";
 "menu_bar_layout_token_space" = "Khoảng trắng";
 "menu_bar_layout_token_line_break" = "Ngắt dòng";
 "menu_bar_layout_token_separator_accessibility" = "Dấu chấm phân cách";
@@ -1615,6 +1618,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "Phiên gần cạn";
 "menu_bar_layout_conditional_default_either_high" = "Phiên hoặc tuần đang ở mức cao";
 "menu_bar_layout_conditional_default_scoped_weekly" = "Tuần theo mô hình đã dùng trên 60%";
+"menu_bar_layout_conditional_default_spend_high" = "Chi phí đã dùng trên 90%";
 "Visible usage items" = "Mục sử dụng hiển thị";
 "Restore Defaults" = "Khôi phục mặc định";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "Chọn các hàng sử dụng xuất hiện trong menu của nhà cung cấp này, bản xem trước Cài đặt và Tổng quan.";

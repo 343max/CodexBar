@@ -1454,6 +1454,9 @@
 "menu_bar_layout_token_runs_out" = "Biter";
 "menu_bar_layout_token_cost_today" = "Bugünkü maliyet";
 "menu_bar_layout_token_cost_window" = "Maliyet (Geçmiş penceresi)";
+"menu_bar_layout_token_spend" = "Harcama %";
+"menu_bar_layout_token_spend_pace" = "Harcama temposu";
+"menu_bar_layout_token_spend_budget" = "Harcama / bütçe";
 "menu_bar_layout_token_space" = "Boşluk";
 "menu_bar_layout_token_line_break" = "Satır sonu";
 "menu_bar_layout_token_separator_accessibility" = "Ayırıcı nokta";
@@ -1617,6 +1620,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "Oturum neredeyse tükendi";
 "menu_bar_layout_conditional_default_either_high" = "Oturum veya haftalık kullanım yükseldi";
 "menu_bar_layout_conditional_default_scoped_weekly" = "Model haftasının %60'ından fazlası kullanıldı";
+"menu_bar_layout_conditional_default_spend_high" = "Harcamanın %90'ından fazlası kullanıldı";
 "Visible usage items" = "Görünür kullanım öğeleri";
 "Restore Defaults" = "Varsayılanları Geri Yükle";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "Bu sağlayıcının menüsünde, Ayarlar önizlemesinde ve Genel Bakış'ta hangi kullanım satırlarının görüneceğini seçin.";

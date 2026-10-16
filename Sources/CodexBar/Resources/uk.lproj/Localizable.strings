@@ -1452,6 +1452,9 @@
 "menu_bar_layout_token_runs_out" = "Закінчиться";
 "menu_bar_layout_token_cost_today" = "Вартість сьогодні";
 "menu_bar_layout_token_cost_window" = "Вартість (Вікно історії)";
+"menu_bar_layout_token_spend" = "Витрати %";
+"menu_bar_layout_token_spend_pace" = "Темп витрат";
+"menu_bar_layout_token_spend_budget" = "Витрати / бюджет";
 "menu_bar_layout_token_space" = "Пробіл";
 "menu_bar_layout_token_line_break" = "Розрив рядка";
 "menu_bar_layout_token_separator_accessibility" = "Крапка-роздільник";
@@ -1614,6 +1617,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "Сесія майже вичерпана";
 "menu_bar_layout_conditional_default_either_high" = "Сесія або тиждень на високому рівні";
 "menu_bar_layout_conditional_default_scoped_weekly" = "Тижневе вікно моделі понад 60 %";
+"menu_bar_layout_conditional_default_spend_high" = "Витрати використано понад 90 %";
 "Visible usage items" = "Видимі елементи використання";
 "Restore Defaults" = "Відновити типові значення";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "Виберіть, які рядки використання відображатимуться в меню цього постачальника, попередньому перегляді налаштувань і огляді.";

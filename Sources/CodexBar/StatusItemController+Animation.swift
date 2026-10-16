@@ -1010,7 +1010,7 @@ extension StatusItemController {
               cost.used >= 0,
               // Codex extra usage is denominated in credits, not money: currency formatting would emit
               // the bare amount ("2000.6633599996567") instead of a spend value, so it keeps the percent text.
-              cost.currencyCode != CodexExtraUsageCost.currencyCode
+              cost.isMonetary
         else {
             return nil
         }

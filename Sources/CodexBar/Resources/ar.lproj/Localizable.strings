@@ -1456,6 +1456,9 @@
 "menu_bar_layout_token_runs_out" = "ينفد";
 "menu_bar_layout_token_cost_today" = "تكلفة اليوم";
 "menu_bar_layout_token_cost_window" = "تكلفة (نافذة التاريخ)";
+"menu_bar_layout_token_spend" = "الإنفاق %";
+"menu_bar_layout_token_spend_pace" = "وتيرة الإنفاق";
+"menu_bar_layout_token_spend_budget" = "الإنفاق / الميزانية";
 "menu_bar_layout_token_space" = "مسافة";
 "menu_bar_layout_token_line_break" = "فاصل سطر";
 "menu_bar_layout_token_separator_accessibility" = "نقطة فاصلة";
@@ -1618,6 +1621,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "الجلسة على وشك النفاد";
 "menu_bar_layout_conditional_default_either_high" = "الجلسة أو الأسبوع في مستوى مرتفع";
 "menu_bar_layout_conditional_default_scoped_weekly" = "نافذة الطراز الأسبوعية فوق 60٪";
+"menu_bar_layout_conditional_default_spend_high" = "استُخدم أكثر من 90٪ من الإنفاق";
 "Visible usage items" = "عناصر الاستخدام المرئية";
 "Restore Defaults" = "استعادة الإعدادات الافتراضية";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "اختر صفوف الاستخدام التي تظهر في قائمة هذا المزوّد ومعاينة الإعدادات والنظرة العامة.";

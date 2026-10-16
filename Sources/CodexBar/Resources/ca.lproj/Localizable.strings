@@ -1459,6 +1459,9 @@
 "menu_bar_layout_token_runs_out" = "S'esgota";
 "menu_bar_layout_token_cost_today" = "Cost d'avui";
 "menu_bar_layout_token_cost_window" = "Cost (Finestra d'historial)";
+"menu_bar_layout_token_spend" = "Despesa %";
+"menu_bar_layout_token_spend_pace" = "Ritme de despesa";
+"menu_bar_layout_token_spend_budget" = "Despesa / pressupost";
 "menu_bar_layout_token_space" = "Espai";
 "menu_bar_layout_token_line_break" = "Salt de línia";
 "menu_bar_layout_token_separator_accessibility" = "Punt separador";
@@ -1618,6 +1621,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "Sessió gairebé esgotada";
 "menu_bar_layout_conditional_default_either_high" = "Sessió o setmana en nivell alt";
 "menu_bar_layout_conditional_default_scoped_weekly" = "Setmanal amb àmbit per damunt del 60%";
+"menu_bar_layout_conditional_default_spend_high" = "Despesa per damunt del 90% utilitzada";
 "Visible usage items" = "Elements d'ús visibles";
 "Restore Defaults" = "Restaura els valors predeterminats";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "Trieu quines files d'ús es mostren al menú d'aquest proveïdor, a la previsualització de Configuració i a la vista general.";

@@ -1456,6 +1456,9 @@
 "menu_bar_layout_token_runs_out" = "หมด";
 "menu_bar_layout_token_cost_today" = "ค่าใช้จ่ายวันนี้";
 "menu_bar_layout_token_cost_window" = "ค่าใช้จ่าย (กรอบเวลาประวัติ)";
+"menu_bar_layout_token_spend" = "ค่าใช้จ่าย %";
+"menu_bar_layout_token_spend_pace" = "อัตราค่าใช้จ่าย";
+"menu_bar_layout_token_spend_budget" = "ค่าใช้จ่าย / งบประมาณ";
 "menu_bar_layout_token_space" = "ช่องว่าง";
 "menu_bar_layout_token_line_break" = "ขึ้นบรรทัดใหม่";
 "menu_bar_layout_token_separator_accessibility" = "จุดคั่น";
@@ -1618,6 +1621,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "เซสชันเกือบหมด";
 "menu_bar_layout_conditional_default_either_high" = "เซสชันหรือรายสัปดาห์อยู่ในระดับสูง";
 "menu_bar_layout_conditional_default_scoped_weekly" = "รายสัปดาห์ตามโมเดลเกิน 60%";
+"menu_bar_layout_conditional_default_spend_high" = "ใช้ค่าใช้จ่ายเกิน 90%";
 "Visible usage items" = "รายการการใช้งานที่มองเห็น";
 "Restore Defaults" = "คืนค่าเริ่มต้น";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "เลือกแถวการใช้งานที่จะแสดงในเมนูของผู้ให้บริการนี้ ตัวอย่างการตั้งค่า และภาพรวม";

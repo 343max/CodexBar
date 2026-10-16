@@ -1455,6 +1455,9 @@
 "menu_bar_layout_token_runs_out" = "Reicht bis";
 "menu_bar_layout_token_cost_today" = "Kosten heute";
 "menu_bar_layout_token_cost_window" = "Kosten (Verlaufsfenster)";
+"menu_bar_layout_token_spend" = "Ausgaben %";
+"menu_bar_layout_token_spend_pace" = "Ausgabentempo";
+"menu_bar_layout_token_spend_budget" = "Ausgaben / Budget";
 "menu_bar_layout_token_space" = "Leerraum";
 "menu_bar_layout_token_line_break" = "Zeilenumbruch";
 "menu_bar_layout_token_separator_accessibility" = "Trennpunkt";
@@ -1616,6 +1619,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "Sitzung fast aufgebraucht";
 "menu_bar_layout_conditional_default_either_high" = "Sitzung oder Woche läuft hoch";
 "menu_bar_layout_conditional_default_scoped_weekly" = "Modellfenster über 60 % genutzt";
+"menu_bar_layout_conditional_default_spend_high" = "Ausgaben über 90 % genutzt";
 "Visible usage items" = "Sichtbare Nutzungselemente";
 "Restore Defaults" = "Standardeinstellungen wiederherstellen";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "Wähle aus, welche Nutzungszeilen im Menü dieses Anbieters, in der Einstellungsvorschau und in der Übersicht angezeigt werden.";

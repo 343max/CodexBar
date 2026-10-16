@@ -1456,6 +1456,9 @@
 "menu_bar_layout_token_runs_out" = "Wyczerpie się";
 "menu_bar_layout_token_cost_today" = "Koszt dzisiaj";
 "menu_bar_layout_token_cost_window" = "Koszt (Zakres historii)";
+"menu_bar_layout_token_spend" = "Wydatki %";
+"menu_bar_layout_token_spend_pace" = "Tempo wydatków";
+"menu_bar_layout_token_spend_budget" = "Wydatki / budżet";
 "menu_bar_layout_token_space" = "Odstęp";
 "menu_bar_layout_token_line_break" = "Podział wiersza";
 "menu_bar_layout_token_separator_accessibility" = "Kropka oddzielająca";
@@ -1617,6 +1620,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "Sesja prawie wyczerpana";
 "menu_bar_layout_conditional_default_either_high" = "Sesja lub tydzień na wysokim poziomie";
 "menu_bar_layout_conditional_default_scoped_weekly" = "Tydzień modelu powyżej 60% zużycia";
+"menu_bar_layout_conditional_default_spend_high" = "Wydatki powyżej 90% zużycia";
 "Visible usage items" = "Widoczne elementy użycia";
 "Restore Defaults" = "Przywróć domyślne";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "Wybierz wiersze użycia wyświetlane w menu tego dostawcy, podglądzie ustawień i przeglądzie.";
