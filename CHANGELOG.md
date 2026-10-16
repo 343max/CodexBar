@@ -2,11 +2,13 @@
 
 ## 0.76.1 — Unreleased
 
+### Fixed
+
+- Widgets: include optional provider details in snapshot JSON so Claude Cloud credits retain their remaining balance, grant total, and expiry without changing quota rows (#4546). Thanks @djbclark!
 ### Added
 
 - Settings: offer a six-day Monday–Saturday work week for weekly pace and session forecasts (#4548). Thanks @ViaxCo!
 
-### Fixed
 
 - Usage forecasts: restore estimated session quotas and windows until reset when older history contains reset-time corrections (#4540). Thanks @emanuelst!
 - Usage cards: distinguish plan renewal dates from quota resets with “Plan renews” wording across all 23 locales (#4540). Thanks @emanuelst!

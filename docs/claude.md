@@ -365,8 +365,9 @@ Changing a cap changes the percentage, not its rollover. A stale observation doe
 - OAuth and Web usage responses can supply promotional cloud-session credit in `iguana_necktie`.
   CodexBar shows a separate **Cloud credits** balance row in the menu and a detail section in the CLI when
   optional credits/extra usage is enabled. The menu row matches the prepaid **Credits** row and shows only the
-  remaining balance; the allowance, progress, and expiry stay in CLI output. CLI JSON exposes the section through
-  `usage.details`, including numeric progress and remaining dollars. No additional request, login, or browser
+  remaining balance; the allowance, progress, and expiry are available in CLI output and the widget snapshot's
+  optional `details` field. CLI JSON exposes the section through `usage.details`, including numeric progress and
+  remaining dollars. No additional request, login, or browser
   discovery is needed for these credits.
 - `limit_dollars`, `used_dollars`, and `remaining_dollars` are already USD amounts. They are never divided by 100,
   added to prepaid Extra usage, counted as local spending, or used for quota pacing. The reported remaining amount
@@ -535,6 +536,7 @@ Model-scoped weekly-window proof (synthetic data, no real accounts or credential
     a configuration issue and recommend checking the provider source/settings, rather than re-authenticating.
 
 ## Cost usage (local log scan)
+- Coverage is local usage-bearing transcripts only. Cloud-backed Code Projects run remotely; unless their token usage is available in a supported local JSONL transcript, it is absent from token totals and API-rate estimates. Account quota percentages are fetched separately, so changing the quota source does not expand history coverage.
 - Source roots:
   - Native Claude logs:
     - `$CLAUDE_CONFIG_DIR` selects one literal directory and uses `<root>/projects`; commas are part of its path.
