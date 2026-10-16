@@ -626,7 +626,10 @@ existing display identity projection.
 Codex session rows show the local thread title when available, with the project, model, and last-activity date
 beneath it. Untitled sessions use a shortened session ID. Titles come from `session_index.jsonl`, with the local
 thread database as a fallback; relative `CODEX_SQLITE_HOME` paths resolve against each rollout's original working
-directory, even when its project is grouped under a different canonical repository path.
+directory, even when its project is grouped under a different canonical repository path. The database fallback can
+contain the full first prompt, so only its first 256 Unicode code points are read, before whitespace trimming. This
+also limits the dashboard row tooltip. Names from `session_index.jsonl` keep their precedence and are not shortened by
+this limit.
 
 The menu's **Cost → Conversations** rows also use these saved titles, with the shortened session ID available
 in the row tooltip. Missing or blank titles keep the existing `Session <id>` label. **Hide personal information**
