@@ -269,6 +269,11 @@ public enum ClaudeProviderDescriptor {
         context: ProviderMenuBarWindowContext) -> ProviderMenuBarWindowResolution
     {
         if context.metric == .extraUsage { return .resolved(context.snapshot.claudeMonthlySpendWindow?.window) }
+        if context.metric == .automatic {
+            let quotas = [context.snapshot.primary, context.snapshot.secondary].compactMap(\.self)
+                .filter { !$0.isSyntheticPlaceholder }
+            if !quotas.isEmpty { return .automaticCandidates(quotas) }
+        }
         guard context.metric == .automatic || context.metric == .primaryAndSecondary,
               context.snapshot.secondary == nil,
               context.snapshot.tertiary == nil,

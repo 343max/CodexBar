@@ -176,9 +176,9 @@ ordinary percentage in Cursor's layout. This saves a Cursor-only override. The l
 Both paths show the allowance's short tag, for example `GB 42%`, and follow the used/remaining
 preference. A saved selection displays `GB –` when the reading is missing or unknown; a real zero
 displays `GB 0%` in used mode. Lane percentages are tagged `T` (Total), `C` (Cursor), and `TP` (Third Party);
-menus and VoiceOver keep the full names. Auto % keeps its existing selection among Cursor's allowances,
-including Grok Bot. Balance tokens remain independent, and the dropdown keeps its existing reset countdown
-and paid-weekly pace display.
+menus and VoiceOver keep the full names. Auto % ranks usable allowances, including Grok Bot, by depletion
+forecast and then used percentage; an exhausted total or exhaustion of every subquota still takes priority.
+Balance tokens remain independent, and the dropdown keeps its existing reset countdown and paid-weekly pace display.
 
 Named-extra selections are stored in V4 layout keys. A V3 projection omits them while preserving explicit
 reset-window selections for 0.60.x; V2/V1 projections remain available for older releases. An unchanged

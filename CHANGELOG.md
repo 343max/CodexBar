@@ -8,6 +8,10 @@
 - Claude: optionally read web usage from the Claude desktop app’s signed-in session, following desktop account switches without using browser credentials (#4494). Thanks @flutterrausch!
 - Settings: navigate visited panes with Back/Forward and Command-[ / Command-], with a native-style detail header on macOS 26 and later (#4475). Thanks @elijahfriedman!
 
+### Changed
+
+- Menu bar: Auto prioritizes eligible quotas projected to run out first, then highest usage, and applies the same rule to the unified highest-usage icon while preserving Gemini tier order and ordered credit pools (#4491). Thanks @J2TeamNNL!
+
 ### Fixed
 
 - Widgets: include optional provider details in snapshot JSON so Claude Cloud credits retain their remaining balance, grant total, and expiry without changing quota rows (#4546). Thanks @djbclark!
