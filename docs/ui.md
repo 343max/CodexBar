@@ -203,13 +203,17 @@ model-generic token label while the rendered menu-bar prefix and accessibility l
 
 Pace compares your actual usage against the expected consumption rate for the current window. Most providers use an even-consumption budget; Codex can use historical pace data when historical tracking is available.
 
-The **Work days** setting selects the weekly pace model. **Automatic** uses Codex historical pace when enough data is available. Historical daily credits follow local calendar-day boundaries, including midnight daylight-saving transitions. Selecting 4, 5, or 7 days uses that explicit schedule for pace and ETA instead; CodexBar continues collecting history in the background, but does not use historical predictions until the setting returns to Automatic.
+The **Work days** setting selects the weekly pace model. **Automatic** uses Codex historical pace when enough data is available. Historical daily credits follow local calendar-day boundaries, including midnight daylight-saving transitions. Selecting 4, 5, 6, or 7 days uses that explicit schedule for pace and ETA instead; CodexBar continues collecting history in the background, but does not use historical predictions until the setting returns to Automatic. Six days counts Monday through Saturday and excludes Sunday, including in the session forecast's remaining capacity.
 
 - **On pace** – usage matches the expected rate.
 - **X% in deficit** – you're consuming faster than the even rate; at this pace you'll run out before the window resets.
 - **X% in reserve** – you're consuming slower than the even rate; you have headroom to spare.
 
 When usage is in deficit, the right-hand label shows an estimated "Runs out in …" countdown. When usage will last until the reset, it shows "Lasts until reset".
+
+Session-equivalent forecasts require at least three qualifying completed session samples. If an older session reset
+timestamp moves backward, the estimator discards the history segment before that correction and can recover the
+forecast from enough valid later samples.
 
 Pace is calculated for any provider window with enough reset timing data and is hidden when less than 3% of the
 window has elapsed. The weekly menu-bar pace token is the one exception: it may appear after 1% of the weekly
@@ -264,7 +268,8 @@ Visibility and accent-color changes preserve account cache identity and retained
 remains available with an explanation; checking it does not override the global setting.
 
 Codex and Claude have separate **Limit Reset Credits** and **Plan renewal / expiry** choices. These are
-independent of the global switch. Plan dates appear immediately after the quota rows, before reset credits.
+independent of the global switch. Plan dates appear immediately after the quota rows, before reset credits, labeled
+**Plan renews** or **Plan expires** to distinguish them from quota resets.
 Compact Overview still omits plan dates when quota bars are present. On upgrade, a previously disabled
 global switch initializes Claude's reset-credit choice to hidden; users can then enable it independently.
 The one-time migration preserves other saved choices and travels with provider settings through sync.

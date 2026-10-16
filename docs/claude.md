@@ -120,6 +120,13 @@ This recovers browser-session access; it does not repair missing OAuth credentia
 instead reports a Cloudflare challenge, follow the network guidance under Web API below rather than repeating
 the cookie import.
 
+## Passive CLI sessions and macOS sleep
+
+After each passive request in the reusable CLI session, and when that session closes, CodexBar sends SIGTERM
+only to `/usr/bin/caffeinate` processes in the session's own process group. The session remains available for
+later requests. There is no recurring process scan; other process groups and other executables are left alone.
+This cleanup applies to the reusable PTY session, not the separate one-shot usage or auth-status commands.
+
 ## Keychain prompt policy (Claude OAuth)
 
 - Preferences → Providers → Claude → Keychain prompt policy.

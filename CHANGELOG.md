@@ -2,12 +2,28 @@
 
 ## 0.76.1 — Unreleased
 
+### Added
+
+- Settings: offer a six-day Monday–Saturday work week for weekly pace and session forecasts (#4548). Thanks @ViaxCo!
+
 ### Fixed
 
+- Usage forecasts: restore estimated session quotas and windows until reset when older history contains reset-time corrections (#4540). Thanks @emanuelst!
+- Usage cards: distinguish plan renewal dates from quota resets with “Plan renews” wording across all 23 locales (#4540). Thanks @emanuelst!
+- Cost history: reduce CPU spent scanning large Codex and Claude message bodies without changing parsed usage. (#4552) Thanks @Lucenx9!
+- Developer tests: isolate local test homes so incidental cost refreshes cannot invalidate the app's cost cache. (#4551) Thanks @postoso!
 - Codex cost history: bound database fallback titles to 256 Unicode code points instead of retaining full prompts, while preserving saved session names. (#4550) Thanks @postoso!
 - Updates: recover from a partially failed Homebrew refresh when the installed cask’s tap has the offered CodexBar version, without repeating the refresh (#4520). Thanks @zerosrat!
 - Codex: remove rejected browser sessions from the affected account’s web store, and protect newer imports from an older rejection (#4514). Thanks @SebTardif!
 - Cookie imports: keep each browser’s permission guidance, preserving Chrome’s Files & Folders advice alongside Safari’s Full Disk Access instructions (#4528, #4513). Thanks @alphasafal!
+- Widgets: retain reset times for measured Antigravity quota rows, including five-hour limits (#4529). Thanks @djbclark!
+- Menu bar: apply native inactive-display dimming to fresh monochrome stacked token rows, including inline icons and reset text (#4532).
+- Claude: open Platform usage for default and API accounts while keeping recognized subscriptions on Claude usage settings (#4503). Thanks @Alex-Keyes!
+- Dock: stop rescanning windows on every update pass while preserving Settings and scheduled update dialogs (#4516, #4524). Thanks @harjothkhara and @Leen15!
+- Confetti: let limit-reset celebrations finish falling off the screen instead of cutting off after 5 seconds (#4536). Thanks @lg!
+- OpenCode Go: include v2 session history in local cost and token totals without counting migrated messages twice (#4526). Thanks @edtheflame!
+- Qwen Cloud: treat a Team summary with an empty `Data` object as no Team subscription, so Individual-only accounts no longer show "Team usage unavailable" (#4527, #4525). Thanks @harjothkhara and @mvicari!
+- Claude: release macOS sleep inhibitors after passive CLI session probes (#4544). Thanks @iamyeizi!
 
 ## 0.76.0 — 2026-10-15
 
@@ -30,10 +46,6 @@
 
 ### Fixed
 
-- Widgets: retain reset times for measured Antigravity quota rows, including five-hour limits (#4529). Thanks @djbclark!
-- Menu bar: apply native inactive-display dimming to fresh monochrome stacked token rows, including inline icons and reset text (#4532).
-- Claude: open Platform usage for default and API accounts while keeping recognized subscriptions on Claude usage settings (#4503). Thanks @Alex-Keyes!
-- Dock: stop rescanning windows on every update pass while preserving Settings and scheduled update dialogs (#4516, #4524). Thanks @harjothkhara and @Leen15!
 - Settings: preserve config files and legacy credentials after read errors during startup, account reloads, and later saves, keep optional Codex credit lanes in the settings catalogue without changing previews, and distinguish real monthly quotas from credit limits (#4509). Thanks @emanuelst!
 - CLI probes: preserve buffered terminal output from fast-exiting commands instead of intermittently returning empty results (refs #4505).
 - Helmcode: import Cloud sessions from the API host or parent domain while preserving older cached sessions, tenant isolation, and manual cookies (#4492). Thanks @aran159!
@@ -41,9 +53,6 @@
 - Plugins: release temporary objects between QuickJS refreshes and free retired JavaScriptCore contexts and completed runtimes (#4512, #4486).
 - Claude: show the winning OAuth account’s email with a cached background profile lookup; slow or failed identity requests never delay quota refreshes (#4493). Thanks @flutterrausch!
 - Droid: import sessions from Firefox Beta, Developer Edition, and Nightly, and continue past unavailable browser stores (#4461). Thanks @vincent-peng!
-- Confetti: let limit-reset celebrations finish falling off the screen instead of cutting off after 5 seconds (#4536). Thanks @lg!
-- OpenCode Go: include v2 session history in local cost and token totals without counting migrated messages twice (#4526). Thanks @edtheflame!
-- Qwen Cloud: treat a Team summary with an empty `Data` object as no Team subscription, so Individual-only accounts no longer show "Team usage unavailable" (#4527, #4525). Thanks @harjothkhara and @mvicari!
 
 ## 0.75.0 — 2026-10-13
 

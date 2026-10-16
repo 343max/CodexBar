@@ -1935,7 +1935,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "Actualitzeu el perfil abans d'actualitzar les dades web de OpenAI.";
 "Refreshing account status…" = "S'està actualitzant l'estat del compte...";
 "Remaining budget compared with an ideal steady burn rate." = "Pressupost restant en comparació amb una taxa de combustió constant ideal.";
-"Renews: %@" = "Renova: %@";
+"Plan renews: %@" = "El pla es renova: %@";
 "Request quota" = "Demana quota";
 "Requesting login…" = "S'està sol·licitant l'inici de sessió...";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "Obligatori. Introduïu una clau normal API o una clau de gestió API aquí. Les claus de gestió també permeten l'activitat del compte al OpenRouter API oficial.";
