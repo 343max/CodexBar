@@ -1934,7 +1934,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "Segarkan profil sebelum menyegarkan data web OpenAI.";
 "Refreshing account status…" = "Menyegarkan status akun…";
 "Remaining budget compared with an ideal steady burn rate." = "Anggaran yang tersisa dibandingkan dengan tingkat pembakaran stabil yang ideal.";
-"Renews: %@" = "Diperbarui: %@";
+"Plan renews: %@" = "Paket diperbarui: %@";
 "Request quota" = "Minta Kuota";
 "Requesting login…" = "Meminta masuk…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "Diperlukan. Masukkan kunci API biasa atau kunci Manajemen API di sini. Kunci manajemen juga mengaktifkan Aktivitas akun di OpenRouter API resmi.";
