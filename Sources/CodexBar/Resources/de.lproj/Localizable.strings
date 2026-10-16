@@ -2627,3 +2627,5 @@
 "API credit" = "API-Guthaben";
 "Purchased credit" = "Gekauftes Guthaben";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform zeigt Console-Guthaben und monatliche Ausgaben an, nicht den lokalen Token-Kostenverlauf.";
+
+"Claude config directory" = "Claude-Konfigurationsordner";

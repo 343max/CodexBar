@@ -2633,3 +2633,5 @@
 "API credit" = "رصيد API";
 "Purchased credit" = "رصيد مشترى";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "يعرض Claude Platform رصيد الائتمان في Console والإنفاق الشهري، وليس سجل تكلفة الرموز المحلي.";
+
+"Claude config directory" = "مجلد إعدادات Claude";

@@ -2597,3 +2597,5 @@
 "API credit" = "API 크레딧";
 "Purchased credit" = "구매한 크레딧";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform은 로컬 토큰 비용 내역이 아닌 Console 크레딧 잔액과 월간 지출을 표시합니다.";
+
+"Claude config directory" = "Claude 설정 디렉터리";

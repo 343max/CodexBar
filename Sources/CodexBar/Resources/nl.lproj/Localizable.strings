@@ -2626,3 +2626,5 @@
 "API credit" = "API-tegoed";
 "Purchased credit" = "Gekocht tegoed";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform toont het Console-tegoed en de maandelijkse uitgaven, niet de lokale tokenkostengeschiedenis.";
+
+"Claude config directory" = "Claude-configuratiemap";

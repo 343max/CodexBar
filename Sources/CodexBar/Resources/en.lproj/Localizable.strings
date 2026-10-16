@@ -2634,3 +2634,5 @@
 "API credit" = "API credit";
 "Purchased credit" = "Purchased credit";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform exposes Console credit balance and monthly spend, not local token cost history.";
+
+"Claude config directory" = "Claude config directory";

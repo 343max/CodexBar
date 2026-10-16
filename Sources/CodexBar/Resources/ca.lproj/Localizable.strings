@@ -2631,3 +2631,5 @@
 "API credit" = "Crèdit d'API";
 "Purchased credit" = "Crèdit comprat";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform mostra el saldo de crèdit i la despesa mensual de la Console, no l'historial de costos local de tokens.";
+
+"Claude config directory" = "Directori de configuració de Claude";

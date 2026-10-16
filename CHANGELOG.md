@@ -2,6 +2,10 @@
 
 ## 0.76.1 — Unreleased
 
+### Added
+
+- Claude: optionally map each token account to a Claude config directory for local cost estimates; unmapped accounts keep combined history (#4470). Thanks @lghsigma597!
+
 ## 0.76.0 — 2026-10-15
 
 ### Highlights

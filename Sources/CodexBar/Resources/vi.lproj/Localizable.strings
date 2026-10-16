@@ -2630,3 +2630,5 @@
 "API credit" = "Tín dụng API";
 "Purchased credit" = "Tín dụng đã mua";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform hiển thị số dư tín dụng và chi tiêu hàng tháng trên Console, không phải lịch sử chi phí token cục bộ.";
+
+"Claude config directory" = "Thư mục cấu hình Claude";

@@ -2621,3 +2621,5 @@
 "API credit" = "API 额度";
 "Purchased credit" = "已购买额度";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform 显示 Console 额度余额和每月支出，而不是本地 token 成本历史记录。";
+
+"Claude config directory" = "Claude 配置目录";
