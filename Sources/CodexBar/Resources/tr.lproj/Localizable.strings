@@ -2635,6 +2635,24 @@
 "Purchased credit" = "Satın alınan kredi";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform, yerel token maliyet geçmişini değil, Console kredi bakiyesini ve aylık harcamayı gösterir.";
 
+/* App-managed HTTP server */
+"http_server_title" = "HTTP sunucusu";
+"http_server_enable" = "HTTP sunucusunu etkinleştir";
+"http_server_bind" = "Bağlanılacak IPv4 adresi";
+"http_server_port" = "Bağlantı noktası";
+"http_server_token" = "Sunucu belirteci";
+"http_server_show" = "Göster";
+"http_server_generate" = "Oluştur";
+"http_server_cache" = "Önbellek aralığı (saniye)";
+"http_server_timeout" = "İstek zaman aşımı (saniye; 0 devre dışı bırakır)";
+"http_server_all_accounts" = "Anlık görüntülere tüm hesapları dahil et";
+"http_server_identity" = "Panodaki kimlik";
+"http_server_redacted" = "Gizlenmiş";
+"http_server_warning" = "Kullanım, maliyet, hesap ve proje bilgilerini paylaşır; sağlayıcı kimlik bilgilerini asla paylaşmaz. HTTP sunucu belirtecini şifrelemeden gönderir. Yalnızca güvenilir bir VPN veya Tailscale bağlantısı kullanın.";
+"http_server_plain_http" = "Bu Mac dışında şifrelenmemiş HTTP’ye izin ver";
+"http_server_dashboard" = "Pano";
+"http_server_wildcard" = "Diğer cihazlarda 0.0.0.0 yerine bu Mac’in VPN veya Tailscale IPv4 adresini kullanın.";
+"http_server_footer" = "Varsayılan olarak kapalıdır. CodexBar ile başlar ve kapatıldığında durur. Ayarlar ve belirteç bu Mac’te kalır; eşitleme ve dışa aktarmaya dahil edilmez. Uzaktan erişim için Mac’i uyanık tutun.";
 /* Claude desktop cookie source */
 "Claude desktop app" = "Claude masaüstü uygulaması";
 "Use Claude desktop app cookies" = "Claude masaüstü uygulamasının çerezlerini kullan";

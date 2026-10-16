@@ -254,6 +254,8 @@ final class SettingsStore {
     #endif
 
     @ObservationIgnored let userDefaults: UserDefaults
+    @ObservationIgnored lazy var httpServer = HTTPServerController(
+        configURL: self.configStore.fileURL.deletingLastPathComponent().appendingPathComponent("http-server.json"))
     @ObservationIgnored let configStore: CodexBarConfigStore
     @ObservationIgnored let antigravityOAuthCredentialsStore: AntigravityOAuthCredentialsStore
     @ObservationIgnored let keychainAccessPolicy: SettingsStoreKeychainAccessPolicy

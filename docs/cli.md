@@ -279,6 +279,42 @@ The saved app reporting period applies by default. `--period month-to-date|all` 
 - Claude/Vertex preliminary proxy records without final usage are excluded from totals. A positive optional `incompleteRequestCount` appears on the provider, `totals`, affected `daily[]`, and affected `modelBreakdowns[]`; complete-only payloads keep their previous shape. Known amounts remain partial subtotals, while incomplete-only amounts stay unavailable. Text output and the web dashboard mark these subtotals **Incomplete**. Usage & Spend exports include the same optional count on affected currency groups, providers, and model rows.
 - `error`: structured provider error when a fetch fails (for example Cursor requested while its cookie source is Off).
 
+## Manage the HTTP server from the Mac app
+
+In **Settings → Advanced → HTTP server**, enable the server, generate a token,
+and click **Apply**. Defaults are off, `127.0.0.1:8080`, a 60-second cache,
+a 30-second request timeout, and redacted dashboard identity. Apply saves the settings
+and restarts only the app's own bundled CLI helper. A terminal-started server is
+independent; a port conflict appears as a startup failure in Settings.
+
+For a phone or another device, bind to the Mac's VPN/Tailscale IPv4 address, or
+`0.0.0.0` to listen on every IPv4 interface. Non-loopback listening requires a token
+and explicit acceptance of unencrypted HTTP. The server exposes usage, cost, account and
+project information, never provider credentials. Dashboard identity controls affect
+account discovery and snapshots; `/usage` and `/cost` retain their CLI payloads. The token is a credential for that
+information: anyone holding it can read those endpoints. Use an encrypted VPN or
+Tailscale connection; do not expose this HTTP listener directly to the internet.
+When binding `0.0.0.0`, replace that address in the copied URL with the Mac's actual
+VPN/Tailscale address on the remote device.
+
+Open the copied dashboard URL in the phone's browser and enter the token. API clients
+send `Authorization: Bearer <token>` to `/usage`, `/cost`, or
+`/dashboard/v1/snapshot`; no provider login is needed on the remote device. The Mac
+must remain awake with CodexBar running. Quitting CodexBar stops its managed server;
+reopening starts it again if enabled. **Show**, **Generate**, and **Copy** manage the
+token locally. After generating a replacement, click Apply and update your clients.
+The token and server settings live in the owner-only `http-server.json` beside the
+app's resolved provider config, outside CodexBar's sync and settings export payloads.
+
+The built-in server speaks HTTP, not HTTPS. An iOS app may need an explicit App
+Transport Security policy for a trusted VPN HTTP endpoint. For HTTPS, use a separately
+configured TLS reverse proxy and a certificate trusted by the device (publicly trusted,
+or a self-signed certificate explicitly installed and trusted). Keep bearer
+authentication enabled through that proxy. A proxy forwarding to loopback must expose
+only token-gated dashboard routes, or enforce its own authentication for `/usage` and
+`/cost`, which remain unauthenticated on loopback. This setting does not install certificates,
+configure a proxy, or change the behavior of a separate `codexbar serve` command.
+
 ## Example usage
 ```
 codexbar                          # text, respects app toggles

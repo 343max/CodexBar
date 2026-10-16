@@ -2631,6 +2631,24 @@
 "Purchased credit" = "Crédito comprado";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform mostra o saldo de crédito e o gasto mensual da Console, non o historial local de custos de tokens.";
 
+/* App-managed HTTP server */
+"http_server_title" = "Servidor HTTP";
+"http_server_enable" = "Activar o servidor HTTP";
+"http_server_bind" = "Enderezo IPv4 de escoita";
+"http_server_port" = "Porto";
+"http_server_token" = "Token do servidor";
+"http_server_show" = "Mostrar";
+"http_server_generate" = "Xerar";
+"http_server_cache" = "Intervalo de caché (segundos)";
+"http_server_timeout" = "Tempo límite da solicitude (segundos; 0 desactiva)";
+"http_server_all_accounts" = "Incluír todas as contas nas instantáneas";
+"http_server_identity" = "Identidade no panel";
+"http_server_redacted" = "Oculta";
+"http_server_warning" = "Expón uso, custos e información de contas e proxectos, nunca credenciais dos provedores. HTTP envía o token do servidor sen cifrar. Úsao só cunha conexión VPN ou Tailscale de confianza.";
+"http_server_plain_http" = "Permitir HTTP sen cifrar fóra deste Mac";
+"http_server_dashboard" = "Panel";
+"http_server_wildcard" = "Noutros dispositivos, substitúe 0.0.0.0 polo enderezo IPv4 da VPN ou Tailscale deste Mac.";
+"http_server_footer" = "Desactivado por defecto. Iníciase con CodexBar e detense ao pechalo. A configuración e o token quedan neste Mac e exclúense da sincronización e das exportacións. Mantén o Mac esperto para o acceso remoto.";
 /* Claude desktop cookie source */
 "Claude desktop app" = "Aplicación de escritorio de Claude";
 "Use Claude desktop app cookies" = "Usar as cookies da aplicación de escritorio de Claude";
