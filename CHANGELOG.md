@@ -2,6 +2,10 @@
 
 ## 0.76.1 — Unreleased
 
+### Added
+
+- Settings: offer a six-day Monday–Saturday work week for weekly pace and session forecasts (#4548). Thanks @ViaxCo!
+
 ### Fixed
 
 - Usage forecasts: restore estimated session quotas and windows until reset when older history contains reset-time corrections (#4540). Thanks @emanuelst!

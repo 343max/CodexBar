@@ -1682,7 +1682,7 @@
 "%@m" = "%@分";
 "%d CONNECTED" = "接続済み：%d 件";
 "%d DAYS" = "%d 日";
-"%d days" = "%d 日";
+"%d days" = "%d日間";
 "%d more accounts ready" = "%d より多くのアカウントの準備ができました";
 "%d percent" = "%d パーセント";
 "%d subscriptions" = "%d 件のサブスクリプション";

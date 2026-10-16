@@ -1681,7 +1681,7 @@
 "%@m" = "%@min";
 "%d CONNECTED" = "%d CONNECTÉ";
 "%d DAYS" = "%d JOURS";
-"%d days" = "Jours %d";
+"%d days" = "%d jours";
 "%d more accounts ready" = "%d plus de comptes prêts";
 "%d percent" = "%d pourcentage";
 "%d subscriptions" = "%d abonnements";

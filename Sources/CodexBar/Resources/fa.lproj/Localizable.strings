@@ -1686,7 +1686,7 @@
 "%@m" = "%@د";
 "%d CONNECTED" = "%d متصل است";
 "%d DAYS" = "%d روز";
-"%d days" = "روز %d";
+"%d days" = "%d روز";
 "%d more accounts ready" = "%d حساب های بیشتر آماده است";
 "%d percent" = "درصد %d";
 "%d subscriptions" = "%d اشتراک";
