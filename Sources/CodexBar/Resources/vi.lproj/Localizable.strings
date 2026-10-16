@@ -2513,6 +2513,8 @@
 "Pace sign" = "Dấu nhịp sử dụng";
 "Ahead of pace is +" = "Vượt nhịp là +";
 "Reserve is +" = "Dự trữ là +";
+"Back" = "Quay lại";
+"Forward" = "Tiếp";
 
 "cost_reset_inferred_tooltip" = "Suy ra: %@ không báo cáo ngày này. Hạn mức chi tiêu hằng tháng được đặt lại vào 00:00 UTC ngày 1.";
 /* fal provider credentials */
@@ -2630,3 +2632,8 @@
 "API credit" = "Tín dụng API";
 "Purchased credit" = "Tín dụng đã mua";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform hiển thị số dư tín dụng và chi tiêu hàng tháng trên Console, không phải lịch sử chi phí token cục bộ.";
+
+/* Claude desktop cookie source */
+"Claude desktop app" = "Ứng dụng Claude trên máy tính";
+"Use Claude desktop app cookies" = "Dùng cookie của ứng dụng Claude trên máy tính";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "Đối với mức sử dụng web, dùng tài khoản đã đăng nhập trong Claude.app thay vì tài khoản trình duyệt.";

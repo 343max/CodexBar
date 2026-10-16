@@ -2516,6 +2516,8 @@
 "Pace sign" = "إشارة وتيرة الاستخدام";
 "Ahead of pace is +" = "تجاوز الوتيرة هو +";
 "Reserve is +" = "الاحتياطي هو +";
+"Back" = "رجوع";
+"Forward" = "تقدم";
 
 "cost_reset_inferred_tooltip" = "مستنتَج: لا يُبلغ %@ عن هذا التاريخ. تتم إعادة تعيين حدود الإنفاق الشهرية في الساعة 00:00 بالتوقيت العالمي المنسق (UTC) في اليوم الأول من الشهر.";
 /* fal provider credentials */
@@ -2633,3 +2635,8 @@
 "API credit" = "رصيد API";
 "Purchased credit" = "رصيد مشترى";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "يعرض Claude Platform رصيد الائتمان في Console والإنفاق الشهري، وليس سجل تكلفة الرموز المحلي.";
+
+/* Claude desktop cookie source */
+"Claude desktop app" = "تطبيق Claude لسطح المكتب";
+"Use Claude desktop app cookies" = "استخدام ملفات تعريف الارتباط لتطبيق Claude لسطح المكتب";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "لاستخدام الويب، اتبع الحساب المسجّل الدخول في Claude.app بدلاً من المتصفح.";

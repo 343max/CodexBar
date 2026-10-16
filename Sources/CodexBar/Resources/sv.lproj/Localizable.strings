@@ -2511,6 +2511,8 @@
 "Pace sign" = "Tecken för förbrukningstakt";
 "Ahead of pace is +" = "Över förbrukningstakten är +";
 "Reserve is +" = "Reserv är +";
+"Back" = "Bakåt";
+"Forward" = "Framåt";
 
 "cost_reset_inferred_tooltip" = "Antaget: %@ rapporterar inte detta datum. Månatliga utgiftsgränser återställs den 1:a kl. 00:00 UTC.";
 /* fal provider credentials */
@@ -2628,3 +2630,8 @@
 "API credit" = "API-kredit";
 "Purchased credit" = "Köpt kredit";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform visar Console-kreditsaldo och månadsutgifter, inte lokal tokenkostnadshistorik.";
+
+/* Claude desktop cookie source */
+"Claude desktop app" = "Claude-skrivbordsappen";
+"Use Claude desktop app cookies" = "Använd cookies från Claude-skrivbordsappen";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "För webbanvändning används kontot som är inloggat i Claude.app i stället för webbläsarkontot.";

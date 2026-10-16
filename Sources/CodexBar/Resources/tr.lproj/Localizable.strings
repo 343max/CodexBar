@@ -2515,6 +2515,8 @@
 "Pace sign" = "Kullanım hızı işareti";
 "Ahead of pace is +" = "Hızın üzerinde kullanım +";
 "Reserve is +" = "Rezerv +";
+"Back" = "Geri";
+"Forward" = "İleri";
 
 "cost_reset_inferred_tooltip" = "Çıkarım: %@ bu tarihi bildirmez. Aylık harcama limitleri her ayın 1'inde 00:00 UTC'de sıfırlanır.";
 /* fal provider credentials */
@@ -2632,3 +2634,8 @@
 "API credit" = "API kredisi";
 "Purchased credit" = "Satın alınan kredi";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform, yerel token maliyet geçmişini değil, Console kredi bakiyesini ve aylık harcamayı gösterir.";
+
+/* Claude desktop cookie source */
+"Claude desktop app" = "Claude masaüstü uygulaması";
+"Use Claude desktop app cookies" = "Claude masaüstü uygulamasının çerezlerini kullan";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "Web kullanımı için tarayıcı hesabı yerine Claude.app içinde oturum açılan hesabı kullan.";

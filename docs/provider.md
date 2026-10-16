@@ -131,6 +131,11 @@ Providers that store a remaining prepaid amount in `ProviderCostSnapshot.balance
 elements and passes USD amounts to Balance remaining conditionals. Legacy menu bar text never shows it, so the
 balance sits beside subscription quotas rather than replacing them.
 
+Providers may return `.automaticCandidates` from `presentation.menuBarWindowResolver` to declare eligible
+competing quotas. The shared app resolver ranks those windows by depletion forecast, then used percentage.
+Return `.resolved` for authoritative selections such as ordered credit pools or product-specific fallback;
+`.unhandled` lets Auto rank the standard lanes. Keep optional/model-only exclusions inside the descriptor.
+
 ## Fetch strategies
 
 A provider declares a pipeline of strategies, in priority order. Each strategy:
