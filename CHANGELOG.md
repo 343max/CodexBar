@@ -32,6 +32,7 @@
 - Plugins: release temporary objects between QuickJS refreshes and free retired JavaScriptCore contexts and completed runtimes (#4512, #4486).
 - Claude: show the winning OAuth account’s email with a cached background profile lookup; slow or failed identity requests never delay quota refreshes (#4493). Thanks @flutterrausch!
 - Droid: import sessions from Firefox Beta, Developer Edition, and Nightly, and continue past unavailable browser stores (#4461). Thanks @vincent-peng!
+- Confetti: let limit-reset celebrations finish falling off the screen instead of cutting off after 5 seconds (#4536). Thanks @lg!
 - OpenCode Go: include v2 session history in local cost and token totals without counting migrated messages twice (#4526). Thanks @edtheflame!
 - Qwen Cloud: treat a Team summary with an empty `Data` object as no Team subscription, so Individual-only accounts no longer show "Team usage unavailable" (#4527, #4525). Thanks @harjothkhara and @mvicari!
 
