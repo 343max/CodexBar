@@ -4,6 +4,7 @@
 
 ### Added
 
+- Providers: add Munito today and this month's spend against the organization's spend limits through a bundled plugin, including Spend layouts, using an admin API key with Read account data permission (#4531). Thanks @dmartinw!
 - Providers: add Future AGI billing-period usage and free allowances with an API-key pair, including AI credits, gateway requests, and estimated usage cost (#4560). Thanks @spencer-shadley!
 - CLI: opt-in `"shareUsageWithCLI"` lets SSH `codexbar usage`/`cards` fall back to the app's cached rate windows (with `source: codexbar-app` and `ageSeconds`) when a fetch fails on a locked keychain (#4554). Thanks @mjaverto!
 - Settings: offer a six-day Monday–Saturday work week for weekly pace and session forecasts (#4548). Thanks @ViaxCo!
