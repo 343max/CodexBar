@@ -412,7 +412,7 @@ The accepted multi-account design in
   result, and disabling the adapter or changing its executable clears the previous detected version.
 - Behavior: on each Claude refresh, CodexBar runs `cswap --list --json` independently of the ambient Claude fetch (no
   shell, fixed arguments, bounded runtime and output), requires `schemaVersion == 1`, and parses only slot number,
-  active state, usage status, email (display only), display-only `organizationName` (always present, may be empty),
+  active state, usage status, email, `organizationUuid`, display-only `organizationName` (always present, may be empty),
   optional display-only `alias` when non-empty, the 5-hour/7-day windows, and optional display-only model-scoped
   weekly windows from `usage.scoped`, optional `usage.spend`, and source measurement times. Identity stays
   `claude-swap:<slot>`; organization name and alias are never
@@ -452,6 +452,11 @@ The accepted multi-account design in
   `~/.config/codexbar/config.json`; legacy installs may use `~/.codexbar/config.json`). The option defaults off,
   zero accounts still use the ambient presentation, and account identity is `claude-swap:<slot>`, never the display
   email.
+- Session forecasts use each account's own recorded usage. History keys hash the normalized email and organization
+  UUID from the existing list response, so moving slots preserves history and the same email in different workspaces
+  stays separate. Empty organization UUIDs identify personal accounts; an email change starts a new history.
+  Raw emails and organization UUIDs are not saved in history. Fresh samples retain their source timestamps and the
+  shared 17,520-sample limit per series; last-known or failed rows do not add samples. Ambient Claude history is separate.
 - Provider widgets follow the active claude-swap account under the same multiple-account/single-account presentation
   rule. Successful list refreshes and clearing the adapter publish a widget snapshot even with account widgets off.
   Retained quota keeps its original measurement time and is bound to the slot's opaque owner fingerprint; unavailable

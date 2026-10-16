@@ -109,6 +109,7 @@ extension UsageStore {
             self.claudeSwapLastError = nil
             self.claudeSwapRevision &+= 1
             self.persistWidgetSnapshot(reason: "claude-swap-accounts")
+            await self.recordClaudeSwapPlanUtilizationHistory(snapshots)
         } catch is CancellationError {
             return
         } catch {
@@ -124,6 +125,43 @@ extension UsageStore {
                 self.claudeSwapRevision &+= 1
             }
         }
+    }
+
+    func recordClaudeSwapPlanUtilizationHistory(_ accounts: [ProviderAccountUsageSnapshot]) async {
+        guard self.shouldRecordPlanUtilizationHistory(for: .claude) else { return }
+        if !self.planUtilizationHistoryLoaded {
+            _ = await self.planUtilizationHistoryLoadTask?.result
+        }
+        let instanceID = UsageProvider.claude.instanceID
+        let originalBuckets = self.planUtilizationHistory[instanceID] ?? PlanUtilizationHistoryBuckets()
+        var buckets = originalBuckets
+        for account in accounts {
+            guard account.provider == .claude,
+                  account.id.source == ClaudeSwapAccountProjection.sourceName,
+                  account.error == nil, !account.usesLastKnownUsage,
+                  let snapshot = account.snapshot, let accountKey = account.historyAccountKey,
+                  let histories = Self.updatedPlanUtilizationHistories(
+                      existingHistories: buckets.histories(for: accountKey),
+                      samples: self.planUtilizationSeriesSamples(
+                          provider: .claude, snapshot: snapshot, capturedAt: snapshot.updatedAt))
+            else { continue }
+            buckets.setHistories(histories, for: accountKey)
+        }
+        guard buckets != originalBuckets else { return }
+        self.planUtilizationHistory[instanceID] = buckets
+        self.planUtilizationHistoryRevision &+= 1
+        await self.planUtilizationPersistenceCoordinator.enqueue(self.planUtilizationHistory)
+    }
+
+    func claudeSwapPlanUtilizationHistorySelection(
+        for account: ProviderAccountUsageSnapshot) -> PlanUtilizationHistorySelection
+    {
+        guard self.planUtilizationHistoryLoaded,
+              account.provider == .claude, account.id.source == ClaudeSwapAccountProjection.sourceName,
+              let accountKey = account.historyAccountKey
+        else { return .unavailable }
+        let buckets = self.planUtilizationHistory[UsageProvider.claude.instanceID] ?? PlanUtilizationHistoryBuckets()
+        return buckets.selection(for: accountKey)
     }
 
     /// Activates one account through the configured claude-swap executable.

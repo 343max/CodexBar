@@ -1,4 +1,9 @@
 import Foundation
+#if canImport(CryptoKit)
+import CryptoKit
+#else
+import Crypto
+#endif
 
 /// Projects parsed `cswap --list --json` rows into the provider-neutral
 /// account snapshot consumed by menus. Identity uses the source-issued numeric
@@ -43,6 +48,7 @@ public enum ClaudeSwapAccountProjection {
                 provider: .claude,
                 displayLabel: self.decoratedLabel(label, row: row),
                 accountEmail: row.email.isEmpty ? nil : row.email,
+                historyAccountKey: self.historyAccountKey(for: row),
                 isActive: row.isActive,
                 canActivate: list.supportsAccountSwitching && self.canActivate(row),
                 usesLastKnownUsage: projected.usesLastKnownUsage,
@@ -281,6 +287,14 @@ public enum ClaudeSwapAccountProjection {
             providerCost: providerCost,
             updatedAt: updatedAt,
             identity: self.identitySnapshot(for: row))
+    }
+
+    private static func historyAccountKey(for row: ClaudeSwapAccountRow) -> String? {
+        let email = self.normalizedEmail(row.email)
+        guard !email.isEmpty else { return nil }
+        let organization = row.organizationUuid.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let pair = try? JSONEncoder().encode([email, organization])
+        return pair.map { "__claude_swap__:" + SHA256.hash(data: $0).map { String(format: "%02x", $0) }.joined() }
     }
 
     private static func identitySnapshot(for row: ClaudeSwapAccountRow) -> ProviderIdentitySnapshot {
