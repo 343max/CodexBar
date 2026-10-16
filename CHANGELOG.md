@@ -2,6 +2,10 @@
 
 ## 0.76.1 — Unreleased
 
+### Fixed
+
+- Cookie imports: keep each browser’s permission guidance, preserving Chrome’s Files & Folders advice alongside Safari’s Full Disk Access instructions (#4528, #4513). Thanks @alphasafal!
+
 ## 0.76.0 — 2026-10-15
 
 ### Highlights
