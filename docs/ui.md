@@ -211,6 +211,10 @@ The **Work days** setting selects the weekly pace model. **Automatic** uses Code
 
 When usage is in deficit, the right-hand label shows an estimated "Runs out in …" countdown. When usage will last until the reset, it shows "Lasts until reset".
 
+Session-equivalent forecasts require at least three qualifying completed session samples. If an older session reset
+timestamp moves backward, the estimator discards the history segment before that correction and can recover the
+forecast from enough valid later samples.
+
 Pace is calculated for any provider window with enough reset timing data and is hidden when less than 3% of the
 window has elapsed. The weekly menu-bar pace token is the one exception: it may appear after 1% of the weekly
 window has elapsed, including when Codex historical tracking predicts less than 1% usage. Session, automatic, and
@@ -264,7 +268,8 @@ Visibility and accent-color changes preserve account cache identity and retained
 remains available with an explanation; checking it does not override the global setting.
 
 Codex and Claude have separate **Limit Reset Credits** and **Plan renewal / expiry** choices. These are
-independent of the global switch. Plan dates appear immediately after the quota rows, before reset credits.
+independent of the global switch. Plan dates appear immediately after the quota rows, before reset credits, labeled
+**Plan renews** or **Plan expires** to distinguish them from quota resets.
 Compact Overview still omits plan dates when quota bars are present. On upgrade, a previously disabled
 global switch initializes Claude's reset-credit choice to hidden; users can then enable it independently.
 The one-time migration preserves other saved choices and travels with provider settings through sync.

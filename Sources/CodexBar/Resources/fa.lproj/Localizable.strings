@@ -1935,7 +1935,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "قبل از بازخوانی داده های وب OpenAI، نمایه را بازخوانی کنید.";
 "Refreshing account status…" = "در حال تازه کردن وضعیت حساب…";
 "Remaining budget compared with an ideal steady burn rate." = "بودجه باقی مانده در مقایسه با نرخ سوزاندن ثابت ایده آل.";
-"Renews: %@" = "تمدید: %@";
+"Plan renews: %@" = "تمدید طرح: %@";
 "Request quota" = "درخواست سهمیه";
 "Requesting login…" = "در حال درخواست ورود…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "مورد نیاز. یک کلید معمولی API یا یک کلید مدیریت API را در اینجا وارد کنید. کلیدهای مدیریتی همچنین فعالیت حساب را در OpenRouter API رسمی فعال می کنند.";
