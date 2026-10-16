@@ -180,6 +180,10 @@ their `_PATH` suffix otherwise matches `_PAT`. Other matching variables, includi
 Use synthetic dictionaries or set synthetic sentinels inside fixtures; never depend on inherited real credentials.
 For direct `swift test`, source the script in a Bash subshell first. This does not authorize live account tests.
 
+`make test`, `make test-fast`, and `make test-skip-build` also give test discovery and execution a temporary
+`HOME` and `CFFIXED_USER_HOME`, removed when the invocation ends. This keeps incidental default cost-store
+access out of the developer's cache. Direct `swift test` callers must provide their own isolated home.
+
 `@ProcessEnvironment` provides count-only descriptions and reflection for stored process-environment dictionaries
 throughout the app, CLI, provider contexts, and session scanners. Use it on every stored environment, including
 captured configuration structs and optional dictionaries. Optional storage preserves `nil` versus an empty map;
