@@ -130,6 +130,22 @@ Include a non-default Claude/Weekly widget in native upgrade verification, then 
 When widgets do not appear in the gallery at all, the issue is almost always
 registration, signing, or daemon caching (not SwiftUI code).
 
+### What happens after an app update
+
+The first launch of a new version uses the normal startup refresh: the app publishes a
+snapshot, waits for the save attempt to finish, then requests `reloadAllTimelines()`.
+Later refreshes repeat that request. There is no separate version-change reload or
+extension-process restart. The widget kinds are declared in `CodexBarWidgetBundle`;
+macOS discovers the embedded extension, rather than the app registering kinds on launch.
+Packaging assigns the same version and build number to the app and extension, but the
+app does not compare the installed extension with an already-running executable.
+
+The shared snapshot has no app-build handshake. New snapshot fields must preserve older
+readers: keep additions optional/defaulted and retain existing field names and types.
+The snapshot schema is unchanged between 0.75.0 and the current 0.76.1 development version.
+A fresh snapshot and a reload request cannot make an old running extension use the
+replacement executable or prove that `chronod` accepted its output.
+
 ### Widgets removed during Homebrew upgrades
 
 Homebrew replaces the app bundle during a cask upgrade. Even when it preserves the outer
@@ -157,10 +173,9 @@ Expired reset dates do not schedule a reload in the past. The snapshot reader do
 impose a byte limit, so a problematic payload still needs to be examined before ruling
 out resource pressure.
 
-For this specific failure, collect app/extension versions, snapshot byte size, and matching
-extension and `chronod` logs. The reporter recovered by quitting only the `CodexBarWidget`
-extension process and allowing macOS to relaunch it. This is a manual diagnostic workaround,
-not an automatic recovery policy; restarting the main app may leave that process alive.
+For this specific failure, collect app/extension versions, the failing snapshot's byte size
+and a sanitized copy, and matching extension and `chronod` logs before recovery. A later
+snapshot is not evidence of the failing payload's size or contents.
 
 After an update, distinguish the installed extension from the executable already mapped by
 its running process. In #2838 the reporter found an old extension mapped from a deleted
@@ -171,6 +186,28 @@ version of the running executable. Compare its mapped executable using `lsof -p 
 the installed extension, and redact paths before sharing logs. Reload requests and a fresh
 snapshot alone do not replace a stale extension process. This failure is separate from
 Homebrew deleting widget placements and from a snapshot containing no provider entries.
+
+The [0.75.0 Homebrew report](https://github.com/steipete/CodexBar/issues/2838#issuecomment-6160909047)
+on macOS 27.0.1 also records version-mismatch rejections immediately after app registration,
+despite matching installed app/extension build numbers. Terminating only `CodexBarWidget`
+restored `chronod` acceptance and timeline-file updates. The old executable mapping and
+failing snapshot were not captured, so this does not establish their exact identity or
+rule out every payload-dependent failure covered by error 1050.
+
+After collecting those diagnostics, a manual recovery for this stale-timeline failure is:
+
+```sh
+killall -TERM CodexBarWidget
+```
+
+macOS can then launch the installed extension on the next timeline request. This terminates
+all processes with that name, including any other CodexBar installation's widget extension;
+it does not terminate the main app. In the Homebrew report, recovery needed no restart of
+`chronod`, Dock or NotificationCenter, cache deletion, or widget reconfiguration. Check for
+`chronod` **Reload success**, updated timeline files, and current visible values afterward;
+extension-side request success alone is insufficient. This is a manual workaround, not a
+guaranteed fix or an automatic process-termination policy, and it cannot restore deleted
+widget placements.
 
 ### 1) Verify the extension bundle exists where macOS expects it
 ```
