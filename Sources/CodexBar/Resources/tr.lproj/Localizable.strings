@@ -2646,6 +2646,7 @@
 "Purchased credit" = "Satın alınan kredi";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform, yerel token maliyet geçmişini değil, Console kredi bakiyesini ve aylık harcamayı gösterir.";
 
+"Claude config directory" = "Claude yapılandırma dizini";
 /* App-managed HTTP server */
 "http_server_title" = "HTTP sunucusu";
 "http_server_enable" = "HTTP sunucusunu etkinleştir";

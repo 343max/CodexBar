@@ -1561,6 +1561,10 @@ extension UsageStore {
             let durationText = String(format: "%.2f", duration)
             let message = "cost usage failed provider=\(provider.rawValue) duration=\(durationText)s error=\(msg)"
             self.tokenCostLogger.error(message)
+            // Provider-specific by design: an unavailable mapped Claude directory must not retain old costs.
+            if provider == .claude, self.claudeTokenCostConfigDirectory != nil {
+                self.clearTokenSnapshot(for: provider)
+            }
             let hadPriorData = self.tokenSnapshotPublications[provider.instanceID]?.snapshot != nil
             let shouldSurface = self.tokenFailureGates[provider.instanceID]?
                 .shouldSurfaceError(onFailureWithPriorData: hadPriorData) ?? true

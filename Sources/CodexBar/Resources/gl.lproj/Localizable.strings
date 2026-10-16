@@ -2642,6 +2642,7 @@
 "Purchased credit" = "Crédito comprado";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform mostra o saldo de crédito e o gasto mensual da Console, non o historial local de custos de tokens.";
 
+"Claude config directory" = "Directorio de configuración de Claude";
 /* App-managed HTTP server */
 "http_server_title" = "Servidor HTTP";
 "http_server_enable" = "Activar o servidor HTTP";

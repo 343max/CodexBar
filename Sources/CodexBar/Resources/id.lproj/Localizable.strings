@@ -2644,6 +2644,7 @@
 "Purchased credit" = "Kredit yang dibeli";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform menampilkan saldo kredit dan pembelanjaan bulanan Console, bukan riwayat biaya token lokal.";
 
+"Claude config directory" = "Direktori konfigurasi Claude";
 /* App-managed HTTP server */
 "http_server_title" = "Server HTTP";
 "http_server_enable" = "Aktifkan server HTTP";

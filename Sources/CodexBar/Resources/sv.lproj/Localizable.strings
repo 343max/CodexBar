@@ -2642,6 +2642,7 @@
 "Purchased credit" = "Köpt kredit";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform visar Console-kreditsaldo och månadsutgifter, inte lokal tokenkostnadshistorik.";
 
+"Claude config directory" = "Konfigurationsmapp för Claude";
 /* App-managed HTTP server */
 "http_server_title" = "HTTP-server";
 "http_server_enable" = "Aktivera HTTP-server";

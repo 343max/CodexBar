@@ -2647,6 +2647,7 @@
 "Purchased credit" = "اعتبار خریداری‌شده";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform موجودی اعتبار و هزینه ماهانه Console را نشان می‌دهد، نه تاریخچه هزینه محلی توکن‌ها.";
 
+"Claude config directory" = "پوشهٔ پیکربندی Claude";
 /* App-managed HTTP server */
 "http_server_title" = "سرور HTTP";
 "http_server_enable" = "فعال‌سازی سرور HTTP";

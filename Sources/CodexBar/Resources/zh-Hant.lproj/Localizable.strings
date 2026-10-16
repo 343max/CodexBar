@@ -2621,6 +2621,7 @@
 "Purchased credit" = "已購買額度";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform 顯示 Console 額度餘額和每月支出，而不是本地 token 成本歷史記錄。";
 
+"Claude config directory" = "Claude 設定目錄";
 /* App-managed HTTP server */
 "http_server_title" = "HTTP 伺服器";
 "http_server_enable" = "啟用 HTTP 伺服器";
