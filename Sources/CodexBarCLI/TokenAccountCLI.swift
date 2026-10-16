@@ -55,7 +55,7 @@ struct TokenAccountCLIContext {
     let selection: TokenAccountCLISelection
     let config: CodexBarConfig
     let accountsByProvider: [UsageProvider: ProviderTokenAccountData]
-    @ProcessEnvironment private var baseEnvironment: [String: String]
+    @ProcessEnvironment private(set) var baseEnvironment: [String: String]
     private let managedCodexAccountStoreURL: URL?
     private let tokenWriteback: TokenAccountCLIWriteback
 
