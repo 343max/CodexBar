@@ -75,7 +75,16 @@ final class ProviderPluginCookieBroker: @unchecked Sendable {
     private var exhaustedImports = Set<String>()
     private let lock = NSLock()
     private let accessFailureLock = NSLock()
-    private var cookieAccessFailure: ProviderFetchClassifiedError?
+    private var cookieAccessFailures: [String: String] = [:]
+    private var cookieAccessFailure: ProviderFetchClassifiedError? {
+        self.accessFailureLock.withLock {
+            guard !self.cookieAccessFailures.isEmpty else { return nil }
+            return ProviderFetchClassifiedError(
+                kind: .permissionDenied,
+                message: self.cookieAccessFailures.values.sorted().joined(separator: " "))
+        }
+    }
+
     private var observed: [String: Issued] = [:]
     private var issuedSessions: [String: Issued] = [:]
     private var visited = Set<String>()
@@ -187,7 +196,7 @@ final class ProviderPluginCookieBroker: @unchecked Sendable {
             }
             if let issued = self.observed[domain] { return issued.session.header }
             guard let session = try self.advance(domain: domain) else {
-                if let failure = self.accessFailureLock.withLock({ self.cookieAccessFailure }) { throw failure }
+                if let failure = self.cookieAccessFailure { throw failure }
                 throw ProviderPluginError.secretAccess("no session cookies were found for this domain")
             }
             return session.header
@@ -231,7 +240,7 @@ final class ProviderPluginCookieBroker: @unchecked Sendable {
         guard let classified = error as? ProviderFetchClassifiedError,
               classified.kind == .missingCredential || classified.kind == .authenticationExpired
         else { return error }
-        return self.accessFailureLock.withLock { self.cookieAccessFailure as Error? } ?? error
+        return self.cookieAccessFailure ?? error
     }
 
     private func importCandidates<Candidate>(_ operation: () throws -> [Candidate]?) throws -> [Candidate]? {
@@ -255,16 +264,18 @@ final class ProviderPluginCookieBroker: @unchecked Sendable {
     #if os(macOS)
     private func recordAccessFailure(for browser: Browser, profileDenied: Bool) {
         let permission = browser.usesKeychainForCookieDecryption ? "Keychain permission" : "browser permission"
+        let recovery = browser == .safari
+            ? "allow CodexBar in System Settings → Privacy & Security → Full Disk Access, then refresh"
+            : "use Refresh beside Cookie source or Refresh in the provider menu to allow it"
         self.accessFailureLock.withLock {
-            // An actual decryption denial takes precedence over a skipped profile.
-            guard !profileDenied || self.cookieAccessFailure == nil else { return }
+            // Preserve stronger access failures within a browser, without hiding another browser's remedy.
+            guard !profileDenied || self.cookieAccessFailures[browser.displayName] == nil else { return }
             let message = profileDenied
                 ? "Cannot read \(browser.displayName)'s profile. In System Settings → Privacy & Security → "
                 + "Files & Folders, turn on \(browser.displayName) under CodexBar, then refresh."
-                : "\(browser.displayName) cookie access needs \(permission) — "
-                + "use Refresh beside Cookie source or Refresh in the provider menu to allow it, "
+                : "\(browser.displayName) cookie access needs \(permission) — \(recovery), "
                 + "or paste a Cookie header in Manual mode."
-            self.cookieAccessFailure = ProviderFetchClassifiedError(kind: .permissionDenied, message: message)
+            self.cookieAccessFailures[browser.displayName] = message
         }
     }
     #endif

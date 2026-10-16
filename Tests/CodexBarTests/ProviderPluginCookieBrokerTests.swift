@@ -6,6 +6,30 @@ import Testing
 struct ProviderPluginCookieBrokerTests {
     private let domains: Set<String> = ["cloud.example.test", "community.example.test"]
 
+    @Test(arguments: [false, true])
+    func `Safari denial cannot hide Chrome profile recovery`(safariFirst: Bool) throws {
+        try self.isolated {
+            let broker = ProviderPluginCookieBroker(
+                provider: .xapi,
+                domains: self.domains,
+                settings: .init(cookieSource: .auto, manualCookieHeader: nil),
+                batches: { _, _ in
+                    if safariFirst { BrowserCookieAccessGate.recordAccessFailure(for: .safari) }
+                    BrowserCookieAccessGate.recordAccessFailure(for: .chrome, profileDenied: true)
+                    if !safariFirst { BrowserCookieAccessGate.recordAccessFailure(for: .safari) }
+                    return nil
+                })
+            #expect(try broker.nextSession(domain: "cloud.example.test") == nil)
+            let missing = ProviderFetchClassifiedError(kind: .missingCredential, message: "Synthetic sign in")
+            let failure = try #require(broker.preferredFailure(over: missing) as? ProviderFetchClassifiedError)
+            #expect(failure.kind == .permissionDenied)
+            #expect(failure.message.contains("Cannot read \(Browser.chrome.displayName)'s profile"))
+            #expect(failure.message.contains("Files & Folders"))
+            #expect(failure.message.contains("Safari"))
+            #expect(failure.message.contains("Full Disk Access"))
+        }
+    }
+
     @Test
     func `denied synthetic profile reports Files and Folders instead of sign in`() throws {
         try self.isolated {
@@ -90,7 +114,7 @@ struct ProviderPluginCookieBrokerTests {
     }
 
     @Test
-    func `decryption denial keeps precedence over skipped profiles`() throws {
+    func `decryption denial keeps precedence over the same browsers skipped profile`() throws {
         try self.isolated {
             let broker = ProviderPluginCookieBroker(
                 provider: .manus,
@@ -98,7 +122,7 @@ struct ProviderPluginCookieBrokerTests {
                 settings: .init(cookieSource: .auto, manualCookieHeader: nil),
                 batches: { _, _ in
                     BrowserCookieAccessGate.recordAccessFailure(for: .chrome)
-                    BrowserCookieAccessGate.recordAccessFailure(for: .brave, profileDenied: true)
+                    BrowserCookieAccessGate.recordAccessFailure(for: .chrome, profileDenied: true)
                     return nil
                 })
             let session = try broker.nextSession(domain: "cloud.example.test")

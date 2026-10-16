@@ -2,6 +2,11 @@
 
 ## 0.76.1 — Unreleased
 
+### Fixed
+
+- Widgets: include optional provider details in snapshot JSON so Claude Cloud credits retain their remaining balance, grant total, and expiry without changing quota rows (#4546). Thanks @djbclark!
+- Cookie imports: retain recovery guidance for every blocked browser so Safari permission failures cannot hide Chrome's Files & Folders fix (#4513). Thanks @marklights54-byte!
+
 ## 0.76.0 — 2026-10-15
 
 ### Highlights
