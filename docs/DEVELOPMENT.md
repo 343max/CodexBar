@@ -219,6 +219,9 @@ existing binaries. No framework search-path override is added.
 selections and their deadlines while avoiding whole-batch retries. Apple-Silicon macOS CI includes the CLI entry suite;
 the former Intel-runner exclusion is retired.
 
+Ordinary settings fixtures use an instance-owned Keychain access policy, including direct `SettingsStore`
+initializers. Tests that deliberately exercise the process-wide gate must explicitly inject `.live` and restore it.
+
 Claude OAuth gate tests use `ClaudeOAuthDefaultsFixtures()` so each test case owns an in-memory preferences store.
 Keep reset, expiry, and persisted-key assertions inside that scope; nested tasks inherit it, detached tasks do not.
 The gates retain their normal production defaults domain. Continue serializing shared gate state and same-host
