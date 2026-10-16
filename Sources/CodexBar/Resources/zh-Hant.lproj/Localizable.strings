@@ -1825,6 +1825,9 @@
 "Gateway URL" = "網關URL";
 "Gemini CLI login is no longer supported" = "Gemini CLI 不再支援登入";
 "Gemini CLI migration" = "Gemini CLI 遷移";
+"Gemini app" = "Gemini 應用程式";
+"Gemini CLI" = "Gemini CLI";
+"Gemini app limits use your browser account and are separate from Gemini CLI quotas." = "Gemini 應用程式的限額適用於你在瀏覽器中登入的帳號，與 Gemini CLI 配額相互獨立。";
 "Generated locally by CodexBar · Data through %@" = "由 CodexBar 本地生成 · 數據截至 %@";
 "GitHub cookies" = "GitHub Cookie";
 "GitHub does not publish this value. Enter it to show a usage bar. Applies to the selected GitHub account." = "GitHub 不公佈該值。輸入它以顯示使用欄。適用於選定的 GitHub 帳戶。";

@@ -1811,6 +1811,9 @@
 "Gateway URL" = "ゲートウェイ URL";
 "Gemini CLI login is no longer supported" = "Gemini CLI ログインはサポートされなくなりました";
 "Gemini CLI migration" = "Gemini CLI の移行";
+"Gemini app" = "Gemini アプリ";
+"Gemini CLI" = "Gemini CLI";
+"Gemini app limits use your browser account and are separate from Gemini CLI quotas." = "Gemini アプリの上限はブラウザのアカウントに適用され、Gemini CLI のクォータとは別です。";
 "Generated locally by CodexBar · Data through %@" = "CodexBar によってローカルに生成 · %@ 時点のデータ";
 "GitHub cookies" = "GitHub cookies";
 "GitHub does not publish this value. Enter it to show a usage bar. Applies to the selected GitHub account." = "GitHub はこの値を公開していません。使用状況バーを表示するには、それを入力します。選択した GitHub アカウントに適用されます。";

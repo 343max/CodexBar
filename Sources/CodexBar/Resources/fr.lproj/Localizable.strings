@@ -1810,6 +1810,9 @@
 "Gateway URL" = "Passerelle URL";
 "Gemini CLI login is no longer supported" = "La connexion Gemini CLI n'est plus prise en charge";
 "Gemini CLI migration" = "Migration Gemini CLI";
+"Gemini app" = "Application Gemini";
+"Gemini CLI" = "Gemini CLI";
+"Gemini app limits use your browser account and are separate from Gemini CLI quotas." = "Les limites de l’application Gemini concernent votre compte dans le navigateur et sont distinctes des quotas de Gemini CLI.";
 "Generated locally by CodexBar · Data through %@" = "Généré localement par CodexBar · Données au %@";
 "GitHub cookies" = "GitHub cookies";
 "GitHub does not publish this value. Enter it to show a usage bar. Applies to the selected GitHub account." = "GitHub ne publie pas cette valeur. Entrez-le pour afficher une barre d'utilisation. S'applique au compte GitHub sélectionné.";

@@ -1780,6 +1780,9 @@
 "Gateway URL" = "게이트웨이 URL";
 "Gemini CLI login is no longer supported" = "Gemini CLI 로그인은 더 이상 지원되지 않습니다.";
 "Gemini CLI migration" = "Gemini CLI 마이그레이션";
+"Gemini app" = "Gemini 앱";
+"Gemini CLI" = "Gemini CLI";
+"Gemini app limits use your browser account and are separate from Gemini CLI quotas." = "Gemini 앱의 한도는 브라우저 계정에 적용되며 Gemini CLI 할당량과는 별개입니다.";
 "Generated locally by CodexBar · Data through %@" = "CodexBar에 의해 로컬에서 생성됨 · %@ 기준 데이터";
 "GitHub cookies" = "GitHub cookies";
 "GitHub does not publish this value. Enter it to show a usage bar. Applies to the selected GitHub account." = "GitHub는 이 값을 게시하지 않습니다. 사용량 표시줄을 표시하려면 입력하세요. 선택한 GitHub 계정에 적용됩니다.";

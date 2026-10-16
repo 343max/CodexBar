@@ -598,7 +598,7 @@ extension UsageMenuCardView.Model {
         } else if input.provider == .sub2api {
             "Weekly"
         } else {
-            input.metadata.weeklyLabel
+            presentation.rateWindowLabels(metadata: input.metadata, snapshot: snapshot, now: input.now).secondary
         }
         let tertiaryLabel = input.provider == .sub2api
             ? L("Monthly")

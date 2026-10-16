@@ -77,7 +77,7 @@ complete when the available scan window covers fewer days.
 | OpenAI | Admin API key (`api`) for organization spend/usage; legacy API-key balance fallback. |
 | Azure OpenAI | API key + endpoint + deployment probe (`api`) for deployment status validation. |
 | Claude | Admin API key (`api`) when configured; otherwise App Auto: OAuth API (`oauth`) → CLI PTY (`claude`) → Web API (`web`). CLI Auto: Web API (`web`) → CLI PTY (`claude`). |
-| Gemini | OAuth-backed API via Gemini CLI credentials (`api`). |
+| Gemini | Gemini CLI OAuth quotas (`auto`/`api`, default), or opt-in Gemini app 5-hour/weekly limits via cookies (`web`). |
 | Antigravity | Local LSP/HTTP probe (`local`). |
 | Cursor | Web API via cookies → legacy stored session → Cursor.app local auth (`web`). |
 | OpenCode | Web dashboard via cookies (`web`). |
@@ -278,7 +278,8 @@ complete when the available scan window covers fewer days.
 - Details: `docs/kilo.md`.
 
 ## Gemini
-- OAuth-backed quota API (`retrieveUserQuota`) using Gemini CLI credentials.
+- Default Gemini CLI source: OAuth-backed quota API (`retrieveUserQuota`) using Gemini CLI credentials.
+- Explicit Gemini app source: bundled cookie plugin for `gemini.google.com/usage` 5-hour and weekly limits.
 - Token refresh via Google OAuth if expired.
 - Tier detection via `loadCodeAssist`.
 - Status: Google Workspace incidents (Gemini product).

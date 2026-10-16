@@ -1814,6 +1814,9 @@
 "Gateway URL" = "Ağ Geçidi URL";
 "Gemini CLI login is no longer supported" = "Gemini CLI oturum açma işlemi artık desteklenmiyor";
 "Gemini CLI migration" = "Gemini CLI geçişi";
+"Gemini app" = "Gemini uygulaması";
+"Gemini CLI" = "Gemini CLI";
+"Gemini app limits use your browser account and are separate from Gemini CLI quotas." = "Gemini uygulamasının sınırları tarayıcı hesabınız için geçerlidir ve Gemini CLI kotalarından ayrıdır.";
 "Generated locally by CodexBar · Data through %@" = "CodexBar tarafından yerel olarak oluşturulmuştur · %@ tarihine kadar veriler";
 "GitHub cookies" = "GitHub cookies";
 "GitHub does not publish this value. Enter it to show a usage bar. Applies to the selected GitHub account." = "GitHub bu değeri yayınlamaz. Kullanım çubuğunu göstermek için girin. Seçilen GitHub hesabı için geçerlidir.";

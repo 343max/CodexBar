@@ -78,7 +78,7 @@ Abacus, Muse, LongCat, Replicate, and TypeSafe unchanged.
 | alibabatokenplan | `needs-host-extension` | No | Form POST is available in host-caps-3. Cookie-jar lane host-caps-4 must preserve domain/path metadata through redirects and define legacy-header migration before cutover. |
 | qwencloud | `needs-host-extension` | Team only | `qwencloud-team.ts` fetches Team credits with form POST and an opaque dashboard session supplied by native cookie selection. Individual remains native: its cookie-derived CSRF/cna payload and paired-host auth parity still need a separate conversion audit. |
 | factory | `needs-files/subprocess/oauth-broker` | No | The canonical fallback recovers WorkOS tokens from browser localStorage and persists sessions; cookie headers cover only part of auth. |
-| gemini | `needs-files/subprocess/oauth-broker` | No | Gemini CLI credential/config files, Google OAuth refresh, and a curl fallback own the current flow. |
+| gemini | `needs-files/subprocess/oauth-broker` | Web only | The opt-in Gemini app source uses `gemini-web` on both engines with opaque, nonpersistent cookie sessions. CLI credentials, Google OAuth refresh, and its curl fallback remain native. |
 | antigravity | `needs-pty/webview/native` | No | Process/port discovery, localhost IDE RPC, OAuth files, and a persistent PTY make this a native integration. |
 | copilot | `needs-files/subprocess/oauth-broker` | No | Full parity includes stored token discovery and interactive device authorization with form-encoded POST; billing cookies alone are insufficient. |
 | devin | `needs-files/subprocess/oauth-broker` | No | Full auth discovery reads Chromium localStorage and organization state; manual bearer alone is partial. |
