@@ -223,6 +223,9 @@ existing binaries. No framework search-path override is added.
 selections and their deadlines while avoiding whole-batch retries. Apple-Silicon macOS CI includes the CLI entry suite;
 the former Intel-runner exclusion is retired.
 
+Ordinary settings fixtures use an instance-owned Keychain access policy, including direct `SettingsStore`
+initializers. Tests that deliberately exercise the process-wide gate must explicitly inject `.live` and restore it.
+
 Claude OAuth gate tests use `ClaudeOAuthDefaultsFixtures()` so each test case owns an in-memory preferences store.
 Keep reset, expiry, and persisted-key assertions inside that scope; nested tasks inherit it, detached tasks do not.
 The gates retain their normal production defaults domain. Continue serializing shared gate state and same-host
@@ -714,6 +717,10 @@ alive until its output is observed; Darwin can discard unread output when the la
 The TTY runner retains its slave descriptor until it has harvested output after child exit, then closes it
 before checking EOF. The fast-exit regression waits for child exit before the first read, without a timed delay.
 Compare working directories after resolving symlinks.
+
+Detached SIGTERM-ignoring fixtures use `KiroProcessTestSupport` to watch the test process with kqueue
+`NOTE_EXIT`, with a 120-second backstop. Watch the test process rather than a short-lived fixture parent;
+heartbeat loops also retain an absolute deadline so they cannot wait forever while the owner remains alive.
 Test output is buffered per group. A direct runtime failure after execution begins fails the run;
 it does not silently rerun the suite through a different runtime. This opt-in adapter depends on
 SwiftPM's toolchain helper contract and needs compatibility validation when updating Xcode.

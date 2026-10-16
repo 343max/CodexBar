@@ -704,7 +704,7 @@ struct StatusMenuTests {
 
         enableTestProviders([.codex, .claude], settings: settings)
 
-        let activeProviders: [UsageProvider] = [.codex, .claude]
+        let activeProviders: [ProviderInstanceID] = [.codex, .claude]
         _ = settings.setMergedOverviewProviderSelection(
             provider: .codex,
             isSelected: false,

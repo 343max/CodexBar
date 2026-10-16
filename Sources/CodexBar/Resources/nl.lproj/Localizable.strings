@@ -1462,6 +1462,9 @@
 "menu_bar_layout_token_runs_out" = "Op";
 "menu_bar_layout_token_cost_today" = "Kosten vandaag";
 "menu_bar_layout_token_cost_window" = "Kosten (Geschiedenisvenster)";
+"menu_bar_layout_token_spend" = "Uitgaven %";
+"menu_bar_layout_token_spend_pace" = "Uitgaventempo";
+"menu_bar_layout_token_spend_budget" = "Uitgaven / begroting";
 "menu_bar_layout_token_space" = "Spatie";
 "menu_bar_layout_token_line_break" = "Regeleinde";
 "menu_bar_layout_token_separator_accessibility" = "Scheidingspunt";
@@ -1623,6 +1626,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "Sessie bijna verbruikt";
 "menu_bar_layout_conditional_default_either_high" = "Sessie of week loopt hoog op";
 "menu_bar_layout_conditional_default_scoped_weekly" = "Modelweek boven 60% gebruikt";
+"menu_bar_layout_conditional_default_spend_high" = "Uitgaven boven 90% gebruikt";
 "Visible usage items" = "Zichtbare gebruiksitems";
 "Restore Defaults" = "Standaardinstellingen herstellen";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "Kies welke gebruiksrijen worden weergegeven in het menu van deze provider, het instellingenvoorbeeld en het overzicht.";
@@ -1909,6 +1913,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "Plak de Cookie-header uit een factuurpaginaverzoek. Het moet sessionid bevatten.";
 "Paste z.ai / GLM API key…" = "Plak z.ai / GLM API sleutel…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "Pad naar het uitvoerbare bestand cswap (github.com/realiti4/claude-swap).";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "Pad naar het uitvoerbare bestand tcr (github.com/dhkts1/teamclaude-rs).";
 "Peak %@" = "Piek %@";
 "Percent left" = "Percentage resterend";
 "Pick another Codex account before importing OpenAI cookies." = "Kies een ander Codex-account voordat u OpenAI cookies importeert.";
@@ -1963,6 +1968,8 @@
 "Select the provider to display." = "Selecteer de provider die u wilt weergeven.";
 "Session (5-hour)" = "Sessie (5 uur)";
 "Session and weekly usage with credits and costs." = "Sessie en wekelijks gebruik met Kredieten en kosten.";
+"Set the cswap executable path below." = "Stel hieronder het pad naar het uitvoerbare bestand cswap in.";
+"Set the tcr executable path below." = "Stel hieronder het pad naar het uitvoerbare bestand tcr in.";
 "Settings unavailable." = "Instellingen niet beschikbaar.";
 "Show account card when only one account is available" = "Toon accountkaart als er slechts één account beschikbaar is";
 "Show model-specific weekly usage in widgets" = "Toon modelspecifiek wekelijks gebruik in widgets";
@@ -1970,6 +1977,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "Toont modelspecifieke Claude Quotum, zoals Fable, in bureaubladwidgets.";
 "Shows the hidden accounts" = "Toont de verborgen accounts";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "Toont het gebruik en laat u van account wisselen via `cswap`. Inloggegevens blijven beheerd door claude-swap; CodexBar leest ze nooit.";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "Toont het gebruik uit `tcr`; wisselt niet van account, omdat tcr voor elk verzoek het account kiest. Inloggegevens blijven beheerd door tcr; CodexBar leest ze nooit.";
 "Stay Awake" = "Blijf wakker";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "Opgeslagen in het CodexBar-configuratiebestand. Leest het maandbudget en het gerouteerde gebruik van /v1/usage.";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "Opgeslagen in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is vereist voor gebruik in de organisatie; oudere/gebruikerssleutels krijgen alleen een terugval in de balans van de beste inspanning.";
@@ -1978,6 +1986,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "Van account wisselen…";
 "Switch Claude Code account" = "Claude Code-account wijzigen";
+"Claude accounts in tcr" = "Claude-accounts in tcr";
 "Switch Claude Code to %@" = "Schakel Claude Code over naar %@";
 "Switch Provider" = "Van aanbieder wisselen";
 "Switch the provider shown in the widget." = "Wijzig de provider die in de widget wordt weergegeven.";
@@ -2064,6 +2073,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "Quotum is uitgeput";
+"tcr executable" = "tcr uitvoerbaar bestand";
 "under pace" = "gebruik beneden het geplande tempo";
 "us-east-1" = "us-east-1";
 "used" = "gebruikt";
@@ -2074,6 +2084,7 @@
 "~%@ est" = "~%@ geschat";
 "~%@ tracked tokens (partial)" = "~%@ Vastgelegde tokens (GEDEELTELIJK)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2521,6 +2532,8 @@
 "Pace sign" = "Teken van gebruikstempo";
 "Ahead of pace is +" = "Boven het tempo is +";
 "Reserve is +" = "Reserve krijgt +";
+"Back" = "Terug";
+"Forward" = "Vooruit";
 
 "cost_reset_inferred_tooltip" = "Afgeleid: %@ meldt deze datum niet. Maandelijkse bestedingslimieten worden op de 1e om 00:00 UTC gereset.";
 /* fal provider credentials */
@@ -2636,3 +2649,27 @@
 "API credit" = "API-tegoed";
 "Purchased credit" = "Gekocht tegoed";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform toont het Console-tegoed en de maandelijkse uitgaven, niet de lokale tokenkostengeschiedenis.";
+
+"Claude config directory" = "Claude-configuratiemap";
+/* App-managed HTTP server */
+"http_server_title" = "HTTP-server";
+"http_server_enable" = "HTTP-server inschakelen";
+"http_server_bind" = "IPv4-luisteradres";
+"http_server_port" = "Poort";
+"http_server_token" = "Servertoken";
+"http_server_show" = "Tonen";
+"http_server_generate" = "Genereren";
+"http_server_cache" = "Cache-interval (seconden)";
+"http_server_timeout" = "Time-out voor verzoeken (seconden; 0 schakelt uit)";
+"http_server_all_accounts" = "Alle accounts in momentopnamen opnemen";
+"http_server_identity" = "Identiteit op dashboard";
+"http_server_redacted" = "Afgeschermd";
+"http_server_warning" = "Deelt gebruik, kosten en account- en projectinformatie, nooit inloggegevens van providers. HTTP verstuurt het servertoken onversleuteld. Gebruik alleen een vertrouwde VPN- of Tailscale-verbinding.";
+"http_server_plain_http" = "Onversleutelde HTTP buiten deze Mac toestaan";
+"http_server_dashboard" = "Dashboard";
+"http_server_wildcard" = "Vervang op andere apparaten 0.0.0.0 door het VPN- of Tailscale-IPv4-adres van deze Mac.";
+"http_server_footer" = "Standaard uit. Start met CodexBar en stopt wanneer het afsluit. Instellingen en token blijven op deze Mac en worden niet gesynchroniseerd of geëxporteerd. Houd de Mac wakker voor externe toegang.";
+/* Claude desktop cookie source */
+"Claude desktop app" = "Claude-desktopapp";
+"Use Claude desktop app cookies" = "Cookies van de Claude-desktopapp gebruiken";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "Gebruik voor webverbruik het account dat bij Claude.app is aangemeld in plaats van het browseraccount.";

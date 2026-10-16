@@ -74,6 +74,8 @@ Gemini uses the Gemini CLI OAuth credentials and private quota APIs. No browser 
   - Primary: Pro models (lowest percent left).
   - Secondary: Flash models (lowest percent left).
   - Tertiary: Flash Lite models (lowest percent left).
+  - Automatic shows the first exhausted tier when present; otherwise it prefers Pro, then Flash, then Flash Lite,
+    even when a later tier has a higher used percentage.
   - Missing model tiers remain absent. The shared menu-bar metric fallback uses Flash Lite when both Pro and Flash
     are unavailable, including Automatic, Pro, Flash, and Average. Average still combines Pro and Flash when both exist.
 

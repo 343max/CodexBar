@@ -8,6 +8,7 @@ read_when:
 # UI & icon
 
 ## Settings
+- Back and Forward revisit the panes you opened, using Command-[ and Command-] as in System Settings. Selecting a new pane after going back clears forward history; reselecting the current pane preserves it. The last pane still restores at launch, while navigation history lasts only for the current app session. Hidden Debug panes are removed from history. On macOS 26 and later, the controls share the detail header; macOS 14/15 retain the native window title and show the controls above the pane content. The native window title stays set on every version for accessibility and the Window menu.
 - Dock presence follows startup and actual window transitions instead of rescanning windows on every app update. Scheduled Sparkle alerts still request temporary Dock presence, including alerts shown behind another app.
 - Menu → Highlight menu cards on hover is on by default. Turn it off to keep normal text and usage-bar colors on provider cards, Overview cards, and Refresh while hovering. Keyboard selection stays visible; clicks and submenus are unchanged. The choice persists locally across restarts.
 - The provider sidebar keeps saved order and the one-click alphabetical toggle (enabled first). The adjacent
@@ -100,19 +101,30 @@ read_when:
 | Group | Tokens | Behavior |
 | --- | --- | --- |
 | Identity | Icon, Provider name, Account | Provider-scoped branding and identity |
-| Usage | Session %, Weekly %, Scoped weekly %, Auto %, Usage bar | Window percentage or a compact three-glyph usage bar |
+| Usage | Session %, Weekly %, Scoped weekly %, Auto %, Spend %, Usage bar | Window percentage or a compact three-glyph usage bar |
 | Usage | Named allowances (Cursor Grok Bot, Antigravity family weekly quotas) | Own label and percentage; a saved selection shows a dash when unavailable |
-| Usage | Session pace, Weekly pace, Auto pace | Signed pace delta for that window |
-| Time | Resets in, Reset at (automatic, Session, Weekly), Runs out | Selected-window relative reset, absolute reset, or pace estimate |
-| Money | Balance, Cost today, Cost (History window) | Provider balance or remaining credits, or local cost estimate. Cost (History window) is the total for the selected [History window](cost-reporting-periods.md), and cost thresholds compare that window's total |
+| Usage | Session pace, Weekly pace, Auto pace, Spend pace | Signed pace delta for that window |
+| Time | Resets in, Reset at (automatic, Session, Weekly, Spend), Runs out | Selected-window relative reset, absolute reset, or pace estimate |
+| Money | Balance, Cost today, Cost (History window), Spend, Spend / budget | Provider balance or remaining credits, or local cost estimate. Cost (History window) is the total for the selected [History window](cost-reporting-periods.md), and cost thresholds compare that window's total. Spend and Spend / budget show the provider-reported amount spent, alone or against its budget |
 | Structure | Separator dot, Space, Line break | Spacing and optional two-line composition |
+
+Spend items use the provider-reported budget behind the Extra usage metric and honor **Show optional credits,
+spending & billing details**. They do not use prepaid balances or local cost estimates. Spend % carries the budget's
+currency symbol; credit-denominated caps have no currency prefix and no monetary amount. Spend pace requires a
+reported period and becomes available after 1% of that period. Existing layouts are unchanged; new installs also
+include a **Spend over 90% used** conditional rule.
+
+Spend layouts, overrides, and rules are stored in V6. Older builds read a V5 projection without Spend tokens or rules;
+V4 and earlier projections retain their existing compatibility behavior. Returning restores the full layout when the
+older copy was unchanged. Edits in an older build take precedence, while untouched overrides and Spend rules survive;
+clearing the older rule library deliberately clears all rules.
 
 The pace tokens render the same delta the menu card shows as "in deficit"/"in reserve", in the compact signed form the
 pre-0.45 **Both** display mode used: `+11%` means usage runs that far ahead of the sustainable rate, `-8%` that far
 behind it, `0%` on pace. Each pace token reads its own window, so `Weekly pace` never borrows the session delta — unlike
 `Runs out`, which always estimates from the weekly (or automatic) lane. A pace token renders an en dash while pace is
-unavailable, including the first 3% of a window. The weekly menu-bar pace token may appear after 1% of its weekly
-window has elapsed; session, automatic, and Runs out tokens keep the 3% threshold. See [Pace tracking](#pace-tracking).
+unavailable. Weekly and Spend pace may appear after 1% of their respective periods has elapsed; session, automatic,
+and Runs out tokens keep the 3% threshold. See [Pace tracking](#pace-tracking).
 
 Choose **Pace sign** under **Menu Bar → Icon**, next to **Color Pace Indicator**:
 **Ahead of pace is +** (the default) shows deficits as positive and reserves as negative;
@@ -122,9 +134,9 @@ pace stays an en dash. The menu card's reserve/deficit wording and the numeric m
 do not change: positive pace thresholds still mean usage ahead of pace.
 
 Enable **Color Pace Indicator** under **Menu Bar → Icon** to show usage behind pace (reserve) in green and usage ahead
-of pace (risk of running out early) in red. The option defaults off, applies to all three pace tokens and the layout
+of pace (risk of running out early) in red. The option defaults off, applies to all four pace tokens and the layout
 preview, and keeps the signed percentages. Zero and unavailable pace stay neutral; stale pace colors are dimmed unless high-contrast rendering is active.
-It colors **Session pace**, **Weekly pace**, and **Auto pace** in the layout editor. Enabling it does not add tokens,
+It colors **Session pace**, **Weekly pace**, **Auto pace**, and **Spend pace** in the layout editor. Enabling it does not add tokens,
 rewrite stored layouts, or migrate legacy display modes. Existing installs stay monochrome until the option is enabled.
 These colors keep the same meaning with either pace sign: reserve is green and deficit is red.
 

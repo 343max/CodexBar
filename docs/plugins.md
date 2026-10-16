@@ -126,6 +126,11 @@ defineProvider({
 - `icon` (optional): `{monogram, tint}`. `monogram` is 1–3 characters; `tint` is `#RRGGBB`. The fallback is the first
   letter of `name` with a neutral tint. File/SVG icons are not supported.
 - `topLevel` (optional, default `true`): gives an enabled plugin its own provider-switcher tab when Merge Icons is on. Set to `false` to keep an appended card.
+  Plugin tabs show a quota gauge from the most constrained reported seven-day window, otherwise the first available
+  primary, secondary, tertiary, or extra window. They follow the used/remaining display preference; unknown usage
+  stays unavailable. Enabled plugins can also be selected in **Settings → Menu Bar → Overview**; they share the
+  six-provider limit and render their existing usage card. Overview selections retain the same string-array format,
+  so older builds can still read the built-in providers while ignoring unknown plugin IDs.
 - `endpoints`: 1–16 declared network origins. A fixed endpoint is a normalized HTTPS origin such as
   `https://api.example.com` (no path, query, fragment, or user info). A settings-derived endpoint is
   `{setting: "BASE_URL", policy: "https"}`, `{setting: "BASE_URL", policy: "https-or-loopback-http"}`, or
