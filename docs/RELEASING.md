@@ -7,7 +7,7 @@ read_when:
 
 # Release process (CodexBar)
 
-[Release](../.github/workflows/release.yml) owns publication. Push an existing SSH-signed, annotated `vX.Y.Z` tag to run the pipeline, or dispatch it from protected `main` with that existing tag and `dry_run=false`. It never creates, moves, or overwrites a version tag. Local publishing through `Scripts/release.sh` and `Scripts/make_appcast.sh` has been retired.
+[Release](https://github.com/steipete/CodexBar/blob/main/.github/workflows/release.yml) owns publication. Push an existing SSH-signed, annotated `vX.Y.Z` tag to run the pipeline, or dispatch it from protected `main` with that existing tag and `dry_run=false`. It never creates, moves, or overwrites a version tag. Local publishing through `Scripts/release.sh` and `Scripts/make_appcast.sh` has been retired.
 
 ## Rehearse without publishing
 
