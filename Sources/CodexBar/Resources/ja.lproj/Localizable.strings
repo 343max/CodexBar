@@ -2629,3 +2629,8 @@
 "API credit" = "API クレジット";
 "Purchased credit" = "購入済みクレジット";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform は、ローカルのトークンコスト履歴ではなく、Console のクレジット残高と月間支出を表示します。";
+
+/* Claude desktop cookie source */
+"Claude desktop app" = "Claudeデスクトップアプリ";
+"Use Claude desktop app cookies" = "ClaudeデスクトップアプリのCookieを使用";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "Webの使用量には、ブラウザではなくClaude.appにログイン中のアカウントを使用します。";
