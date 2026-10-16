@@ -314,6 +314,14 @@ provider-toggle actions under test on the production setter; the fixture helper 
 
 ### Cost scanner CPU regressions
 
+Cost marker searches compare exact UTF-8 bytes with bounded libc `memchr` and `memcmp` calls.
+Both buffers remain borrowed during the search, and candidate starts stop at the last position
+where the complete needle fits. Empty needles retain Foundation's `Data.range(of:)` behavior.
+`CostUsageAsciiSearchTests` compares results with Foundation, including nonzero-index data views,
+binary bytes, Unicode, repeated prefixes, and matches at the buffer boundary.
+JSON decoding, parser classification, and resumable scan state keep their existing paths.
+The parser-hash change retains `3f88178bf03ad704` as a tested compatible native-store predecessor.
+
 `CostUsageJsonl` finds complete physical LF spans with bounded libc `memchr` on Darwin, Glibc, and
 Musl, using the same span algorithm with scalar LF search elsewhere. Borrowed pointers stay inside
 the current `withUnsafeBytes` call; search counts and distances fit the existing 256 KiB read chunk.
