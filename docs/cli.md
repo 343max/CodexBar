@@ -443,15 +443,17 @@ non-zero only when it cannot produce a valid snapshot document.
 
 ## SSH sessions (macOS)
 
-SSH sessions cannot unlock the login keychain, so keychain-backed providers can fail there while the app has fresh
+When the login keychain is locked, keychain-backed providers can fail over SSH while the app has fresh
 numbers. Set `"shareUsageWithCLI": true` in `config.json` (off by default) and the app writes a private cache
 (`~/Library/Application Support/CodexBar/CLIUsageCache/usage.json`, `0600` in a `0700` directory) holding rate
-windows and fetch times, without credentials or account identity. Provider-supplied text such as reset descriptions and
+windows (including extra quota rows) and fetch times, without credentials, costs, or account identity. Provider-supplied text such as reset descriptions and
 window titles is stored as received. In a non-GUI session, when a default-account
 fetch without `--source` hits a locked keychain and ends with a missing-credential or cookie-access error (for example
 `No Claude session key found in browser cookies.`), `usage` and `cards` report the app's
 numbers instead (at most one hour old) as `"source": "codexbar-app"` with `"ageSeconds"` (whole seconds since the app fetched them). Other failures (timeouts, parse errors, HTTP rejections), token
-accounts, and GUI sessions keep their normal behavior.
+accounts, managed Codex accounts/profile homes, explicit account selections, and GUI sessions keep their normal behavior.
+Future-dated, corrupt, incorrectly owned, non-private, and symlinked cache files are ignored. Disabling sharing removes
+the file; providers that no longer have an eligible default-account snapshot are withdrawn on the next publication.
 
 ## Managed Codex accounts (macOS)
 

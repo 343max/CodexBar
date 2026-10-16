@@ -29,6 +29,12 @@ public struct CLIUsageCache: Codable, Sendable {
             self.usage = Self.figures(usage)
         }
 
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.provider = try container.decode(String.self, forKey: .provider)
+            self.usage = try Self.figures(container.decode(UsageSnapshot.self, forKey: .usage))
+        }
+
         private static func figures(_ usage: UsageSnapshot) -> UsageSnapshot {
             UsageSnapshot(
                 primary: usage.primary,
@@ -60,21 +66,21 @@ public struct CLIUsageCache: Codable, Sendable {
         return base.appendingPathComponent("CodexBar/CLIUsageCache/usage.json", isDirectory: false)
     }
 
-    /// Atomic write of a `0600` file inside a `0700` directory owned by `ownerUID` (never a symlink).
+    /// Atomic write of a `0600` file inside a same-user `0700` directory (never a symlink).
     public static func write(
         _ cache: CLIUsageCache,
-        to url: URL = defaultURL(),
-        fileManager: FileManager = .default,
-        ownerUID: uid_t = geteuid()) throws
+        to url: URL = defaultURL()) throws
     {
+        let fileManager = FileManager.default
         let directory = url.deletingLastPathComponent()
         try fileManager.createDirectory(
             at: directory,
             withIntermediateDirectories: true,
             attributes: [.posixPermissions: 0o700])
-        let attributes = try fileManager.attributesOfItem(atPath: directory.path)
-        guard attributes[.type] as? FileAttributeType == .typeDirectory,
-              (attributes[.ownerAccountID] as? NSNumber)?.uint32Value == ownerUID
+        var attributes = stat()
+        guard lstat(directory.path, &attributes) == 0,
+              attributes.st_mode & S_IFMT == S_IFDIR,
+              attributes.st_uid == geteuid()
         else { throw CocoaError(.fileWriteNoPermission) }
         try fileManager.setAttributes([.posixPermissions: 0o700], ofItemAtPath: directory.path)
         let encoder = JSONEncoder()
@@ -92,7 +98,7 @@ public struct CLIUsageCache: Codable, Sendable {
         guard fstat(descriptor, &metadata) == 0,
               metadata.st_mode & S_IFMT == S_IFREG,
               metadata.st_uid == ownerUID,
-              metadata.st_mode & 0o077 == 0,
+              metadata.st_mode & 0o7777 == 0o600,
               let data = try? handle.readToEnd()
         else { return nil }
         let decoder = JSONDecoder()
@@ -102,24 +108,30 @@ public struct CLIUsageCache: Codable, Sendable {
 
     public func hit(for provider: UsageProvider, now: Date = Date()) -> Hit? {
         guard let entry = self.entries.first(where: { $0.provider == provider.rawValue }),
-              now.timeIntervalSince(entry.usage.updatedAt) <= Self.maximumAge,
-              entry.usage.updatedAt <= now.addingTimeInterval(60)
+              entry.usage.hasRateLimitWindows
         else { return nil }
-        return Hit(entry: entry, ageSeconds: Int(max(0, now.timeIntervalSince(entry.usage.updatedAt))))
+        let age = now.timeIntervalSince(entry.usage.updatedAt)
+        guard (0...Self.maximumAge).contains(age) else { return nil }
+        return Hit(entry: entry, ageSeconds: Int(age))
     }
 
     /// Serves cached usage after a failed fetch, only in a non-GUI session (local behavior there is unchanged), only
     /// when the fetch hit a locked keychain, and only when the terminal failure is itself a credential-access one.
     /// A lock seen by an unrelated optional lookup must not mask a timeout, parse error, or HTTP rejection.
     public static func fallbackReader(
+        config: CodexBarConfig,
         url: URL = defaultURL(),
         hasGraphicSession: () -> Bool = CLIUsageCache.callerHasGraphicSession,
         now: @escaping @Sendable () -> Date = { Date() })
         -> (@Sendable (UsageProvider, _ lockedKeychainObserved: Bool, _ terminalError: Error) -> Hit?)?
     {
-        guard !hasGraphicSession() else { return nil }
+        guard config.shareUsageWithCLI, !hasGraphicSession() else { return nil }
         return { provider, lockedKeychainObserved, terminalError in
             guard lockedKeychainObserved, Self.isCredentialAccessFailure(terminalError) else { return nil }
+            // Provider-specific by design: managed/profile Codex homes do not own the app's live-system cache.
+            guard provider != .codex ||
+                (config.providerConfig(for: .codex)?.codexActiveSource ?? .liveSystem) == .liveSystem
+            else { return nil }
             return Self.load(from: url)?.hit(for: provider, now: now())
         }
     }
@@ -130,6 +142,8 @@ public struct CLIUsageCache: Codable, Sendable {
     /// own error.
     public static func isCredentialAccessFailure(_ error: Error) -> Bool {
         switch error {
+        case let error as ProviderBrowserSessionFailure:
+            return Self.isCredentialAccessFailure(error.underlyingError)
         case let error as ProviderFetchClassifiedError:
             // `.authenticationExpired` is the server rejecting a credential that was read fine.
             return error.kind == .missingCredential || error.kind == .permissionDenied

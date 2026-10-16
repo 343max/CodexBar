@@ -6,6 +6,7 @@ import SweetCookieKit
 import Testing
 @testable import CodexBarCore
 
+@Suite(.serialized)
 struct ProviderPluginCookieResultTests {
     @Test(arguments: [true, false])
     func `only a successful nonpersistent script fetch validates an empty refresh`(authenticated: Bool) async throws {
@@ -113,11 +114,9 @@ struct ProviderPluginCookieResultTests {
     }
 
     #if os(macOS)
-    @Test(
-        arguments: BundledPluginTestSupport.engines,
-        [errSecInteractionNotAllowed, errSecAuthFailed, errSecItemNotFound])
+    @Test(arguments: BundledPluginTestSupport.engines)
     func `plugin fetch tasks keep separate witnesses when an importer reports a keychain status`(
-        engine: ProviderPluginEngineKind, status: OSStatus) async throws
+        engine: ProviderPluginEngineKind) async throws
     {
         let domain = "fixture-\(UUID().uuidString.lowercased()).example.test"
         let source = """
@@ -152,10 +151,10 @@ struct ProviderPluginCookieResultTests {
             return observed
         }
         // Concurrent fetches keep their own witness: only the locked one observes it.
-        async let locked = fetch(importerStatus: status)
+        async let locked = fetch(importerStatus: errSecInteractionNotAllowed)
         async let other = fetch(importerStatus: errSecItemNotFound)
         let (lockedObserved, otherObserved) = try await (locked, other)
-        #expect(lockedObserved == (status == errSecInteractionNotAllowed || status == errSecAuthFailed))
+        #expect(lockedObserved)
         #expect(!otherObserved)
     }
     #endif

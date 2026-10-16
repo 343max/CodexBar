@@ -33,7 +33,7 @@ struct UsageCommandContext {
 
     func withUsageCacheFallback(config: CodexBarConfig) -> UsageCommandContext {
         var context = self
-        context.usageCacheFallback = config.shareUsageWithCLI ? CLIUsageCache.fallbackReader() : nil
+        context.usageCacheFallback = CLIUsageCache.fallbackReader(config: config)
         return context
     }
 }
@@ -548,7 +548,8 @@ extension CodexBarCLI {
         case let .failure(error):
             // Only a default-account fetch without `--source` whose terminal failure is a credential-access one
             // after a locked keychain read falls back to the cache.
-            if command.sourceModeOverride == nil, account == nil, codexVisibleAccount == nil,
+            if command.sourceModeOverride == nil, !tokenContext.selection.usesOverride,
+               account == nil, codexVisibleAccount == nil,
                let hit = command.usageCacheFallback?(provider, lockedKeychainObserved, error)
             {
                 let usage = hit.entry.usage.scoped(to: provider)

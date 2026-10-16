@@ -14,7 +14,9 @@ extension UsageStore {
                 // Provider-specific by design: Codex managed/profile-home accounts differ from the CLI's live one.
                 // Real snapshots only: the presentation snapshot can be a fabricated placeholder.
                 guard self.settings.effectiveSelectedTokenAccount(for: provider) == nil,
-                      provider != .codex || self.settings.codexActiveSource == .liveSystem,
+                      !self.tokenAccountLiveStateProviders.contains(provider.instanceID),
+                      provider != .codex || (self.settings.codexActiveSource == .liveSystem &&
+                          self.lastCodexUsagePublicationGuard?.source == .liveSystem),
                       let snapshot = self.snapshot(for: provider.instanceID)
                 else { return nil }
                 return CLIUsageCache.Entry(provider: provider, usage: snapshot)
@@ -24,13 +26,9 @@ extension UsageStore {
         self.cliUsageCachePersistTask = Task.detached(priority: .utility) {
             _ = await previous?.value
             guard let entries else {
-                if FileManager.default.fileExists(atPath: url.path) {
-                    try? FileManager.default.removeItem(at: url)
-                }
+                try? FileManager.default.removeItem(at: url)
                 return
             }
-            // An early persist before any fetch must not replace a valid cache with an empty one.
-            guard !entries.isEmpty else { return }
             do {
                 try CLIUsageCache.write(CLIUsageCache(entries: entries), to: url)
             } catch {
