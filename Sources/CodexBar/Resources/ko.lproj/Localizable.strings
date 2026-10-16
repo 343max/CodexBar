@@ -62,6 +62,16 @@
 "7d" = "7일";
 "A managed Codex login is already running. Wait for it to finish before adding " = "관리되는 Codex 로그인이 이미 실행 중입니다. 추가하기 전에 완료될 때까지 기다리세요. ";
 "API key" = "API 키";
+
+/* Future AGI provider */
+"Secret key" = "비밀 키";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "API 키와 함께 필요합니다. 로컬 구성 파일에 저장됩니다. 또는 FI_SECRET_KEY를 설정하세요.";
+"Paste secret key…" = "비밀 키 붙여넣기…";
+"AI credits" = "AI 크레딧";
+"Gateway requests" = "게이트웨이 요청";
+"Future AGI cost history is not available." = "Future AGI 비용 내역을 사용할 수 없습니다.";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "CodexBar의 로컬 구성 파일에 저장됩니다. 또는 FI_API_KEY를 설정하세요.";
+
 "API region" = "API 지역";
 "API token" = "API 토큰";
 "API tokens" = "API 토큰";
@@ -1872,6 +1882,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "청구 페이지 요청에서 Cookie 헤더를 붙여넣습니다. sessionid를 포함해야 합니다.";
 "Paste z.ai / GLM API key…" = "z.ai / GLM API 키 붙여넣기…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "cswap 실행 파일의 경로(github.com/realiti4/claude-swap)";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "tcr 실행 파일의 경로(github.com/dhkts1/teamclaude-rs)";
 "Peak %@" = "피크 %@";
 "Percent left" = "남은 비율";
 "Pick another Codex account before importing OpenAI cookies." = "OpenAI cookies를 가져오기 전에 다른 Codex 계정을 선택하세요.";
@@ -1926,6 +1937,8 @@
 "Select the provider to display." = "표시할 공급자를 선택하세요.";
 "Session (5-hour)" = "세션(5시간)";
 "Session and weekly usage with credits and costs." = "크레딧를 사용한 세션 및 주간 사용량과 비용.";
+"Set the cswap executable path below." = "아래에 cswap 실행 파일 경로를 설정하세요.";
+"Set the tcr executable path below." = "아래에 tcr 실행 파일 경로를 설정하세요.";
 "Settings unavailable." = "설정을 사용할 수 없습니다.";
 "Show account card when only one account is available" = "하나의 계정만 사용할 수 있는 경우 계정 카드 표시";
 "Show model-specific weekly usage in widgets" = "위젯에 모델별 주간 사용량 표시";
@@ -1933,6 +1946,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "데스크톱 위젯에 모델별 Claude 할당량(예: Fable)를 표시합니다.";
 "Shows the hidden accounts" = "숨겨진 계정을 표시합니다";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "사용량을 표시하고 `cswap`를 통해 계정을 전환할 수 있습니다. 자격 증명은 claude-swap에 의해 관리됩니다. CodexBar는 절대 읽지 않습니다.";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "`tcr`의 사용량을 표시합니다. tcr가 요청마다 계정을 선택하므로 계정을 전환하지 않습니다. 자격 증명은 tcr에 의해 관리됩니다. CodexBar는 절대 읽지 않습니다.";
 "Stay Awake" = "깨어 있으라";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "CodexBar 구성 파일에 저장됩니다. /v1/usage에서 월별 예산 및 라우팅된 사용량을 읽습니다.";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "~/.codexbar/config.json에 저장됩니다. 조직에서 사용하려면 OPENAI_ADMIN_KEY가 필요합니다. 레거시/사용자 키는 최선의 균형 대체만 얻습니다.";
@@ -1941,6 +1955,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "계정 전환…";
 "Switch Claude Code account" = "Claude Code 계정 전환";
+"Claude accounts in tcr" = "tcr의 Claude 계정";
 "Switch Claude Code to %@" = "Claude Code를 %@로 전환";
 "Switch Provider" = "공급자 전환";
 "Switch the provider shown in the widget." = "위젯에 표시된 공급자를 전환하세요.";
@@ -2027,6 +2042,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "할당량 고갈";
+"tcr executable" = "tcr 실행 파일";
 "under pace" = "계획된 속도보다 사용량이 적음";
 "us-east-1" = "us-east-1";
 "used" = "사용됨";
@@ -2037,6 +2053,7 @@
 "~%@ est" = "~%@ 추정";
 "~%@ tracked tokens (partial)" = "~%@ 기록된 토큰 (부분)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2604,6 +2621,7 @@
 "Purchased credit" = "구매한 크레딧";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform은 로컬 토큰 비용 내역이 아닌 Console 크레딧 잔액과 월간 지출을 표시합니다.";
 
+"Claude config directory" = "Claude 설정 디렉터리";
 /* App-managed HTTP server */
 "http_server_title" = "HTTP 서버";
 "http_server_enable" = "HTTP 서버 활성화";

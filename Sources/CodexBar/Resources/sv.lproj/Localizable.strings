@@ -62,6 +62,16 @@
 "7d" = "7 d";
 "A managed Codex login is already running. Wait for it to finish before adding " = "En hanterad Codex-inloggning körs redan. Vänta tills den är klar innan du lägger till ";
 "API key" = "API-nyckel";
+
+/* Future AGI provider */
+"Secret key" = "Hemlig nyckel";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "Krävs tillsammans med API-nyckeln. Sparas i den lokala konfigurationsfilen. Du kan också ange FI_SECRET_KEY.";
+"Paste secret key…" = "Klistra in hemlig nyckel…";
+"AI credits" = "AI-krediter";
+"Gateway requests" = "Gatewayförfrågningar";
+"Future AGI cost history is not available." = "Kostnadshistorik för Future AGI är inte tillgänglig.";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "Sparas i CodexBars lokala konfigurationsfil. Du kan också ange FI_API_KEY.";
+
 "API region" = "API-region";
 "API token" = "API-token";
 "API tokens" = "API-token";
@@ -1903,6 +1913,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "Klistra in Cookie-huvudet från en begäran om faktureringssida. Den måste innehålla sessionid.";
 "Paste z.ai / GLM API key…" = "Klistra in z.ai / GLM API-nyckel...";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "Sökväg till den körbara cswap (github.com/realiti4/claude-swap).";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "Sökväg till den körbara tcr (github.com/dhkts1/teamclaude-rs).";
 "Peak %@" = "Topp %@";
 "Percent left" = "Andel kvar";
 "Pick another Codex account before importing OpenAI cookies." = "Välj ett annat Codex-konto innan du importerar OpenAI cookies.";
@@ -1957,6 +1968,8 @@
 "Select the provider to display." = "Välj den leverantör som ska visas.";
 "Session (5-hour)" = "Session (5 timmar)";
 "Session and weekly usage with credits and costs." = "Session och veckovis användning med Krediter och kostnader.";
+"Set the cswap executable path below." = "Ange sökvägen till den körbara cswap nedan.";
+"Set the tcr executable path below." = "Ange sökvägen till den körbara tcr nedan.";
 "Settings unavailable." = "Inställningarna är inte tillgängliga.";
 "Show account card when only one account is available" = "Visa kontokort när endast ett konto är tillgängligt";
 "Show model-specific weekly usage in widgets" = "Visa modellspecifik veckoanvändning i widgets";
@@ -1964,6 +1977,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "Visar modellspecifika Claude Kvot, som Fable, i skrivbordswidgets.";
 "Shows the hidden accounts" = "Visar de dolda kontona";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "Visar användning och låter dig byta konto via `cswap`. Inloggningsuppgifterna hanteras av claude-swap; CodexBar läser dem aldrig.";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "Visar användning från `tcr`; byter inte konto, eftersom tcr väljer konto för varje förfrågan. Inloggningsuppgifterna hanteras av tcr; CodexBar läser dem aldrig.";
 "Stay Awake" = "Håll dig vaken";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "Lagrat i konfigurationsfilen CodexBar. Läser månadsbudget och dirigerad användning från /v1/usage.";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "Lagrat i ~/.codexbar/config.json. OPENAI_ADMIN_KEY krävs för organisationsanvändning; äldre nycklar/användarnycklar får bara den bästa möjliga balansen.";
@@ -1972,6 +1986,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "Byt konto...";
 "Switch Claude Code account" = "Byt Claude Code-konto";
+"Claude accounts in tcr" = "Claude-konton i tcr";
 "Switch Claude Code to %@" = "Byt Claude Code till %@";
 "Switch Provider" = "Byt leverantör";
 "Switch the provider shown in the widget." = "Byt leverantör som visas i widgeten.";
@@ -2058,6 +2073,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "Kvot utarmat";
+"tcr executable" = "tcr körbar";
 "under pace" = "användning under planerad takt";
 "us-east-1" = "us-east-1";
 "used" = "använt";
@@ -2068,6 +2084,7 @@
 "~%@ est" = "~%@ uppskattat";
 "~%@ tracked tokens (partial)" = "~%@ Registrerade token (DELVIS)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2635,6 +2652,7 @@
 "Purchased credit" = "Köpt kredit";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform visar Console-kreditsaldo och månadsutgifter, inte lokal tokenkostnadshistorik.";
 
+"Claude config directory" = "Konfigurationsmapp för Claude";
 /* App-managed HTTP server */
 "http_server_title" = "HTTP-server";
 "http_server_enable" = "Aktivera HTTP-server";

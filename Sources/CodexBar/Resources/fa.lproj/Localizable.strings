@@ -41,6 +41,16 @@
 "7d" = "7 روز";
 "A managed Codex login is already running. Wait for it to finish before adding " = "یک ورود Codex مدیریت شده هم اکنون در حال اجرا است. صبر کنید تا تمام شود و بعد   را اضافه کنید";
 "API key" = "کلید API";
+
+/* Future AGI provider */
+"Secret key" = "کلید مخفی";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "همراه با کلید API الزامی است. در فایل پیکربندی محلی ذخیره می‌شود. یا FI_SECRET_KEY را تنظیم کنید.";
+"Paste secret key…" = "کلید مخفی را جای‌گذاری کنید…";
+"AI credits" = "اعتبارهای هوش مصنوعی";
+"Gateway requests" = "درخواست‌های درگاه";
+"Future AGI cost history is not available." = "تاریخچه هزینه‌های Future AGI در دسترس نیست.";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "در فایل پیکربندی محلی CodexBar ذخیره می‌شود. یا FI_API_KEY را تنظیم کنید.";
+
 "API region" = "منطقه API";
 "API token" = "API توکن";
 "API tokens" = "توکن های API";
@@ -1908,6 +1918,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "هدر Cookie را از یک درخواست صفحه صورتحساب جای‌گذاری کنید. باید حاوی sessionid باشد.";
 "Paste z.ai / GLM API key…" = "کلید z.ai / GLM API را بچسبانید…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "مسیری به فایل اجرایی cswap (github.com/realiti4/claude-swap).";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "مسیری به فایل اجرایی tcr (github.com/dhkts1/teamclaude-rs).";
 "Peak %@" = "پیک %@";
 "Percent left" = "درصد باقی مانده است";
 "Pick another Codex account before importing OpenAI cookies." = "قبل از وارد کردن OpenAI cookies یک حساب دیگر Codex انتخاب کنید.";
@@ -1962,6 +1973,8 @@
 "Select the provider to display." = "ارائه دهنده را برای نمایش انتخاب کنید.";
 "Session (5-hour)" = "جلسه (5 ساعت)";
 "Session and weekly usage with credits and costs." = "جلسه و استفاده هفتگی با اعتبارات و هزینه ها.";
+"Set the cswap executable path below." = "مسیر فایل اجرایی cswap را در زیر تنظیم کنید.";
+"Set the tcr executable path below." = "مسیر فایل اجرایی tcr را در زیر تنظیم کنید.";
 "Settings unavailable." = "تنظیمات در دسترس نیست.";
 "Show account card when only one account is available" = "نمایش کارت حساب زمانی که فقط یک حساب در دسترس است";
 "Show model-specific weekly usage in widgets" = "نمایش استفاده هفتگی خاص مدل در ویجت ها";
@@ -1969,6 +1982,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "Claude سهمیه برای مدل خاص مانند Fable را در ویجت های دسکتاپ نشان می دهد.";
 "Shows the hidden accounts" = "اکانت های مخفی را نشان می دهد";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "استفاده را نشان می دهد و به شما امکان می دهد حساب ها را از طریق `cswap` تغییر دهید. اعتبارنامه ها توسط claude-swap مدیریت می شوند. CodexBar هرگز آنها را نمی خواند.";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "استفاده را از `tcr` نشان می دهد؛ حساب ها را تغییر نمی دهد، زیرا tcr برای هر درخواست حساب را انتخاب می کند. اعتبارنامه ها توسط tcr مدیریت می شوند. CodexBar هرگز آنها را نمی خواند.";
 "Stay Awake" = "بیدار بمان";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "در فایل پیکربندی CodexBar ذخیره می شود. بودجه ماهانه و استفاده مسیریابی شده را از /v1/usage می خواند.";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "ذخیره شده در ~/.codexbar/config.json. OPENAI_ADMIN_KEY برای استفاده سازمان مورد نیاز است. کلیدهای قدیمی/کاربر فقط یک موجودی با بهترین تلاش را دریافت می کنند.";
@@ -1977,6 +1991,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "تغییر حساب…";
 "Switch Claude Code account" = "حساب Claude Code را تغییر دهید";
+"Claude accounts in tcr" = "حساب های Claude در tcr";
 "Switch Claude Code to %@" = "Claude Code را به %@ تغییر دهید";
 "Switch Provider" = "سوئیچ ارائه دهنده";
 "Switch the provider shown in the widget." = "ارائه دهنده نشان داده شده در ویجت را تغییر دهید.";
@@ -2063,6 +2078,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "سهمیه تخلیه شد";
+"tcr executable" = "tcr قابل اجرا";
 "under pace" = "استفاده کمتر از سرعت برنامه ریزی شده";
 "us-east-1" = "us-east-1";
 "used" = "مصرف‌شده";
@@ -2073,6 +2089,7 @@
 "~%@ est" = "~%@ تخمین زده شده است";
 "~%@ tracked tokens (partial)" = "~%@ توکن‌های ثبت‌شده (جزئی)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2640,6 +2657,7 @@
 "Purchased credit" = "اعتبار خریداری‌شده";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform موجودی اعتبار و هزینه ماهانه Console را نشان می‌دهد، نه تاریخچه هزینه محلی توکن‌ها.";
 
+"Claude config directory" = "پوشهٔ پیکربندی Claude";
 /* App-managed HTTP server */
 "http_server_title" = "سرور HTTP";
 "http_server_enable" = "فعال‌سازی سرور HTTP";

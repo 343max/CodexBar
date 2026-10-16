@@ -62,6 +62,16 @@
 "7d" = "7д";
 "A managed Codex login is already running. Wait for it to finish before adding " = "Керований вхід до Codex вже запущено. Перш ніж додавати, зачекайте, поки він закінчиться";
 "API key" = "Ключ API";
+
+/* Future AGI provider */
+"Secret key" = "Секретний ключ";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "Потрібен разом із ключем API. Зберігається в локальному файлі конфігурації. Або задайте FI_SECRET_KEY.";
+"Paste secret key…" = "Вставте секретний ключ…";
+"AI credits" = "Кредити ШІ";
+"Gateway requests" = "Запити до шлюзу";
+"Future AGI cost history is not available." = "Історія витрат Future AGI недоступна.";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "Зберігається в локальному файлі конфігурації CodexBar. Або задайте FI_API_KEY.";
+
 "API region" = "регіон API";
 "API token" = "Маркер API";
 "API tokens" = "маркери API";
@@ -1904,6 +1914,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "Вставте заголовок Cookie із запиту платіжної сторінки. Він повинен містити sessionid.";
 "Paste z.ai / GLM API key…" = "Вставте ключ z.ai / GLM API…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "Шлях до виконуваного файлу cswap (github.com/realiti4/claude-swap).";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "Шлях до виконуваного файлу tcr (github.com/dhkts1/teamclaude-rs).";
 "Peak %@" = "Пік %@";
 "Percent left" = "Залишився відсоток";
 "Pick another Codex account before importing OpenAI cookies." = "Виберіть інший обліковий запис Codex перед імпортом OpenAI cookies.";
@@ -1958,6 +1969,8 @@
 "Select the provider to display." = "Виберіть постачальника для відображення.";
 "Session (5-hour)" = "Сеанс (5 годин)";
 "Session and weekly usage with credits and costs." = "Сеанс і тижневе використання з Кредити і вартість.";
+"Set the cswap executable path below." = "Укажіть нижче шлях до виконуваного файлу cswap.";
+"Set the tcr executable path below." = "Укажіть нижче шлях до виконуваного файлу tcr.";
 "Settings unavailable." = "Налаштування недоступні.";
 "Show account card when only one account is available" = "Показувати картку облікового запису, якщо доступний лише один обліковий запис";
 "Show model-specific weekly usage in widgets" = "Показати щотижневе використання для конкретної моделі у віджетах";
@@ -1965,6 +1978,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "Показує модель Claude Квота, наприклад Fable, у віджетах робочого столу.";
 "Shows the hidden accounts" = "Показує приховані облікові записи";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "Показує використання та дозволяє перемикати облікові записи через `cswap`. Облікові дані залишаються під керуванням claude-swap; CodexBar ніколи їх не читає.";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "Показує використання з `tcr`; не перемикає облікові записи, бо tcr сам вибирає обліковий запис для кожного запиту. Облікові дані залишаються під керуванням tcr; CodexBar ніколи їх не читає.";
 "Stay Awake" = "Не спати";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "Зберігається у конфігураційному файлі CodexBar. Зчитує місячний бюджет і маршрутизоване використання з /v1/usage.";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "Зберігається в ~/.codexbar/config.json. OPENAI_ADMIN_KEY необхідний для використання в організації; застарілі/користувацькі ключі отримують лише запасний баланс найкращих зусиль.";
@@ -1973,6 +1987,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "Змінити обліковий запис…";
 "Switch Claude Code account" = "Змінити обліковий запис Claude Code";
+"Claude accounts in tcr" = "Облікові записи Claude у tcr";
 "Switch Claude Code to %@" = "Змініть Claude Code на %@";
 "Switch Provider" = "Змінити постачальника";
 "Switch the provider shown in the widget." = "Змініть постачальника, який відображається у віджеті.";
@@ -2059,6 +2074,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "Квота вичерпано";
+"tcr executable" = "Виконуваний файл tcr";
 "under pace" = "використання нижче запланованого темпу";
 "us-east-1" = "us-east-1";
 "used" = "використано";
@@ -2069,6 +2085,7 @@
 "~%@ est" = "~%@ приблизно";
 "~%@ tracked tokens (partial)" = "~%@ Обліковані токени (ЧАСТКОВИЙ)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2636,6 +2653,7 @@
 "Purchased credit" = "Придбаний кредит";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform показує баланс кредитів і щомісячні витрати в Console, а не локальну історію витрат на токени.";
 
+"Claude config directory" = "Каталог конфігурації Claude";
 /* App-managed HTTP server */
 "http_server_title" = "HTTP-сервер";
 "http_server_enable" = "Увімкнути HTTP-сервер";

@@ -104,6 +104,7 @@ enum CLIClaudeSwapCards {
     static func fetch(
         eligible: Bool,
         executablePath: String,
+        source: ClaudeSwapAccountSource = .claudeSwap,
         showSingleAccount: Bool = false,
         renderOptions: CLIClaudeSwapCardsRenderOptions,
         ambientFetch: @escaping AmbientFetch) async -> UsageCommandOutput
@@ -111,17 +112,19 @@ enum CLIClaudeSwapCards {
         await self.fetch(
             eligible: eligible,
             executablePath: executablePath,
+            source: source,
             showSingleAccount: showSingleAccount,
             renderOptions: renderOptions,
             ambientFetch: ambientFetch,
             accountListReader: { path in
-                try await ClaudeSwapAccountReader.readAccountList(executablePath: path)
+                try await ClaudeSwapAccountReader.readAccountList(executablePath: path, source: source)
             })
     }
 
     static func fetch(
         eligible: Bool,
         executablePath: String,
+        source: ClaudeSwapAccountSource = .claudeSwap,
         showSingleAccount: Bool = false,
         renderOptions: CLIClaudeSwapCardsRenderOptions,
         ambientFetch: @escaping AmbientFetch,
@@ -135,6 +138,7 @@ enum CLIClaudeSwapCards {
             let retained = ClaudeSwapRetainedUsageStore.previousAccounts(inMemory: previousAccounts)
             let accounts = ClaudeSwapAccountProjection.accountSnapshots(
                 from: list,
+                source: source,
                 previousAccounts: retained,
                 now: renderOptions.now)
             ClaudeSwapRetainedUsageStore.save(accounts)
@@ -153,11 +157,11 @@ enum CLIClaudeSwapCards {
         } catch {
             var output = await ambientFetch()
             let diagnostic = CLIClaudeSwapText.sanitizeDiagnostic(error.localizedDescription)
-            let message = diagnostic.isEmpty ? "claude-swap list failed." : diagnostic
+            let message = diagnostic.isEmpty ? "\(source.label) list failed." : diagnostic
             output.cardFailures.append(CLICardFailure(
                 // Provider-specific by design: a claude-swap subprocess failure is attached to the Claude card lane.
                 provider: .claude,
-                accountLabel: ClaudeSwapAccountProjection.sourceLabel,
+                accountLabel: source.label,
                 message: message))
             output.exitCode = .failure
             return output

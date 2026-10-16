@@ -285,6 +285,14 @@ action, and honors denial cooldowns. OAuth and Claude Code login sources are unc
 - Session quota warnings ignore a weekly quota promoted into the primary field when the five-hour payload is missing. Existing session warning history stays tied to its account, and weekly warnings continue independently.
 - Preferences → Providers → Claude → Cookie source (Automatic or Manual).
 - Manual mode accepts a `Cookie:` header from a claude.ai request.
+Each Claude token account can optionally select a **Claude config directory** in Settings → Providers → Claude.
+With Track costs enabled, the active account’s local token and API-price cost estimates scan only its `projects` history,
+without default, claude-swap, or Pi history. Selecting a directory declares that its history belongs to the account;
+CodexBar does not infer ownership or detect mixed/copied history beyond existing scanner deduplication. A missing or
+unreadable history directory leaves its estimate unavailable. Clear the mapping to restore the existing combined
+view; unmapped accounts and claude-swap retain their current behavior. The optional `claudeConfigDirectory` field
+is stored on the token account in the config file and does not change quota fetching or credential resolution.
+
 - Multi-account manual tokens: add entries to `~/.codexbar/config.json` (`tokenAccounts`) and set Claude cookies to
   Manual. The menu can show all accounts stacked or a switcher bar (Preferences → Advanced → Display).
 - Claude token accounts accept either `sessionKey` cookies or OAuth access tokens (`sk-ant-oat...`). OAuth-token
@@ -408,11 +416,23 @@ The accepted multi-account design in
 - Setup: Preferences → Providers → Claude → "Read accounts from claude-swap", then set the path to the
   [`cswap`](https://github.com/realiti4/claude-swap) executable (for example `~/.local/bin/cswap`) in the field
   directly beneath the enabled toggle. The path field and its help are hidden while the integration is off.
+- tcr source: [tcr](https://github.com/dhkts1/teamclaude-rs) prints the same list schema v1 from `tcr list --json`.
+  Pick "tcr" in the Source picker shown while the integration is on (config key `claudeSwapSource: "tcr"`) and set
+  the path to the `tcr` executable. CodexBar then runs `tcr list --json` and `tcr --version` with the same bounds,
+  parser and isolation rules; cards are labelled `tcr` and identity is `tcr:<slot>`. tcr pools its accounts and
+  routes each request itself, so its list reports no active account and `supportsAccountSwitching: false`: no row
+  offers Switch or Re-authenticate, and CodexBar never sends tcr a switch command. Late list results from a
+  previously selected source are discarded before publishing cards, refresh times, or forecast history, including
+  when the initial history load is still pending.
+- tcr forecast history requires both a nonempty email and `organizationUuid` in the list row. When both are
+  supplied, it uses the same normalized email/organization hash as claude-swap; display names and slot numbers
+  never substitute for an organization UUID. The current tcr contract fixture omits `organizationUuid`, so those
+  accounts show usage without a history-based forecast.
 - Version detection retries after a failed or cancelled startup probe; replaced refreshes cannot overwrite a newer
   result, and disabling the adapter or changing its executable clears the previous detected version.
 - Behavior: on each Claude refresh, CodexBar runs `cswap --list --json` independently of the ambient Claude fetch (no
   shell, fixed arguments, bounded runtime and output), requires `schemaVersion == 1`, and parses only slot number,
-  active state, usage status, email (display only), display-only `organizationName` (always present, may be empty),
+  active state, usage status, email, `organizationUuid`, display-only `organizationName` (always present, may be empty),
   optional display-only `alias` when non-empty, the 5-hour/7-day windows, and optional display-only model-scoped
   weekly windows from `usage.scoped`, optional `usage.spend`, and source measurement times. Identity stays
   `claude-swap:<slot>`; organization name and alias are never
@@ -452,6 +472,11 @@ The accepted multi-account design in
   `~/.config/codexbar/config.json`; legacy installs may use `~/.codexbar/config.json`). The option defaults off,
   zero accounts still use the ambient presentation, and account identity is `claude-swap:<slot>`, never the display
   email.
+- Session forecasts use each account's own recorded usage. History keys hash the normalized email and organization
+  UUID from the existing list response, so moving slots preserves history and the same email in different workspaces
+  stays separate. Empty organization UUIDs identify personal accounts; an email change starts a new history.
+  Raw emails and organization UUIDs are not saved in history. Fresh samples retain their source timestamps and the
+  shared 17,520-sample limit per series; last-known or failed rows do not add samples. Ambient Claude history is separate.
 - Provider widgets follow the active claude-swap account under the same multiple-account/single-account presentation
   rule. Successful list refreshes and clearing the adapter publish a widget snapshot even with account widgets off.
   Retained quota keeps its original measurement time and is bound to the slot's opaque owner fingerprint; unavailable

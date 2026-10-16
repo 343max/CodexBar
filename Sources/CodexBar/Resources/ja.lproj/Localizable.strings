@@ -62,6 +62,16 @@
 "7d" = "7日";
 "A managed Codex login is already running. Wait for it to finish before adding " = "管理対象の Codex ログインがすでに実行中です。完了を待ってから追加してください ";
 "API key" = "API キー";
+
+/* Future AGI provider */
+"Secret key" = "シークレットキー";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "API キーと併せて必要です。ローカル設定ファイルに保存されます。または FI_SECRET_KEY を設定してください。";
+"Paste secret key…" = "シークレットキーを貼り付け…";
+"AI credits" = "AI クレジット";
+"Gateway requests" = "ゲートウェイリクエスト";
+"Future AGI cost history is not available." = "Future AGI の費用履歴は利用できません。";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "CodexBar のローカル設定ファイルに保存されます。または FI_API_KEY を設定してください。";
+
 "API region" = "API リージョン";
 "API token" = "API トークン";
 "API tokens" = "API トークン";
@@ -1904,6 +1914,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "請求ページのリクエストから Cookie ヘッダーを貼り付けます。 sessionid が含まれている必要があります。";
 "Paste z.ai / GLM API key…" = "z.ai / GLM API キーを貼り付け…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "cswap 実行可能ファイルへのパス (github.com/realiti4/claude-swap)。";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "tcr 実行可能ファイルへのパス (github.com/dhkts1/teamclaude-rs)。";
 "Peak %@" = "ピーク %@";
 "Percent left" = "残りの割合";
 "Pick another Codex account before importing OpenAI cookies." = "OpenAI cookies をインポートする前に、別の Codex アカウントを選択してください。";
@@ -1958,6 +1969,8 @@
 "Select the provider to display." = "表示するプロバイダーを選択します。";
 "Session (5-hour)" = "セッション（5時間）";
 "Session and weekly usage with credits and costs." = "セッションと週間の使用量、クレジット、費用を表示します。";
+"Set the cswap executable path below." = "下に cswap 実行可能ファイルのパスを設定してください。";
+"Set the tcr executable path below." = "下に tcr 実行可能ファイルのパスを設定してください。";
 "Settings unavailable." = "設定が利用できません。";
 "Show account card when only one account is available" = "利用可能なアカウントが 1 つだけの場合にアカウント カードを表示する";
 "Show model-specific weekly usage in widgets" = "モデル固有の週ごとの使用量をウィジェットに表示";
@@ -1965,6 +1978,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "デスクトップ ウィジェットに、Fable などのモデル固有の Claude クォータ を表示します。";
 "Shows the hidden accounts" = "隠しアカウントを表示します";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "使用状況を表示し、`cswap` を通じてアカウントを切り替えることができます。資格情報は claude-swap によって管理されます。 CodexBar はそれらを決して読みません。";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "`tcr` から使用状況を表示します。tcr がリクエストごとにアカウントを選ぶため、アカウントは切り替えません。資格情報は tcr によって管理されます。 CodexBar はそれらを決して読みません。";
 "Stay Awake" = "スリープを防ぐ";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "CodexBar 構成ファイルに保存されます。 /v1/usage から月次予算とルーティングされた使用量を読み取ります。";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "~/.codexbar/config.json に保存されます。 OPENAI_ADMIN_KEY は組織で使用する場合に必要です。レガシー/ユーザーキーは、ベストエフォート型バランスのフォールバックのみを取得します。";
@@ -1973,6 +1987,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "アカウントを切り替え…";
 "Switch Claude Code account" = "Claude Code アカウントを切り替える";
+"Claude accounts in tcr" = "tcr の Claude アカウント";
 "Switch Claude Code to %@" = "Claude Code を %@ に切り替えます";
 "Switch Provider" = "プロバイダーの切り替え";
 "Switch the provider shown in the widget." = "ウィジェットに表示されるプロバイダーを切り替えます。";
@@ -2059,6 +2074,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "クォータ が枯渇しました";
+"tcr executable" = "tcr 実行可能ファイル";
 "under pace" = "計画されたペースを下回る使用量";
 "us-east-1" = "us-east-1";
 "used" = "使用済み";
@@ -2069,6 +2085,7 @@
 "~%@ est" = "~%@ 推定";
 "~%@ tracked tokens (partial)" = "~%@ 記録済みトークン (部分的)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2636,6 +2653,7 @@
 "Purchased credit" = "購入済みクレジット";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform は、ローカルのトークンコスト履歴ではなく、Console のクレジット残高と月間支出を表示します。";
 
+"Claude config directory" = "Claude の設定ディレクトリ";
 /* App-managed HTTP server */
 "http_server_title" = "HTTPサーバー";
 "http_server_enable" = "HTTPサーバーを有効にする";

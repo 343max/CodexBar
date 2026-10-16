@@ -41,6 +41,16 @@
 "7d" = "7 วัน";
 "A managed Codex login is already running. Wait for it to finish before adding " = "การเข้าสู่ระบบ Codex ที่มีการจัดการกําลังทํางานอยู่แล้ว รอให้เสร็จก่อนที่จะเพิ่ม  ";
 "API key" = "ปุ่ม API";
+
+/* Future AGI provider */
+"Secret key" = "คีย์ลับ";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "ต้องใช้ร่วมกับคีย์ API บันทึกไว้ในไฟล์การกำหนดค่าภายในเครื่อง หรือกำหนด FI_SECRET_KEY";
+"Paste secret key…" = "วางคีย์ลับ…";
+"AI credits" = "เครดิต AI";
+"Gateway requests" = "คำขอเกตเวย์";
+"Future AGI cost history is not available." = "ไม่มีประวัติค่าใช้จ่ายของ Future AGI";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "บันทึกไว้ในไฟล์การกำหนดค่าภายในเครื่องของ CodexBar หรือกำหนด FI_API_KEY";
+
 "API region" = "ภูมิภาค API";
 "API token" = "โทเค็น API";
 "API tokens" = "โทเค็น API";
@@ -1908,6 +1918,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "วางส่วนหัว Cookie จากคำขอหน้าการเรียกเก็บเงิน จะต้องมี sessionid";
 "Paste z.ai / GLM API key…" = "วางคีย์ z.ai / GLM API...";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "พาธไปยังไฟล์เรียกทำงาน cswap (github.com/realiti4/claude-swap)";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "พาธไปยังไฟล์เรียกทำงาน tcr (github.com/dhkts1/teamclaude-rs)";
 "Peak %@" = "พีค %@";
 "Percent left" = "เปอร์เซ็นต์ที่เหลืออยู่";
 "Pick another Codex account before importing OpenAI cookies." = "เลือกบัญชี Codex อื่นก่อนที่จะนำเข้า OpenAI cookies";
@@ -1962,6 +1973,8 @@
 "Select the provider to display." = "เลือกผู้ให้บริการที่จะแสดง";
 "Session (5-hour)" = "เซสชั่น (5 ชั่วโมง)";
 "Session and weekly usage with credits and costs." = "การใช้งานเซสชันและรายสัปดาห์กับ เครดิต และค่าใช้จ่าย";
+"Set the cswap executable path below." = "ตั้งค่าพาธไฟล์เรียกทำงาน cswap ด้านล่าง";
+"Set the tcr executable path below." = "ตั้งค่าพาธไฟล์เรียกทำงาน tcr ด้านล่าง";
 "Settings unavailable." = "การตั้งค่าไม่พร้อมใช้งาน";
 "Show account card when only one account is available" = "แสดงบัตรบัญชีเมื่อมีบัญชีเดียวเท่านั้น";
 "Show model-specific weekly usage in widgets" = "แสดงการใช้งานรายสัปดาห์เฉพาะรุ่นในวิดเจ็ต";
@@ -1969,6 +1982,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "แสดง Claude โควต้า เฉพาะรุ่น เช่น Fable ในวิดเจ็ตเดสก์ท็อป";
 "Shows the hidden accounts" = "แสดงบัญชีที่ซ่อนอยู่";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "แสดงการใช้งานและให้คุณสลับบัญชีผ่าน `cswap` ข้อมูลรับรองจะได้รับการจัดการโดย claude-swap CodexBar ไม่เคยอ่านเลย";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "แสดงการใช้งานจาก `tcr` และไม่สลับบัญชี เพราะ tcr เลือกบัญชีให้แต่ละคำขอเอง ข้อมูลรับรองจะได้รับการจัดการโดย tcr CodexBar ไม่เคยอ่านเลย";
 "Stay Awake" = "ตื่นตัวอยู่เสมอ";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "เก็บไว้ในไฟล์กำหนดค่า CodexBar อ่านงบประมาณรายเดือนและการใช้งานที่กำหนดเส้นทางจาก /v1/usage";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "เก็บไว้ใน ~/.codexbar/config.json ต้องใช้ OPENAI_ADMIN_KEY สำหรับการใช้งานในองค์กร คีย์เดิม/ผู้ใช้จะได้รับเฉพาะทางเลือกสมดุลที่ดีที่สุดเท่านั้น";
@@ -1977,6 +1991,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "สลับบัญชี...";
 "Switch Claude Code account" = "สลับบัญชี Claude Code";
+"Claude accounts in tcr" = "บัญชี Claude ใน tcr";
 "Switch Claude Code to %@" = "สลับ Claude Code เป็น %@";
 "Switch Provider" = "ผู้ให้บริการสวิตช์";
 "Switch the provider shown in the widget." = "สลับผู้ให้บริการที่แสดงในวิดเจ็ต";
@@ -2063,6 +2078,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "โควต้า หมดลง";
+"tcr executable" = "ปฏิบัติการ tcr ได้";
 "under pace" = "การใช้งานต่ำกว่าก้าวที่วางแผนไว้";
 "us-east-1" = "us-east-1";
 "used" = "ใช้แล้ว";
@@ -2073,6 +2089,7 @@
 "~%@ est" = "~%@ โดยประมาณ";
 "~%@ tracked tokens (partial)" = "~%@ โทเค็นที่บันทึกไว้ (บางส่วน)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2638,6 +2655,7 @@
 "Purchased credit" = "เครดิตที่ซื้อ";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform แสดงยอดเครดิตและการใช้จ่ายรายเดือนของ Console ไม่ใช่ประวัติต้นทุนโทเค็นในเครื่อง";
 
+"Claude config directory" = "โฟลเดอร์การตั้งค่า Claude";
 /* App-managed HTTP server */
 "http_server_title" = "เซิร์ฟเวอร์ HTTP";
 "http_server_enable" = "เปิดใช้งานเซิร์ฟเวอร์ HTTP";

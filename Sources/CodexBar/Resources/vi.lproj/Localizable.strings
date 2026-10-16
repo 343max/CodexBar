@@ -62,6 +62,16 @@
 "7d" = "7d";
 "A managed Codex login is already running. Wait for it to finish before adding " = "Đăng nhập Codex được quản lý đã chạy. Đợi quá trình này hoàn tất trước khi thêm";
 "API key" = "API khóa";
+
+/* Future AGI provider */
+"Secret key" = "Khóa bí mật";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "Bắt buộc cùng với khóa API. Được lưu trong tệp cấu hình cục bộ. Hoặc đặt FI_SECRET_KEY.";
+"Paste secret key…" = "Dán khóa bí mật…";
+"AI credits" = "Tín dụng AI";
+"Gateway requests" = "Yêu cầu qua cổng";
+"Future AGI cost history is not available." = "Lịch sử chi phí Future AGI không khả dụng.";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "Được lưu trong tệp cấu hình cục bộ của CodexBar. Hoặc đặt FI_API_KEY.";
+
 "API region" = "API khu vực";
 "API token" = "API token";
 "API tokens" = "API mã thông báo";
@@ -1905,6 +1915,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "Dán tiêu đề Cookie từ yêu cầu trang thanh toán. Nó phải chứa sessionid.";
 "Paste z.ai / GLM API key…" = "Dán khóa z.ai / GLM API…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "Đường dẫn đến tệp thực thi cswap (github.com/realiti4/claude-swap).";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "Đường dẫn đến tệp thực thi tcr (github.com/dhkts1/teamclaude-rs).";
 "Peak %@" = "Đỉnh %@";
 "Percent left" = "Phần trăm còn lại";
 "Pick another Codex account before importing OpenAI cookies." = "Chọn một tài khoản Codex khác trước khi nhập OpenAI cookies.";
@@ -1959,6 +1970,8 @@
 "Select the provider to display." = "Chọn nhà cung cấp để hiển thị.";
 "Session (5-hour)" = "Phiên (5 giờ)";
 "Session and weekly usage with credits and costs." = "Phiên và mức sử dụng hàng tuần với Tín dụng và chi phí.";
+"Set the cswap executable path below." = "Đặt đường dẫn tệp thực thi cswap bên dưới.";
+"Set the tcr executable path below." = "Đặt đường dẫn tệp thực thi tcr bên dưới.";
 "Settings unavailable." = "Cài đặt không có sẵn.";
 "Show account card when only one account is available" = "Hiển thị thẻ tài khoản khi chỉ có một tài khoản";
 "Show model-specific weekly usage in widgets" = "Hiển thị mức sử dụng hàng tuần theo từng mẫu cụ thể trong các tiện ích";
@@ -1966,6 +1979,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "Hiển thị Claude Hạn mức dành riêng cho mẫu máy, chẳng hạn như Fable, trong các tiện ích trên máy tính để bàn.";
 "Shows the hidden accounts" = "Hiển thị các tài khoản ẩn";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "Hiển thị mức sử dụng và cho phép bạn chuyển đổi tài khoản thông qua `cswap`. Thông tin xác thực vẫn được quản lý bởi claude-swap; CodexBar không bao giờ đọc chúng.";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "Hiển thị mức sử dụng từ `tcr`; không chuyển đổi tài khoản, vì tcr tự chọn tài khoản cho mỗi yêu cầu. Thông tin xác thực vẫn được quản lý bởi tcr; CodexBar không bao giờ đọc chúng.";
 "Stay Awake" = "Luôn tỉnh táo";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "Được lưu trữ trong tệp cấu hình CodexBar. Đọc ngân sách hàng tháng và định tuyến mức sử dụng từ /v1/usage.";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "Được lưu trữ trong ~/.codexbar/config.json. OPENAI_ADMIN_KEY là bắt buộc để sử dụng trong tổ chức; Khóa kế thừa/người dùng chỉ nhận được dự phòng số dư nỗ lực tốt nhất.";
@@ -1974,6 +1988,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "Chuyển đổi tài khoản…";
 "Switch Claude Code account" = "Chuyển tài khoản Claude Code";
+"Claude accounts in tcr" = "Tài khoản Claude trong tcr";
 "Switch Claude Code to %@" = "Chuyển Claude Code sang %@";
 "Switch Provider" = "Chuyển đổi nhà cung cấp";
 "Switch the provider shown in the widget." = "Chuyển đổi nhà cung cấp được hiển thị trong widget.";
@@ -2060,6 +2075,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "Hạn mức đã cạn kiệt";
+"tcr executable" = "tcr có thể thực thi được";
 "under pace" = "sử dụng dưới tốc độ dự kiến";
 "us-east-1" = "us-east-1";
 "used" = "đã dùng";
@@ -2070,6 +2086,7 @@
 "~%@ est" = "~%@ ước tính";
 "~%@ tracked tokens (partial)" = "~%@ Token đã ghi nhận (MỘT PHẦN)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2637,6 +2654,7 @@
 "Purchased credit" = "Tín dụng đã mua";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform hiển thị số dư tín dụng và chi tiêu hàng tháng trên Console, không phải lịch sử chi phí token cục bộ.";
 
+"Claude config directory" = "Thư mục cấu hình Claude";
 /* App-managed HTTP server */
 "http_server_title" = "Máy chủ HTTP";
 "http_server_enable" = "Bật máy chủ HTTP";

@@ -41,6 +41,16 @@
 "7d" = "7 gün";
 "A managed Codex login is already running. Wait for it to finish before adding " = "Yönetilen bir Codex girişi zaten çalışıyor. Eklemeden önce bitmesini bekleyin ";
 "API key" = "API anahtarı";
+
+/* Future AGI provider */
+"Secret key" = "Gizli anahtar";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "API anahtarıyla birlikte gereklidir. Yerel yapılandırma dosyasına kaydedilir. Alternatif olarak FI_SECRET_KEY ayarlayın.";
+"Paste secret key…" = "Gizli anahtarı yapıştırın…";
+"AI credits" = "Yapay zekâ kredileri";
+"Gateway requests" = "Ağ geçidi istekleri";
+"Future AGI cost history is not available." = "Future AGI maliyet geçmişi kullanılamıyor.";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "CodexBar’ın yerel yapılandırma dosyasına kaydedilir. Alternatif olarak FI_API_KEY ayarlayın.";
+
 "API region" = "API bölgesi";
 "API token" = "API tokenı";
 "API tokens" = "API tokenları";
@@ -1907,6 +1917,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "Bir fatura sayfası isteğinden Cookie başlığını yapıştırın. sessionid içermelidir.";
 "Paste z.ai / GLM API key…" = "z.ai / GLM API anahtarını yapıştırın…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "cswap yürütülebilir dosyasının yolu (github.com/realiti4/claude-swap).";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "tcr yürütülebilir dosyasının yolu (github.com/dhkts1/teamclaude-rs).";
 "Peak %@" = "Zirve %@";
 "Percent left" = "Kalan yüzde";
 "Pick another Codex account before importing OpenAI cookies." = "OpenAI cookies'yi içe aktarmadan önce başka bir Codex hesabı seçin.";
@@ -1961,6 +1972,8 @@
 "Select the provider to display." = "Görüntülenecek sağlayıcıyı seçin.";
 "Session (5-hour)" = "Oturum (5 saat)";
 "Session and weekly usage with credits and costs." = "Krediler ile oturum ve haftalık kullanım ve maliyetler.";
+"Set the cswap executable path below." = "cswap yürütülebilir dosyasının yolunu aşağıda ayarlayın.";
+"Set the tcr executable path below." = "tcr yürütülebilir dosyasının yolunu aşağıda ayarlayın.";
 "Settings unavailable." = "Ayarlar kullanılamıyor.";
 "Show account card when only one account is available" = "Yalnızca bir hesap mevcut olduğunda hesap kartını göster";
 "Show model-specific weekly usage in widgets" = "Widget'larda modele özgü haftalık kullanımı göster";
@@ -1968,6 +1981,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "Masaüstü widget'larında Fable gibi modele özgü Claude Kota'yi gösterir.";
 "Shows the hidden accounts" = "Gizli hesapları gösterir";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "Kullanımı gösterir ve `cswap` aracılığıyla hesaplar arasında geçiş yapmanızı sağlar. Kimlik bilgileri claude-swap tarafından yönetilmeye devam eder; CodexBar bunları asla okumaz.";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "Kullanımı `tcr` üzerinden gösterir; hesaplar arasında geçiş yapmaz, çünkü tcr her istek için hesabı kendisi seçer. Kimlik bilgileri tcr tarafından yönetilmeye devam eder; CodexBar bunları asla okumaz.";
 "Stay Awake" = "Uyanık Kal";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "CodexBar yapılandırma dosyasında saklanır. /v1/usage'den aylık bütçeyi ve yönlendirilmiş kullanımı okur.";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "~/.codexbar/config.json konumunda saklanır. OPENAI_ADMIN_KEY kurumsal kullanım için gereklidir; eski/kullanıcı anahtarları yalnızca en iyi çaba dengesine geri döner.";
@@ -1976,6 +1990,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "Hesap Değiştir…";
 "Switch Claude Code account" = "Claude Code hesabını değiştir";
+"Claude accounts in tcr" = "tcr içindeki Claude hesapları";
 "Switch Claude Code to %@" = "Claude Code'yi %@ olarak değiştirin";
 "Switch Provider" = "Sağlayıcıyı Değiştir";
 "Switch the provider shown in the widget." = "Widget'ta gösterilen sağlayıcıyı değiştirin.";
@@ -2062,6 +2077,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "Kota tükendi";
+"tcr executable" = "tcr çalıştırılabilir";
 "under pace" = "planlanan hızın altında kullanım";
 "us-east-1" = "us-east-1";
 "used" = "kullanıldı";
@@ -2072,6 +2088,7 @@
 "~%@ est" = "~%@ tahmini";
 "~%@ tracked tokens (partial)" = "~%@ Kaydedilen tokenlar (KISMİ)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2639,6 +2656,7 @@
 "Purchased credit" = "Satın alınan kredi";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform, yerel token maliyet geçmişini değil, Console kredi bakiyesini ve aylık harcamayı gösterir.";
 
+"Claude config directory" = "Claude yapılandırma dizini";
 /* App-managed HTTP server */
 "http_server_title" = "HTTP sunucusu";
 "http_server_enable" = "HTTP sunucusunu etkinleştir";

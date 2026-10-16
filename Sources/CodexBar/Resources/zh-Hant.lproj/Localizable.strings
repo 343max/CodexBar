@@ -62,6 +62,16 @@
 "7d" = "7 天";
 "A managed Codex login is already running. Wait for it to finish before adding " = "託管 Codex 登入已在執行。請等待其完成後再新增 ";
 "API key" = "API 金鑰";
+
+/* Future AGI provider */
+"Secret key" = "密鑰";
+"Required with the API key. Saved in the local config file. Or set FI_SECRET_KEY." = "需與 API 金鑰搭配使用。儲存在本機設定檔中。也可設定 FI_SECRET_KEY。";
+"Paste secret key…" = "貼上密鑰…";
+"AI credits" = "AI 額度";
+"Gateway requests" = "閘道請求";
+"Future AGI cost history is not available." = "無法查看 Future AGI 的費用歷史。";
+"Saved in CodexBar's local config file. Or set FI_API_KEY." = "儲存在 CodexBar 的本機設定檔中。也可設定 FI_API_KEY。";
+
 "API key limit" = "API 金鑰限制";
 "API region" = "API 區域";
 "API token" = "API token";
@@ -1900,6 +1910,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "粘貼帳單頁面請求中的 Cookie 請求頭，其中必須包含 sessionid。";
 "Paste z.ai / GLM API key…" = "粘貼 z.ai / GLM API 密鑰…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "cswap 執行檔的路徑 (github.com/realiti4/claude-swap)。";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "tcr 執行檔的路徑 (github.com/dhkts1/teamclaude-rs)。";
 "Peak %@" = "峰值%@";
 "Plan expires: %@" = "計劃到期：%@";
 "Portable preferences" = "可遷移的偏好設置";
@@ -1948,12 +1959,15 @@
 "Select the provider to display." = "選擇要顯示的提供者。";
 "Session (5-hour)" = "五小時配額";
 "Session and weekly usage with credits and costs." = "顯示會話及每周用量、額度和費用。";
+"Set the cswap executable path below." = "請在下方設定 cswap 執行檔的路徑。";
+"Set the tcr executable path below." = "請在下方設定 tcr 執行檔的路徑。";
 "Show account card when only one account is available" = "只有一個帳戶可用時顯示帳戶卡";
 "Show model-specific weekly usage in widgets" = "在小工具中顯示各模型的每周用量";
 "Show workspace spend" = "顯示工作空間支出";
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "在桌面小工具中顯示各 Claude 模型的配額，例如 Fable。";
 "Shows the hidden accounts" = "顯示隱藏帳戶";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "顯示用量，並通過 `cswap` 切換帳戶。憑據由 claude-swap 管理，CodexBar 不會讀取。";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "顯示來自 `tcr` 的用量；不會切換帳戶，因為 tcr 會為每個請求選擇帳戶。憑據由 tcr 管理，CodexBar 不會讀取。";
 "Stay Awake" = "保持喚醒";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "儲存在 CodexBar 設定檔中。從 /v1/usage 讀取每月預算和路由使用量。";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "保存在 ~/.codexbar/config.json 中。查看組織用量需要 OPENAI_ADMIN_KEY；舊版或用戶密鑰僅能嘗試獲取餘額。";
@@ -1962,6 +1976,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "切換帳戶...";
 "Switch Claude Code account" = "切換Claude Code帳號";
+"Claude accounts in tcr" = "tcr 中的 Claude 帳戶";
 "Switch Claude Code to %@" = "將 Claude Code 切換到 %@";
 "Switch Provider" = "切換提供者";
 "Switch the provider shown in the widget." = "切換小工具中顯示的提供者。";
@@ -2041,6 +2056,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "已耗盡";
+"tcr executable" = "tcr 執行檔";
 "under pace" = "使用速度較慢";
 "us-east-1" = "us-east-1";
 "used" = "已用";
@@ -2051,6 +2067,7 @@
 "~%@ est" = "~%@ 估計";
 "~%@ tracked tokens (partial)" = "約 %@ 個已記錄 token（部分數據）";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2614,6 +2631,7 @@
 "Purchased credit" = "已購買額度";
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform 顯示 Console 額度餘額和每月支出，而不是本地 token 成本歷史記錄。";
 
+"Claude config directory" = "Claude 設定目錄";
 /* App-managed HTTP server */
 "http_server_title" = "HTTP 伺服器";
 "http_server_enable" = "啟用 HTTP 伺服器";
