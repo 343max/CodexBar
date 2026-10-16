@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Updates: recover from a partially failed Homebrew refresh when the installed cask’s tap has the offered CodexBar version, without repeating the refresh (#4520). Thanks @zerosrat!
 - Codex: remove rejected browser sessions from the affected account’s web store, and protect newer imports from an older rejection (#4514). Thanks @SebTardif!
 - Cookie imports: keep each browser’s permission guidance, preserving Chrome’s Files & Folders advice alongside Safari’s Full Disk Access instructions (#4528, #4513). Thanks @alphasafal!
 
