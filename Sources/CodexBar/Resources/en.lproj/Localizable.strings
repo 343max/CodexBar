@@ -2516,6 +2516,8 @@
 "Pace sign" = "Pace sign";
 "Ahead of pace is +" = "Ahead of pace is +";
 "Reserve is +" = "Reserve is +";
+"Back" = "Back";
+"Forward" = "Forward";
 
 "cost_reset_inferred_tooltip" = "Inferred: %@ doesn't report this date. Monthly spend caps roll over at 00:00 UTC on the 1st.";
 /* fal provider credentials */

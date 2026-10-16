@@ -2513,6 +2513,8 @@
 "Pace sign" = "Знак темпа расхода";
 "Ahead of pace is +" = "Опережение темпа — +";
 "Reserve is +" = "Запас — +";
+"Back" = "Назад";
+"Forward" = "Вперед";
 
 "cost_reset_inferred_tooltip" = "Предположительно: %@ не сообщает эту дату. Месячные лимиты расходов сбрасываются 1-го числа в 00:00 UTC.";
 /* fal provider credentials */

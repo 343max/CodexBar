@@ -2511,6 +2511,8 @@
 "Pace sign" = "Tecken för förbrukningstakt";
 "Ahead of pace is +" = "Över förbrukningstakten är +";
 "Reserve is +" = "Reserv är +";
+"Back" = "Bakåt";
+"Forward" = "Framåt";
 
 "cost_reset_inferred_tooltip" = "Antaget: %@ rapporterar inte detta datum. Månatliga utgiftsgränser återställs den 1:a kl. 00:00 UTC.";
 /* fal provider credentials */

@@ -2510,6 +2510,8 @@
 "Pace sign" = "Vorzeichen des Nutzungstempos";
 "Ahead of pace is +" = "Über dem Solltempo ist +";
 "Reserve is +" = "Reserve ist +";
+"Back" = "Zurück";
+"Forward" = "Vorwärts";
 
 "cost_reset_inferred_tooltip" = "Abgeleitet: %@ meldet dieses Datum nicht. Monatliche Ausgabenlimits werden am Ersten um 00:00 UTC zurückgesetzt.";
 /* fal provider credentials */

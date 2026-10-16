@@ -2516,6 +2516,8 @@
 "Pace sign" = "علامت آهنگ مصرف";
 "Ahead of pace is +" = "جلوتر از آهنگ مصرف یعنی +";
 "Reserve is +" = "ذخیره یعنی +";
+"Back" = "بازگشت";
+"Forward" = "جلو";
 
 "cost_reset_inferred_tooltip" = "استنباط‌شده: %@ این تاریخ را گزارش نمی‌کند. سقف هزینه ماهانه ساعت 00:00 UTC روز اول ماه ریست می‌شود.";
 /* fal provider credentials */

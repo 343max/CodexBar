@@ -2512,6 +2512,8 @@
 "Pace sign" = "Sinal do ritmo";
 "Ahead of pace is +" = "Acima do ritmo é +";
 "Reserve is +" = "A reserva é +";
+"Back" = "Voltar";
+"Forward" = "Avançar";
 
 "cost_reset_inferred_tooltip" = "Inferido: o %@ não informa esta data. Os limites de gasto mensais são renovados às 00:00 UTC no dia 1.";
 /* fal provider credentials */

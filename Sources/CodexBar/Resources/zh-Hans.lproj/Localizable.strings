@@ -2505,6 +2505,8 @@
 "Pace sign" = "使用节奏符号";
 "Ahead of pace is +" = "超出节奏为 +";
 "Reserve is +" = "余量为 +";
+"Back" = "后退";
+"Forward" = "前进";
 
 "cost_reset_inferred_tooltip" = "推断：%@ 不提供此日期。每月支出上限在每月 1 日 00:00 UTC 重置。";
 /* fal provider credentials */

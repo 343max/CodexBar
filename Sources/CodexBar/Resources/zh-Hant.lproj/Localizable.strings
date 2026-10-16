@@ -2490,6 +2490,8 @@
 "Pace sign" = "使用節奏符號";
 "Ahead of pace is +" = "超出節奏為 +";
 "Reserve is +" = "餘量為 +";
+"Back" = "返回";
+"Forward" = "前進";
 
 "cost_reset_inferred_tooltip" = "推斷：%@ 不提供此日期。每月支出上限會在每月 1 日 00:00 UTC 重置。";
 /* fal provider credentials */

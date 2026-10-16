@@ -2513,6 +2513,8 @@
 "Pace sign" = "Dấu nhịp sử dụng";
 "Ahead of pace is +" = "Vượt nhịp là +";
 "Reserve is +" = "Dự trữ là +";
+"Back" = "Quay lại";
+"Forward" = "Tiếp";
 
 "cost_reset_inferred_tooltip" = "Suy ra: %@ không báo cáo ngày này. Hạn mức chi tiêu hằng tháng được đặt lại vào 00:00 UTC ngày 1.";
 /* fal provider credentials */
