@@ -109,6 +109,10 @@ Usage source picker:
   **Hide personal information** uses the same numbered account and workspace labels as the account switcher.
   Authorized OpenAI Code review usage remains on the followed account's row; sibling rows never inherit it,
   and same-email ambiguity keeps the existing display-only dashboard policy.
+- The provider settings catalogue lists optional credit-limit lanes for managed accounts even when optional usage
+  is off. Account previews still follow that switch. Real 30-day quota windows remain independently configurable;
+  they are not treated as optional credit balances. A shared control keeps that meaning when another account has an optional
+  monthly credit lane, regardless of account order.
 - Refresh an individual row or choose **Refresh all accounts** to visit every account in batches of up to six,
   without changing the followed account or promoting credentials to System. The provider header keeps its existing
   account-scoped refresh, including credits and OpenAI web extras. Zero or one account, and ambient PAT mode, keep
@@ -232,6 +236,7 @@ and stable account numbers distinguish rows while usable workspace labels remain
 - Uses an off-screen `WKWebView` with a per-account `WKWebsiteDataStore`.
   - Store key: deterministic UUID from the normalized email.
 - WebKit store can hold multiple accounts concurrently.
+- A browser session rejected for an account mismatch or a login requirement is removed only from the affected store. Imports into the same store finish validation and cleanup before the next import writes cookies; other accounts remain independent.
 - WebView acquisitions retain ownership during page preparation. Store eviction invalidates its pending preparations; evict-all invalidates all. Stale success/failure/timeout retries cannot displace replacements. Ordinary lease release leaves concurrent temporary views valid. Leases retain their cleanup owner independently of the cache and release once: validated pages allow brief reuse; other releases schedule deferred cleanup, including temporary views.
 - Cookie import (Automatic mode, when WebKit store has no matching session or login required):
   1) Safari: `~/Library/Cookies/Cookies.binarycookies`
@@ -621,7 +626,10 @@ existing display identity projection.
 Codex session rows show the local thread title when available, with the project, model, and last-activity date
 beneath it. Untitled sessions use a shortened session ID. Titles come from `session_index.jsonl`, with the local
 thread database as a fallback; relative `CODEX_SQLITE_HOME` paths resolve against each rollout's original working
-directory, even when its project is grouped under a different canonical repository path.
+directory, even when its project is grouped under a different canonical repository path. The database fallback can
+contain the full first prompt, so only its first 256 Unicode code points are read, before whitespace trimming. This
+also limits the dashboard row tooltip. Names from `session_index.jsonl` keep their precedence and are not shortened by
+this limit.
 
 The menu's **Cost → Conversations** rows also use these saved titles, with the shortened session ID available
 in the row tooltip. Missing or blank titles keep the existing `Session <id>` label. **Hide personal information**

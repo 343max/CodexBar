@@ -1930,7 +1930,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "Vernieuw het profiel voordat u de OpenAI-webgegevens vernieuwt.";
 "Refreshing account status…" = "Accountstatus vernieuwen…";
 "Remaining budget compared with an ideal steady burn rate." = "Resterend budget vergeleken met een ideale stabiele brandsnelheid.";
-"Renews: %@" = "Vernieuwt: %@";
+"Plan renews: %@" = "Abonnement wordt verlengd: %@";
 "Request quota" = "Quotum aanvragen";
 "Requesting login…" = "Inloggen aanvragen…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "Vereist. Voer hier een gewone API-sleutel of een Management API-sleutel in. Beheersleutels maken ook accountactiviteit mogelijk op de officiële OpenRouter API.";

@@ -13,7 +13,10 @@ struct ProviderUsageItemVisibilityTests {
             (UsageProvider.codex, ["codex-spark", "codex-spark-weekly", "codex-extra-quota", "monthly"]),
             (.claude, ["claude-routines"]),
         ] {
-            let model = Self.model(provider: provider, metricIDs: ["primary", "secondary"] + optionalIDs)
+            let model = Self.model(
+                provider: provider,
+                metricIDs: ["primary", "secondary"] + optionalIDs,
+                monthlyIsSyntheticCreditLane: provider == .codex)
             let items = model.usageItemDescriptors
             #expect(items.filter(\.requiresOptionalUsage).map(\.id) == optionalIDs.map(ProviderUsageItemID.metric))
             let unavailable = Self.model(provider: provider, metricIDs: ["primary", "secondary"])
@@ -43,13 +46,13 @@ struct ProviderUsageItemVisibilityTests {
     func `claude independently selects resets extra usage and subscription without losing quota notes`() {
         var model = Self.model(provider: .claude, metricIDs: ["primary", "secondary"], showsResetCredits: true)
         model.providerCost = .init(title: "Extra usage", percentUsed: 10, spendLine: "$1 / $10", percentLine: nil)
-        model.subscriptionNotes = ["Renews: Nov 5, 2026"]
-        model.usageNotes = ["Usage estimate", "Renews: Nov 5, 2026"]
+        model.subscriptionNotes = ["Plan renews: Nov 5, 2026"]
+        model.usageNotes = ["Usage estimate", "Plan renews: Nov 5, 2026"]
         let items = model.usageItemDescriptors
         #expect(items.contains { $0.id == .claudeResetCredits && !$0.requiresOptionalUsage })
         #expect(items.contains { $0.id == .claudeExtraUsage && $0.requiresOptionalUsage })
         #expect(items.contains { $0.id == .subscription && !$0.requiresOptionalUsage })
-        #expect(model.quotaSubscriptionNotes == ["Renews: Nov 5, 2026"])
+        #expect(model.quotaSubscriptionNotes == ["Plan renews: Nov 5, 2026"])
         #expect(model.supplementalUsageNotes == ["Usage estimate"])
 
         let hidden = model.applyingUsageItemVisibility(hiddenItemIDs: [.claudeExtraUsage, .subscription])
@@ -634,7 +637,8 @@ struct ProviderUsageItemVisibilityTests {
         showsCredits: Bool = false,
         showsResetCredits: Bool = false,
         detailSections: [ProviderDetailSection] = [],
-        detailRawTitles: [String?]? = nil) -> UsageMenuCardView.Model
+        detailRawTitles: [String?]? = nil,
+        monthlyIsSyntheticCreditLane: Bool = false) -> UsageMenuCardView.Model
     {
         UsageMenuCardView.Model(
             provider: provider,
@@ -654,7 +658,8 @@ struct ProviderUsageItemVisibilityTests {
                     detailLeftText: nil,
                     detailRightText: nil,
                     pacePercent: nil,
-                    paceOnTop: true)
+                    paceOnTop: true,
+                    isSyntheticCreditLane: id == "monthly" && monthlyIsSyntheticCreditLane)
             },
             usageNotes: [],
             providerDetails: detailSections,

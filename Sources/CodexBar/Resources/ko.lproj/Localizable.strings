@@ -1899,7 +1899,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "OpenAI 웹 데이터를 새로 고치기 전에 프로필을 새로 고치십시오.";
 "Refreshing account status…" = "계정 상태 새로고침 중…";
 "Remaining budget compared with an ideal steady burn rate." = "이상적인 꾸준한 연소율과 비교한 남은 예산입니다.";
-"Renews: %@" = "갱신: %@";
+"Plan renews: %@" = "요금제 갱신: %@";
 "Request quota" = "할당량 요청";
 "Requesting login…" = "로그인을 요청하는 중…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "필수입니다. 여기에 일반 API 키 또는 관리 API 키를 입력하세요. 관리 키는 공식 OpenRouter API에서 계정 활동도 활성화합니다.";
