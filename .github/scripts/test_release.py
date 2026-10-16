@@ -1,4 +1,6 @@
+import base64
 import importlib.util
+import shutil
 import os
 from pathlib import Path
 import tempfile
@@ -84,6 +86,48 @@ Load command 11
         with patch.dict(os.environ, DRY_RUN='true'):
             with self.assertRaises(AssertionError):
                 release.availability()
+
+    def test_prerelease_metadata_and_channel(self):
+        (self.root / 'version.env').write_text('MARKETING_VERSION=1.2.3-beta.2\nBUILD_NUMBER=12\n')
+        self.assertEqual(release.metadata(), ('1.2.3-beta.2', '12'))
+        self.assertEqual(release.sparkle_channel('1.2.3-beta.2'), 'beta')
+        self.assertIsNone(release.sparkle_channel('1.2.3'))
+
+    def test_publishing_prerelease_does_not_replace_latest_stable(self):
+        for version in ['1.2.3', '1.2.3-beta.2']:
+            with self.subTest(version=version):
+                (self.root / 'version.env').write_text(f'MARKETING_VERSION={version}\nBUILD_NUMBER=12\n')
+                (self.root / 'CHANGELOG.md').write_text(f'## {version} — 2026-01-01\n\n- Synthetic change.\n')
+                feed = b'<rss><channel/></rss>'
+                (self.root / 'appcast.xml').write_bytes(feed)
+                directory = self.root / 'release-assets'
+                if directory.exists(): shutil.rmtree(directory)
+                directory.mkdir()
+                for name in release.asset_names(version):
+                    (directory / name).write_bytes(b'asset')
+                    (directory / (name + '.sha256')).write_bytes(b'sidecar')
+                (directory / 'appcast.xml').write_bytes(feed)
+                (directory / 'RELEASE-NOTES.md').write_text(release.notes(version))
+                (directory / 'SHA256SUMS').write_text(release.checksums(directory))
+                def command(args, **kwargs):
+                    if args[:3] == ['gh', 'release', 'download']:
+                        target = self.root / args[-1]
+                        for path in directory.iterdir(): shutil.copyfile(path, target / path.name)
+                def git(*args):
+                    return 'commit' if args[-1].endswith('^{commit}') else 'tag-object'
+                response = {'object': {'type': 'tag', 'sha': 'tag-object'}, 'sha': 'feed-object', 'content': base64.b64encode(feed).decode()}
+                old = Path.cwd()
+                try:
+                    os.chdir(self.root)
+                    with patch.dict(os.environ, DRY_RUN='false', RELEASE_SHA='commit'), patch.object(release, 'require_ci'), patch.object(release, 'require_absent'), patch.object(release, 'api', return_value=response), patch.object(release, 'run', side_effect=git), patch.object(release.subprocess, 'run', side_effect=command) as commands:
+                        release.publish()
+                    calls = [c.args[0] for c in commands.call_args_list]
+                    create = next(c for c in calls if c[:3] == ['gh', 'release', 'create'])
+                    edit = next(c for c in calls if c[:3] == ['gh', 'release', 'edit'])
+                    self.assertEqual('--prerelease' in create, '-' in version)
+                    self.assertIn('--latest=false' if '-' in version else '--latest=true', edit)
+                finally:
+                    os.chdir(old)
 
     def test_dry_run_cannot_publish(self):
         with patch.dict(os.environ, DRY_RUN='true'), patch.object(release, 'api') as api:

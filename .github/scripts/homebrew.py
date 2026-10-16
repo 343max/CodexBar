@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
-from release import CONFIG, api, metadata
+from release import CONFIG, api, metadata, is_prerelease
 
 
 def rewrite_cask(source, version, digest):
@@ -35,6 +35,7 @@ def rewrite_formula(source, version, digests):
 def main():
     assert os.environ['DRY_RUN'] == 'false', 'No tap writes in dry runs'
     version, _ = metadata()
+    assert not is_prerelease(version), 'Prereleases must not replace the stable Homebrew packages'
     tap = 'steipete/homebrew-tap'
     app = CONFIG['app']
     directory = Path('release-assets')

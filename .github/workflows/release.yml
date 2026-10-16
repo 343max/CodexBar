@@ -207,6 +207,7 @@ jobs:
           RELEASE_SHA: ${{ needs.validate.outputs.sha }}
         run: python3 .github/scripts/release.py publish
       - name: Update Homebrew from the verified release
+        if: ${{ !contains(needs.validate.outputs.version, '-') }}
         env:
           GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: python3 .github/scripts/homebrew.py

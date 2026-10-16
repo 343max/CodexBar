@@ -50,11 +50,19 @@ def deployment_targets(load_commands):
 
 def metadata():
     text = (ROOT / 'version.env').read_text()
-    values = dict(re.findall(r'^(MARKETING_VERSION|BUILD_NUMBER)=([0-9.]+)$', text, re.M))
+    values = dict(re.findall(r'^(MARKETING_VERSION|BUILD_NUMBER)=([0-9A-Za-z.-]+)$', text, re.M))
     version = values.get('MARKETING_VERSION', '')
-    assert re.fullmatch(r'\d+\.\d+\.\d+', version), 'Expected X.Y.Z in version.env'
+    assert re.fullmatch(r'\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?', version), 'Expected X.Y.Z or X.Y.Z-beta.N in version.env'
     assert re.fullmatch(r'[1-9]\d*', values.get('BUILD_NUMBER', '')), 'Invalid BUILD_NUMBER'
     return version, values['BUILD_NUMBER']
+
+
+def is_prerelease(version):
+    return '-' in version
+
+
+def sparkle_channel(version):
+    return 'beta' if is_prerelease(version) else None
 
 
 def notes(version, dry=False):
@@ -198,6 +206,8 @@ if data.count == 32 {
         if item.findtext(f'{{{SPARKLE}}}version') == build:
             channel.remove(item)
     item = ET.Element('item')
+    if sparkle_channel(version):
+        ET.SubElement(item, f'{{{SPARKLE}}}channel').text = sparkle_channel(version)
     ET.SubElement(item, 'title').text = version
     ET.SubElement(item, 'pubDate').text = dt.datetime.now(dt.timezone.utc).strftime('%a, %d %b %Y %H:%M:%S +0000')
     ET.SubElement(item, f'{{{SPARKLE}}}version').text = build
@@ -229,14 +239,17 @@ def publish():
     assert sorted(p.name for p in directory.iterdir()) == sorted(asset_names(version) + [n + '.sha256' for n in asset_names(version)] + ['appcast.xml', 'RELEASE-NOTES.md', 'SHA256SUMS'])
     assert (directory / 'SHA256SUMS').read_text() == checksums(directory), 'Artifact checksum mismatch'
     assert (directory / 'RELEASE-NOTES.md').read_text() == notes(version)
-    subprocess.run(['gh', 'release', 'create', tag, '--repo', CONFIG['repository'], '--draft', '--verify-tag', '--title', f'{CONFIG["app"]} {version}', '--notes-file', str(directory / 'RELEASE-NOTES.md'), *map(str, sorted(directory.iterdir()))], check=True)
+    create = ['gh', 'release', 'create', tag, '--repo', CONFIG['repository'], '--draft', '--verify-tag', '--title', f'{CONFIG["app"]} {version}', '--notes-file', str(directory / 'RELEASE-NOTES.md')]
+    if is_prerelease(version):
+        create.append('--prerelease')
+    subprocess.run([*create, *map(str, sorted(directory.iterdir()))], check=True)
     # Verify the uploaded bytes, not just the local artifacts, before making the draft public.
     with tempfile.TemporaryDirectory() as temp:
         subprocess.run(['gh', 'release', 'download', tag, '--repo', CONFIG['repository'], '--dir', temp], check=True)
         downloaded = Path(temp)
         assert sorted(p.name for p in downloaded.iterdir()) == sorted(p.name for p in directory.iterdir())
         assert all((downloaded / p.name).read_bytes() == p.read_bytes() for p in directory.iterdir())
-    subprocess.run(['gh', 'release', 'edit', tag, '--repo', CONFIG['repository'], '--draft=false', '--latest'], check=True)
+    subprocess.run(['gh', 'release', 'edit', tag, '--repo', CONFIG['repository'], '--draft=false', f'--latest={str(not is_prerelease(version)).lower()}'], check=True)
     # Keep the historical feed URL: existing installed clients read main/appcast.xml.
     current = api(f'repos/{CONFIG["repository"]}/contents/appcast.xml?ref=main')
     assert current['sha'] == current_feed['sha'], 'Feed changed during publication; finish feed handoff from the verified release'

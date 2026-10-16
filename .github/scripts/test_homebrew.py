@@ -2,6 +2,8 @@ import importlib.util
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
+import os
 
 sys.path.insert(0, str(Path(__file__).parent))
 import homebrew
@@ -28,3 +30,8 @@ class HomebrewTests(unittest.TestCase):
             self.assertIn(digest, changed)
         with self.assertRaises(AssertionError):
             homebrew.rewrite_formula(source.replace('macos-arm64', 'linux-x86_64'), '1.2.3', digests)
+
+    def test_prerelease_cannot_write_the_stable_tap(self):
+        with patch.dict(os.environ, DRY_RUN='false'), patch.object(homebrew, 'metadata', return_value=('1.2.3-beta.2', '12')), patch.object(homebrew, 'api') as api:
+            with self.assertRaises(AssertionError): homebrew.main()
+            api.assert_not_called()
