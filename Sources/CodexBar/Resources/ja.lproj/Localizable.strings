@@ -1453,6 +1453,9 @@
 "menu_bar_layout_token_runs_out" = "使い切り";
 "menu_bar_layout_token_cost_today" = "今日のコスト";
 "menu_bar_layout_token_cost_window" = "コスト（履歴期間）";
+"menu_bar_layout_token_spend" = "支出 %";
+"menu_bar_layout_token_spend_pace" = "支出ペース";
+"menu_bar_layout_token_spend_budget" = "支出 / 予算";
 "menu_bar_layout_token_space" = "空白";
 "menu_bar_layout_token_line_break" = "改行";
 "menu_bar_layout_token_separator_accessibility" = "区切り点";
@@ -1614,6 +1617,7 @@
 "menu_bar_layout_conditional_default_session_spent" = "セッションがほぼ上限";
 "menu_bar_layout_conditional_default_either_high" = "セッションまたは週間が高水準";
 "menu_bar_layout_conditional_default_scoped_weekly" = "モデル別週間の使用率 60% 超";
+"menu_bar_layout_conditional_default_spend_high" = "支出使用率 90% 超";
 "Visible usage items" = "表示する使用量項目";
 "Restore Defaults" = "デフォルトに戻す";
 "Choose which usage rows appear in this provider's menu, Settings preview, and Overview." = "このプロバイダーのメニュー、設定プレビュー、概要に表示する使用量の行を選択します。";
@@ -1682,7 +1686,7 @@
 "%@m" = "%@分";
 "%d CONNECTED" = "接続済み：%d 件";
 "%d DAYS" = "%d 日";
-"%d days" = "%d 日";
+"%d days" = "%d日間";
 "%d more accounts ready" = "%d より多くのアカウントの準備ができました";
 "%d percent" = "%d パーセント";
 "%d subscriptions" = "%d 件のサブスクリプション";
@@ -1900,6 +1904,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "請求ページのリクエストから Cookie ヘッダーを貼り付けます。 sessionid が含まれている必要があります。";
 "Paste z.ai / GLM API key…" = "z.ai / GLM API キーを貼り付け…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "cswap 実行可能ファイルへのパス (github.com/realiti4/claude-swap)。";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "tcr 実行可能ファイルへのパス (github.com/dhkts1/teamclaude-rs)。";
 "Peak %@" = "ピーク %@";
 "Percent left" = "残りの割合";
 "Pick another Codex account before importing OpenAI cookies." = "OpenAI cookies をインポートする前に、別の Codex アカウントを選択してください。";
@@ -1931,7 +1936,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "OpenAI Web データを更新する前に、プロファイルを更新してください。";
 "Refreshing account status…" = "アカウントのステータスを更新しています…";
 "Remaining budget compared with an ideal steady burn rate." = "理想的な安定した燃焼速度と比較した残りの予算。";
-"Renews: %@" = "更新: %@";
+"Plan renews: %@" = "プラン更新日: %@";
 "Request quota" = "リクエスト クォータ";
 "Requesting login…" = "ログインをリクエスト中…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "必須。ここに通常の API キーまたは管理 API キーを入力します。管理キーにより、公式 OpenRouter API でのアカウント アクティビティも有効になります。";
@@ -1954,6 +1959,8 @@
 "Select the provider to display." = "表示するプロバイダーを選択します。";
 "Session (5-hour)" = "セッション（5時間）";
 "Session and weekly usage with credits and costs." = "セッションと週間の使用量、クレジット、費用を表示します。";
+"Set the cswap executable path below." = "下に cswap 実行可能ファイルのパスを設定してください。";
+"Set the tcr executable path below." = "下に tcr 実行可能ファイルのパスを設定してください。";
 "Settings unavailable." = "設定が利用できません。";
 "Show account card when only one account is available" = "利用可能なアカウントが 1 つだけの場合にアカウント カードを表示する";
 "Show model-specific weekly usage in widgets" = "モデル固有の週ごとの使用量をウィジェットに表示";
@@ -1961,6 +1968,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "デスクトップ ウィジェットに、Fable などのモデル固有の Claude クォータ を表示します。";
 "Shows the hidden accounts" = "隠しアカウントを表示します";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "使用状況を表示し、`cswap` を通じてアカウントを切り替えることができます。資格情報は claude-swap によって管理されます。 CodexBar はそれらを決して読みません。";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "`tcr` から使用状況を表示します。tcr がリクエストごとにアカウントを選ぶため、アカウントは切り替えません。資格情報は tcr によって管理されます。 CodexBar はそれらを決して読みません。";
 "Stay Awake" = "スリープを防ぐ";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "CodexBar 構成ファイルに保存されます。 /v1/usage から月次予算とルーティングされた使用量を読み取ります。";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "~/.codexbar/config.json に保存されます。 OPENAI_ADMIN_KEY は組織で使用する場合に必要です。レガシー/ユーザーキーは、ベストエフォート型バランスのフォールバックのみを取得します。";
@@ -1969,6 +1977,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "アカウントを切り替え…";
 "Switch Claude Code account" = "Claude Code アカウントを切り替える";
+"Claude accounts in tcr" = "tcr の Claude アカウント";
 "Switch Claude Code to %@" = "Claude Code を %@ に切り替えます";
 "Switch Provider" = "プロバイダーの切り替え";
 "Switch the provider shown in the widget." = "ウィジェットに表示されるプロバイダーを切り替えます。";
@@ -2055,6 +2064,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "クォータ が枯渇しました";
+"tcr executable" = "tcr 実行可能ファイル";
 "under pace" = "計画されたペースを下回る使用量";
 "us-east-1" = "us-east-1";
 "used" = "使用済み";
@@ -2065,6 +2075,7 @@
 "~%@ est" = "~%@ 推定";
 "~%@ tracked tokens (partial)" = "~%@ 記録済みトークン (部分的)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 
@@ -2512,6 +2523,8 @@
 "Pace sign" = "ペースの符号";
 "Ahead of pace is +" = "ペース超過を + で表示";
 "Reserve is +" = "余裕を + で表示";
+"Back" = "戻る";
+"Forward" = "進む";
 
 "cost_reset_inferred_tooltip" = "推定: %@ はこの日付を報告しません。月間の支出上限は毎月1日 00:00 UTC にリセットされます。";
 /* fal provider credentials */
@@ -2631,3 +2644,25 @@
 "Claude Platform exposes Console credit balance and monthly spend, not local token cost history." = "Claude Platform は、ローカルのトークンコスト履歴ではなく、Console のクレジット残高と月間支出を表示します。";
 
 "Claude config directory" = "Claude の設定ディレクトリ";
+/* App-managed HTTP server */
+"http_server_title" = "HTTPサーバー";
+"http_server_enable" = "HTTPサーバーを有効にする";
+"http_server_bind" = "バインドするIPv4アドレス";
+"http_server_port" = "ポート";
+"http_server_token" = "サーバートークン";
+"http_server_show" = "表示";
+"http_server_generate" = "生成";
+"http_server_cache" = "キャッシュ間隔（秒）";
+"http_server_timeout" = "リクエストのタイムアウト（秒、0で無効）";
+"http_server_all_accounts" = "スナップショットにすべてのアカウントを含める";
+"http_server_identity" = "ダッシュボードの識別情報";
+"http_server_redacted" = "伏せ字";
+"http_server_warning" = "使用量、費用、アカウント、プロジェクトの情報を公開します。プロバイダーの認証情報は公開しません。HTTPはサーバートークンを暗号化せず送信します。信頼できるVPNまたはTailscale接続でのみ使用してください。";
+"http_server_plain_http" = "このMac以外からの暗号化されていないHTTPを許可";
+"http_server_dashboard" = "ダッシュボード";
+"http_server_wildcard" = "他のデバイスでは、0.0.0.0をこのMacのVPNまたはTailscaleのIPv4アドレスに置き換えてください。";
+"http_server_footer" = "デフォルトではオフです。CodexBarと共に起動し、終了時に停止します。設定とトークンはこのMacに保存され、同期や書き出しの対象外です。リモートアクセス中はMacをスリープさせないでください。";
+/* Claude desktop cookie source */
+"Claude desktop app" = "Claudeデスクトップアプリ";
+"Use Claude desktop app cookies" = "ClaudeデスクトップアプリのCookieを使用";
+"For Web usage, follow the account signed into Claude.app instead of a browser." = "Webの使用量には、ブラウザではなくClaude.appにログイン中のアカウントを使用します。";
