@@ -87,6 +87,16 @@ extension SettingsStore {
                 value: newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "cleared" : "set")
         }
     }
+
+    var claudeSwapSource: ClaudeSwapAccountSource {
+        get { self.configSnapshot.providerConfig(for: .claude)?.resolvedClaudeSwapSource ?? .claudeSwap }
+        set {
+            self.updateProviderConfig(provider: .claude) { entry in
+                entry.claudeSwapSource = newValue == .claudeSwap ? nil : newValue.rawValue
+            }
+            self.logProviderModeChange(provider: .claude, field: "claudeSwapSource", value: newValue.rawValue)
+        }
+    }
 }
 
 extension SettingsStore {

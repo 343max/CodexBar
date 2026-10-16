@@ -29,6 +29,30 @@ struct ClaudeSwapSessionForecastTests {
     }
 
     @Test
+    func `tcr history requires email and organization and uses the shared account key`() async throws {
+        let fixture = try CodexWorkspacesNavigationFixture(userDefaults: InMemoryUserDefaults())
+        defer { fixture.cleanup() }
+        let rows = [
+            Self.row(number: 1, email: " One@Example.com ", organizationUuid: "ORG-A", sessionUsed: 30),
+            Self.row(number: 2, email: "one@example.com", organizationUuid: "org-b", sessionUsed: 80),
+            Self.row(number: 3, email: "one@example.com", sessionUsed: 50),
+            Self.row(number: 4, email: "", organizationUuid: "org-a", sessionUsed: 60),
+        ]
+        let accounts = Self.accounts(rows, source: .tcr)
+        #expect(accounts[0].historyAccountKey == Self.accounts(rows)[0].historyAccountKey)
+        #expect(accounts[0].historyAccountKey != accounts[1].historyAccountKey)
+        #expect(accounts[2].historyAccountKey == nil)
+        #expect(accounts[3].historyAccountKey == nil)
+        await fixture.store.recordClaudeSwapPlanUtilizationHistory(accounts)
+        #expect(fixture.store.planUtilizationHistory[.claude]?.accounts.count == 2)
+        #expect(fixture.store.claudeSwapPlanUtilizationHistorySelection(for: accounts[0]).histories
+            .first { $0.name == .session }?.entries.map(\.usedPercent) == [30])
+        #expect(fixture.store.claudeSwapPlanUtilizationHistorySelection(for: accounts[1]).histories
+            .first { $0.name == .session }?.entries.map(\.usedPercent) == [80])
+        #expect(fixture.store.claudeSwapPlanUtilizationHistorySelection(for: accounts[2]).histories.isEmpty)
+    }
+
+    @Test
     func `last known and unavailable rows record nothing`() async throws {
         let fixture = try CodexWorkspacesNavigationFixture(userDefaults: InMemoryUserDefaults())
         defer { fixture.cleanup() }
@@ -70,8 +94,8 @@ struct ClaudeSwapSessionForecastTests {
         #expect(store.settings.userDefaults.object(forKey: UsageStore.sessionLimitResetDetectorDefaultsKey) == nil)
     }
 
-    @Test
-    func `swap card shows the session forecast from its own history`() throws {
+    @Test(arguments: ClaudeSwapAccountSource.allCases)
+    func `account card shows the session forecast from its own history`(source: ClaudeSwapAccountSource) throws {
         let fixture = try CodexWorkspacesNavigationFixture(userDefaults: InMemoryUserDefaults())
         defer { fixture.cleanup() }
         let store = fixture.store
@@ -81,11 +105,13 @@ struct ClaudeSwapSessionForecastTests {
             [Self.row(
                 number: 1,
                 email: "one@example.com",
+                organizationUuid: "fixture-org",
                 sessionUsed: 20,
                 weeklyUsed: 60,
                 sessionReset: history.currentSessionReset,
                 weeklyReset: now.addingTimeInterval(2 * 24 * 3600),
                 fetchedAt: now)],
+            source: source,
             now: now).first)
         let accountKey = try #require(account.historyAccountKey)
         var buckets = PlanUtilizationHistoryBuckets()
@@ -232,10 +258,12 @@ struct ClaudeSwapSessionForecastTests {
 
     private static func accounts(
         _ rows: [ClaudeSwapAccountRow],
+        source: ClaudeSwapAccountSource = .claudeSwap,
         now: Date = fetchedAt) -> [ProviderAccountUsageSnapshot]
     {
         ClaudeSwapAccountProjection.accountSnapshots(
             from: ClaudeSwapAccountList(activeAccountNumber: 1, accounts: rows),
+            source: source,
             now: now)
     }
 }

@@ -40,7 +40,7 @@ struct ClaudeSwapAccountMenuDisplay {
 
     static func privacyOrdinal(for account: ProviderAccountUsageSnapshot) -> PersonalInfoRedactor.AccountOrdinal? {
         guard account.provider == .claude,
-              account.id.source == ClaudeSwapAccountProjection.sourceName,
+              ClaudeSwapAccountSource(identitySource: account.id.source) != nil,
               let number = Int(account.id.opaqueID)
         else { return nil }
         return PersonalInfoRedactor.AccountOrdinal(number)
@@ -65,7 +65,8 @@ struct ClaudeSwapAccountMenuDisplay {
             plan: .label(planLabel),
             planEmphasis: account.isActive ? .active : .none,
             lastKnownUsageCapturedAt: account.usesLastKnownUsage ? account.snapshot?.updatedAt : nil,
-            sourceLabel: ClaudeSwapAccountProjection.sourceLabel))
+            sourceLabel: ClaudeSwapAccountSource(identitySource: account.id.source)?.label
+                ?? ClaudeSwapAccountProjection.sourceLabel))
     }
 
     static func actionLabel(

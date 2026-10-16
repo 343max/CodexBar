@@ -35,4 +35,15 @@ extension ProviderConfig {
     public var sanitizedClaudeSwapExecutablePath: String? {
         SettingsValue.cleaned(self.claudeSwapExecutablePath)
     }
+
+    /// `"claude-swap"` (default) or `"tcr"`: which tool the executable path names.
+    public var claudeSwapSource: String? {
+        get { self.extensionValue(forKey: "claudeSwapSource") }
+        set { self.setExtensionValue(newValue, forKey: "claudeSwapSource") }
+    }
+
+    /// An unset or unrecognised value reads as claude-swap, the source that predates the key.
+    public var resolvedClaudeSwapSource: ClaudeSwapAccountSource {
+        SettingsValue.cleaned(self.claudeSwapSource).flatMap(ClaudeSwapAccountSource.init(rawValue:)) ?? .claudeSwap
+    }
 }

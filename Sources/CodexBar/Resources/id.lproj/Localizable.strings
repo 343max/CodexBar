@@ -1907,6 +1907,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "Tempelkan header Cookie dari permintaan halaman penagihan. Itu harus berisi sessionid.";
 "Paste z.ai / GLM API key…" = "Tempel kunci z.ai / GLM API…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "Jalur ke cswap yang dapat dieksekusi (github.com/realiti4/claude-swap).";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "Jalur ke tcr yang dapat dieksekusi (github.com/dhkts1/teamclaude-rs).";
 "Peak %@" = "Puncak %@";
 "Percent left" = "Persentase tersisa";
 "Pick another Codex account before importing OpenAI cookies." = "Pilih akun Codex lain sebelum mengimpor OpenAI cookies.";
@@ -1961,6 +1962,8 @@
 "Select the provider to display." = "Pilih penyedia yang akan ditampilkan.";
 "Session (5-hour)" = "Sesi (5 jam)";
 "Session and weekly usage with credits and costs." = "Sesi dan penggunaan mingguan dengan Kredit dan biaya.";
+"Set the cswap executable path below." = "Atur jalur cswap yang dapat dieksekusi di bawah.";
+"Set the tcr executable path below." = "Atur jalur tcr yang dapat dieksekusi di bawah.";
 "Settings unavailable." = "Pengaturan tidak tersedia.";
 "Show account card when only one account is available" = "Tunjukkan kartu akun ketika hanya satu akun yang tersedia";
 "Show model-specific weekly usage in widgets" = "Tampilkan penggunaan mingguan khusus model di widget";
@@ -1968,6 +1971,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "Menampilkan Claude Kuota khusus model, seperti Fable, di widget desktop.";
 "Shows the hidden accounts" = "Menampilkan akun yang tersembunyi";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "Menunjukkan penggunaan dan memungkinkan Anda berpindah akun melalui `cswap`. Kredensial tetap dikelola oleh claude-swap; CodexBar tidak pernah membacanya.";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "Menunjukkan penggunaan dari `tcr`; tidak berpindah akun, karena tcr memilih akun untuk setiap permintaan. Kredensial tetap dikelola oleh tcr; CodexBar tidak pernah membacanya.";
 "Stay Awake" = "Tetap terjaga";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "Disimpan dalam file konfigurasi CodexBar. Membaca anggaran bulanan dan penggunaan yang dialihkan dari /v1/usage.";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "Disimpan di ~/.codexbar/config.json. OPENAI_ADMIN_KEY diperlukan untuk penggunaan organisasi; kunci lama/pengguna hanya mendapatkan penggantian keseimbangan upaya terbaik.";
@@ -1976,6 +1980,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "Ganti Akun…";
 "Switch Claude Code account" = "Ganti akun Claude Code";
+"Claude accounts in tcr" = "Akun Claude di tcr";
 "Switch Claude Code to %@" = "Ganti Claude Code ke %@";
 "Switch Provider" = "Ganti Penyedia";
 "Switch the provider shown in the widget." = "Ganti penyedia yang ditampilkan di widget.";
@@ -2062,6 +2067,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "Kuota habis";
+"tcr executable" = "tcr dapat dieksekusi";
 "under pace" = "penggunaan di bawah kecepatan yang direncanakan";
 "us-east-1" = "us-east-1";
 "used" = "terpakai";
@@ -2072,6 +2078,7 @@
 "~%@ est" = "~%@ diperkirakan";
 "~%@ tracked tokens (partial)" = "~%@ Token tercatat (SEBAGIAN)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 

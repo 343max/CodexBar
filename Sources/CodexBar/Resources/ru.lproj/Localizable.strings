@@ -1905,6 +1905,7 @@
 "Paste the Cookie header from a billing-page request. It must contain sessionid." = "Вставьте заголовок Cookie из запроса страницы выставления счетов. Он должен содержать sessionid.";
 "Paste z.ai / GLM API key…" = "Вставьте ключ z.ai/GLM API…";
 "Path to the cswap executable (github.com/realiti4/claude-swap)." = "Путь к исполняемому файлу cswap (github.com/realiti4/claude-swap).";
+"Path to the tcr executable (github.com/dhkts1/teamclaude-rs)." = "Путь к исполняемому файлу tcr (github.com/dhkts1/teamclaude-rs).";
 "Peak %@" = "Пик %@";
 "Percent left" = "Оставшийся процент";
 "Pick another Codex account before importing OpenAI cookies." = "Прежде чем импортировать OpenAI cookies, выберите другую учетную запись Codex.";
@@ -1959,6 +1960,8 @@
 "Select the provider to display." = "Выберите поставщика для отображения.";
 "Session (5-hour)" = "Сессия (5 часов)";
 "Session and weekly usage with credits and costs." = "Сеансовое и еженедельное использование с Кредиты и стоимость.";
+"Set the cswap executable path below." = "Укажите ниже путь к исполняемому файлу cswap.";
+"Set the tcr executable path below." = "Укажите ниже путь к исполняемому файлу tcr.";
 "Settings unavailable." = "Настройки недоступны.";
 "Show account card when only one account is available" = "Показывать карточку счета, когда доступен только один счет";
 "Show model-specific weekly usage in widgets" = "Показывать еженедельное использование конкретной модели в виджетах";
@@ -1966,6 +1969,7 @@
 "Shows model-specific Claude quotas, such as Fable, in desktop widgets." = "Показывает Claude Квота для конкретной модели, например Fable, в виджетах рабочего стола.";
 "Shows the hidden accounts" = "Показывает скрытые аккаунты";
 "Shows usage and lets you switch accounts through `cswap`. Credentials stay managed by claude-swap; CodexBar never reads them." = "Показывает использование и позволяет переключать учетные записи через `cswap`. Учетные данные остаются под управлением claude-swap; CodexBar никогда их не читает.";
+"Shows usage from `tcr`; it does not switch accounts, because tcr picks the account for each request. Credentials stay managed by tcr; CodexBar never reads them." = "Показывает использование из `tcr`; не переключает учетные записи, потому что tcr выбирает учетную запись для каждого запроса. Учетные данные остаются под управлением tcr; CodexBar никогда их не читает.";
 "Stay Awake" = "Бодрствуйте";
 "Stored in the CodexBar config file. Reads monthly budget and routed usage from /v1/usage." = "Хранится в файле конфигурации CodexBar. Считывает ежемесячный бюджет и маршрутизируемое использование из /v1/usage.";
 "Stored in ~/.codexbar/config.json. OPENAI_ADMIN_KEY is required for organization usage; legacy/user keys only get a best-effort balance fallback." = "Хранится в ~/.codexbar/config.json. OPENAI_ADMIN_KEY необходим для использования в организации; устаревшие/пользовательские ключи получают только резервный баланс баланса.";
@@ -1974,6 +1978,7 @@
 "SuperGrok OAuth" = "SuperGrok OAuth";
 "Switch Account…" = "Сменить аккаунт…";
 "Switch Claude Code account" = "Сменить аккаунт Claude Code";
+"Claude accounts in tcr" = "Учетные записи Claude в tcr";
 "Switch Claude Code to %@" = "Переключить Claude Code на %@";
 "Switch Provider" = "Сменить поставщика";
 "Switch the provider shown in the widget." = "Переключите провайдера, показанного в виджете.";
@@ -2060,6 +2065,7 @@
 "sk-ant-admin..." = "sk-ant-admin...";
 "sk-or-v1-..." = "sk-or-v1-...";
 "spent" = "Квота исчерпан";
+"tcr executable" = "tcr исполняемый файл";
 "under pace" = "использование ниже запланированного темпа";
 "us-east-1" = "us-east-1";
 "used" = "использовано";
@@ -2070,6 +2076,7 @@
 "~%@ est" = "~%@ приблизительно";
 "~%@ tracked tokens (partial)" = "~%@ Учтённые токены (ЧАСТИЧНЫЙ)";
 "~/.local/bin/cswap" = "~/.local/bin/cswap";
+"/Applications/TcrBar.app/Contents/MacOS/tcr" = "/Applications/TcrBar.app/Contents/MacOS/tcr";
 "~/Library/Application Support/JetBrains/IntelliJIdea2024.3" = "~/Library/Application Support/JetBrains/IntelliJIdea2024.3";
 "00000000-0000-0000-0000-000000000000" = "00000000-0000-0000-0000-000000000000";
 

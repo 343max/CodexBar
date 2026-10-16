@@ -244,10 +244,7 @@ extension UsageStore {
         let snapshot = swapOwnsClaude ? activeSwapAccount?.snapshot : self.snapshots[provider.instanceID]
         let tokenSnapshot = self.tokenSnapshotForCurrentProviderConfig(for: provider)?.snapshot
         let claudeQuotaOwnerKey: String? = if swapOwnsClaude {
-            activeSwapAccount.flatMap { account in
-                ClaudeSwapRetainedUsageStore.ownershipFingerprint(for: account)
-                    .map { "claude/swap:\(account.id.opaqueID):\($0)" }
-            }
+            activeSwapAccount.flatMap(Self.claudeSwapWidgetOwnerKey(for:))
         } else if provider == .claude {
             self.claudeWidgetQuotaOwnerKey()
         } else {

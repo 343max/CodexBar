@@ -31,6 +31,7 @@ struct ClaudeProviderImplementation: ProviderImplementation {
         _ = settings.claudeSwapEnabled
         _ = settings.claudeSwapShowSingleAccount
         _ = settings.claudeSwapExecutablePath
+        _ = settings.claudeSwapSource
     }
 
     @MainActor
@@ -89,12 +90,13 @@ struct ClaudeProviderImplementation: ProviderImplementation {
 
         let claudeSwapBinding = context.binding(\.claudeSwapEnabled)
         let claudeSwapShowSingleAccountBinding = context.binding(\.claudeSwapShowSingleAccount)
+        let claudeSwapSetup = ClaudeSwapSetupText(source: context.settings.claudeSwapSource)
         let claudeSwapExecutableField = ProviderSettingsFieldDescriptor(
             id: "claude-swap-executable-path",
-            title: "claude-swap executable",
-            subtitle: "Path to the cswap executable (github.com/realiti4/claude-swap).",
+            title: claudeSwapSetup.title,
+            subtitle: claudeSwapSetup.subtitle,
             kind: .plain,
-            placeholder: "~/.local/bin/cswap",
+            placeholder: claudeSwapSetup.placeholder,
             binding: context.binding(\.claudeSwapExecutablePath),
             actions: [],
             isVisible: nil)
@@ -166,8 +168,7 @@ struct ClaudeProviderImplementation: ProviderImplementation {
             ProviderSettingsToggleDescriptor(
                 id: "claude-swap-accounts",
                 title: "Read accounts from claude-swap",
-                subtitle: "Shows usage and lets you switch accounts through `cswap`. " +
-                    "Credentials stay managed by claude-swap; CodexBar never reads them.",
+                subtitle: claudeSwapSetup.toggleSubtitle,
                 binding: claudeSwapBinding,
                 statusText: { Self.claudeSwapStatusText(store: context.store, settings: context.settings) },
                 actions: [],
@@ -196,11 +197,11 @@ struct ClaudeProviderImplementation: ProviderImplementation {
     private static func claudeSwapStatusText(store: UsageStore, settings: SettingsStore) -> String? {
         guard settings.claudeSwapEnabled else { return nil }
         if settings.claudeSwapExecutablePath.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return "Set the cswap executable path below."
+            return ClaudeSwapSetupText(source: settings.claudeSwapSource).missingPathStatus
         }
         var parts: [String] = []
         if let version = store.claudeSwapDetectedVersion {
-            parts.append("claude-swap \(version)")
+            parts.append("\(settings.claudeSwapSource.label) \(version)")
         }
         if let error = store.claudeSwapLastError {
             parts.append(error)
@@ -263,6 +264,17 @@ struct ClaudeProviderImplementation: ProviderImplementation {
                 options: keychainPromptPolicyOptions,
                 isVisible: nil,
                 isEnabled: { !context.settings.debugDisableKeychainAccess },
+                onChange: nil),
+            ProviderSettingsPickerDescriptor(
+                id: "claude-swap-source",
+                title: "Source",
+                subtitle: "",
+                binding: context.rawValueBinding(\.claudeSwapSource, fallback: .claudeSwap),
+                // Tool names, not prose: they stay untranslated in every locale.
+                options: ClaudeSwapAccountSource.allCases.map {
+                    ProviderSettingsPickerOption(id: $0.rawValue, title: $0.label)
+                },
+                isVisible: { context.settings.claudeSwapEnabled },
                 onChange: nil),
             ProviderCookieSourceUI.picker(
                 id: "claude-cookie-source",
@@ -417,5 +429,37 @@ struct ClaudeProviderImplementation: ProviderImplementation {
             return true
         }
         return false
+    }
+}
+
+/// Setup copy for the account-source toggle, its executable field and the empty-path status, chosen by the
+/// selected source so the instructions name the executable that will be run with that source's list arguments.
+/// Title, subtitle, placeholder and toggle subtitle are English catalog keys the settings rows localize; the
+/// status row renders its text as-is, so `missingPathStatus` is localized here.
+private struct ClaudeSwapSetupText {
+    let title: String
+    let subtitle: String
+    let placeholder: String
+    let toggleSubtitle: String
+    let missingPathStatus: String
+
+    init(source: ClaudeSwapAccountSource) {
+        switch source {
+        case .claudeSwap:
+            self.title = "claude-swap executable"
+            self.subtitle = "Path to the cswap executable (github.com/realiti4/claude-swap)."
+            self.placeholder = "~/.local/bin/cswap"
+            self.toggleSubtitle = "Shows usage and lets you switch accounts through `cswap`. " +
+                "Credentials stay managed by claude-swap; CodexBar never reads them."
+            self.missingPathStatus = L("Set the cswap executable path below.")
+        case .tcr:
+            // tcr picks the account for each request, so its list never offers a switch.
+            self.title = "tcr executable"
+            self.subtitle = "Path to the tcr executable (github.com/dhkts1/teamclaude-rs)."
+            self.placeholder = "/Applications/TcrBar.app/Contents/MacOS/tcr"
+            self.toggleSubtitle = "Shows usage from `tcr`; it does not switch accounts, because tcr picks " +
+                "the account for each request. Credentials stay managed by tcr; CodexBar never reads them."
+            self.missingPathStatus = L("Set the tcr executable path below.")
+        }
     }
 }

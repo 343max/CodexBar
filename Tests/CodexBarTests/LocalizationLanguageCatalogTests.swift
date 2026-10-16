@@ -730,6 +730,7 @@ struct LocalizationLanguageCatalogTests {
 
         // Brands, protocol examples, pure format strings and accepted Italian cognates.
         let intentionallyUnchanged: Set = [
+            "/Applications/TcrBar.app/Contents/MacOS/tcr",
             "<1%% %@",
             "%.0f%% %@",
             "%@ %@",
