@@ -1934,7 +1934,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "OpenAI web verilerini yenilemeden önce profili yenileyin.";
 "Refreshing account status…" = "Hesap durumu yenileniyor…";
 "Remaining budget compared with an ideal steady burn rate." = "İdeal sabit yazma hızıyla karşılaştırıldığında kalan bütçe.";
-"Renews: %@" = "Yeniler: %@";
+"Plan renews: %@" = "Plan yenilenir: %@";
 "Request quota" = "Kota talebinde bulunun";
 "Requesting login…" = "Giriş isteniyor…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "Gerekli. Buraya normal bir API anahtarı veya Yönetim API anahtarı girin. Yönetim anahtarları ayrıca resmi OpenRouter API'deki hesap Etkinliğini de etkinleştirir.";

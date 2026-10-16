@@ -1932,7 +1932,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "Làm mới cấu hình trước khi làm mới dữ liệu web OpenAI.";
 "Refreshing account status…" = "Đang làm mới trạng thái tài khoản…";
 "Remaining budget compared with an ideal steady burn rate." = "Ngân sách còn lại so với tốc độ đốt ổn định lý tưởng.";
-"Renews: %@" = "Gia hạn: %@";
+"Plan renews: %@" = "Gia hạn gói: %@";
 "Request quota" = "Yêu cầu Hạn mức";
 "Requesting login…" = "Đang yêu cầu đăng nhập…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "Bắt buộc. Nhập khóa API thông thường hoặc khóa API quản lý tại đây. Khóa quản lý cũng cho phép Hoạt động tài khoản trên OpenRouter API chính thức.";

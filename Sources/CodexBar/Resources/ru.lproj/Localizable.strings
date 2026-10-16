@@ -1932,7 +1932,7 @@
 "Refresh the profile before refreshing OpenAI web data." = "Обновите профиль перед обновлением веб-данных OpenAI.";
 "Refreshing account status…" = "Обновление статуса аккаунта…";
 "Remaining budget compared with an ideal steady burn rate." = "Оставшийся бюджет по сравнению с идеальной постоянной скоростью расходования средств.";
-"Renews: %@" = "Обновления: %@";
+"Plan renews: %@" = "Продление плана: %@";
 "Request quota" = "Запрос Квота";
 "Requesting login…" = "Запрос входа…";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "Обязательно. Введите здесь обычный ключ API или ключ управления API. Ключи управления также позволяют активировать учетную запись на официальном OpenRouter API.";

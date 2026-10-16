@@ -1922,7 +1922,7 @@
 "Refresh budgets" = "重新整理預算";
 "Refreshing account status…" = "正在刷新帳號狀態...";
 "Remaining budget compared with an ideal steady burn rate." = "比較剩餘額度與理想的均勻使用速度。";
-"Renews: %@" = "續訂時間：%@";
+"Plan renews: %@" = "方案續訂時間：%@";
 "Request quota" = "請求 配額";
 "Required. Enter a regular API key or a Management API key here. Management keys also enable account Activity on the official OpenRouter API." = "必填。在此輸入常規 API 金鑰或管理 API 金鑰。管理金鑰還可以啟用官方 OpenRouter API 上的帳號活動。";
 "Reset: %@" = "重置：%@";
