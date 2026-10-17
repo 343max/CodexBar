@@ -74,7 +74,7 @@ jobs:
     needs: [validate, availability]
     if: always() && needs.validate.result == 'success' && (needs.availability.result == 'success' || needs.validate.outputs.dry_run == 'true')
     runs-on: macos-15
-    timeout-minutes: 90
+    timeout-minutes: 120
     permissions:
       contents: read
     steps:
@@ -100,6 +100,8 @@ jobs:
         run: bash .github/scripts/setup-signing.sh
       - name: Build, sign, notarize, and staple
         env:
+          # Cold universal widget builds compile CodexBarCore again in Xcode.
+          CODEXBAR_WIDGET_EXTENSION_TIMEOUT_SECONDS: "3600"
           APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.ASC_PRIVATE_KEY_P8 }}
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
