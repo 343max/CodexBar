@@ -98,6 +98,12 @@ jobs:
           MACOS_SIGNING_P12: ${{ secrets.MACOS_SIGNING_P12 }}
           MACOS_SIGNING_P12_PASSWORD: ${{ secrets.MACOS_SIGNING_P12_PASSWORD }}
         run: bash .github/scripts/setup-signing.sh
+      - name: Retry dropped Apple ticket-service connections
+        run: |
+          mkdir -p "$RUNNER_TEMP/apple-tools"
+          ln -s "$GITHUB_WORKSPACE/.github/scripts/apple-tool.py" "$RUNNER_TEMP/apple-tools/xcrun"
+          ln -s "$GITHUB_WORKSPACE/.github/scripts/apple-tool.py" "$RUNNER_TEMP/apple-tools/stapler"
+          echo "$RUNNER_TEMP/apple-tools" >> "$GITHUB_PATH"
       - name: Build, sign, notarize, and staple
         env:
           # Cold universal widget builds compile CodexBarCore again in Xcode.
