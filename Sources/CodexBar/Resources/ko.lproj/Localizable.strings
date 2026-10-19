@@ -2655,3 +2655,7 @@
 "Show all accounts in Overview" = "개요에 모든 계정 표시";
 
 "Expand cached account usage. The six-provider limit still applies." = "캐시된 계정 사용량으로 선택한 제공업체를 펼칩니다. 제공업체는 최대 6개까지 표시됩니다.";
+"Edit" = "편집";
+"Move up" = "위로 이동";
+"Move down" = "아래로 이동";
+"Leave blank to keep the saved credential." = "저장된 인증 정보를 유지하려면 비워 두세요.";

@@ -2686,3 +2686,7 @@
 "Show all accounts in Overview" = "Visa alla konton i översikten";
 
 "Expand cached account usage. The six-provider limit still applies." = "Expandera valda leverantörer med cachad kontoanvändning. Gränsen på sex leverantörer gäller fortfarande.";
+"Edit" = "Redigera";
+"Move up" = "Flytta upp";
+"Move down" = "Flytta ned";
+"Leave blank to keep the saved credential." = "Lämna tomt för att behålla de sparade inloggningsuppgifterna.";

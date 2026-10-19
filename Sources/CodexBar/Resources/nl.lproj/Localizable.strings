@@ -2684,3 +2684,7 @@
 "Show all accounts in Overview" = "Alle accounts in het overzicht tonen";
 
 "Expand cached account usage. The six-provider limit still applies." = "Klap geselecteerde aanbieders uit met gebruiksgegevens van accounts uit de cache. De limiet van zes aanbieders blijft gelden.";
+"Edit" = "Bewerken";
+"Move up" = "Omhoog";
+"Move down" = "Omlaag";
+"Leave blank to keep the saved credential." = "Laat leeg om de opgeslagen inloggegevens te behouden.";

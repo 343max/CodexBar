@@ -2686,3 +2686,7 @@
 "Show all accounts in Overview" = "Afficher tous les comptes dans la vue d’ensemble";
 
 "Expand cached account usage. The six-provider limit still applies." = "Développe les fournisseurs sélectionnés avec les données d’utilisation des comptes en cache. La limite de six fournisseurs reste applicable.";
+"Edit" = "Modifier";
+"Move up" = "Monter";
+"Move down" = "Descendre";
+"Leave blank to keep the saved credential." = "Laissez ce champ vide pour conserver les identifiants enregistrés.";

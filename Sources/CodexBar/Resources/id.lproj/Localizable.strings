@@ -2689,3 +2689,7 @@
 "Show all accounts in Overview" = "Tampilkan semua akun di Ringkasan";
 
 "Expand cached account usage. The six-provider limit still applies." = "Perluas penyedia yang dipilih menggunakan data penggunaan akun yang tersimpan dalam cache. Batas enam penyedia tetap berlaku.";
+"Edit" = "Edit";
+"Move up" = "Pindah ke atas";
+"Move down" = "Pindah ke bawah";
+"Leave blank to keep the saved credential." = "Biarkan kosong untuk mempertahankan kredensial tersimpan.";

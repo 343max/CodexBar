@@ -2689,3 +2689,7 @@
 "Show all accounts in Overview" = "Mostra tots els comptes a la vista general";
 
 "Expand cached account usage. The six-provider limit still applies." = "Desplega els proveïdors seleccionats amb les dades d’ús dels comptes en memòria cau. Es manté el límit de sis proveïdors.";
+"Edit" = "Edita";
+"Move up" = "Mou amunt";
+"Move down" = "Mou avall";
+"Leave blank to keep the saved credential." = "Deixeu-ho en blanc per conservar la credencial desada.";

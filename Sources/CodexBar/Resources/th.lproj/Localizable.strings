@@ -2689,3 +2689,7 @@
 "Show all accounts in Overview" = "แสดงทุกบัญชีในภาพรวม";
 
 "Expand cached account usage. The six-provider limit still applies." = "ขยายผู้ให้บริการที่เลือกโดยใช้ข้อมูลการใช้งานบัญชีที่แคชไว้ ยังคงจำกัดผู้ให้บริการสูงสุดหกราย";
+"Edit" = "แก้ไข";
+"Move up" = "เลื่อนขึ้น";
+"Move down" = "เลื่อนลง";
+"Leave blank to keep the saved credential." = "เว้นว่างไว้เพื่อใช้ข้อมูลรับรองที่บันทึกไว้ต่อไป";

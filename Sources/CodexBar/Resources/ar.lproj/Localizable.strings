@@ -2691,3 +2691,7 @@
 "Show all accounts in Overview" = "إظهار جميع الحسابات في النظرة العامة";
 
 "Expand cached account usage. The six-provider limit still applies." = "توسيع المزوّدين المحددين باستخدام بيانات الاستخدام المخزنة مؤقتًا للحسابات. يبقى الحد الأقصى ستة مزوّدين.";
+"Edit" = "تعديل";
+"Move up" = "نقل لأعلى";
+"Move down" = "نقل لأسفل";
+"Leave blank to keep the saved credential." = "اتركه فارغًا للاحتفاظ ببيانات الاعتماد المحفوظة.";

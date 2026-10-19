@@ -2691,3 +2691,7 @@
 "Show all accounts in Overview" = "Mostra tutti gli account nella panoramica";
 
 "Expand cached account usage. The six-provider limit still applies." = "Espandi i provider selezionati usando i dati di utilizzo degli account nella cache. Il limite di sei provider resta valido.";
+"Edit" = "Modifica";
+"Move up" = "Sposta su";
+"Move down" = "Sposta giù";
+"Leave blank to keep the saved credential." = "Lascia vuoto per mantenere la credenziale salvata.";

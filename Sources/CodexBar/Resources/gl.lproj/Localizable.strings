@@ -2686,3 +2686,7 @@
 "Show all accounts in Overview" = "Mostrar todas as contas na vista xeral";
 
 "Expand cached account usage. The six-provider limit still applies." = "Despregue os provedores seleccionados cos datos de uso das contas na caché. Mantense o límite de seis provedores.";
+"Edit" = "Editar";
+"Move up" = "Mover arriba";
+"Move down" = "Mover abaixo";
+"Leave blank to keep the saved credential." = "Déixao en branco para conservar a credencial gardada.";

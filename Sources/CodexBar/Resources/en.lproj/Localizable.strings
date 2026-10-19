@@ -2692,3 +2692,7 @@
 "Show all accounts in Overview" = "Show all accounts in Overview";
 
 "Expand cached account usage. The six-provider limit still applies." = "Expand cached account usage. The six-provider limit still applies.";
+"Edit" = "Edit";
+"Move up" = "Move up";
+"Move down" = "Move down";
+"Leave blank to keep the saved credential." = "Leave blank to keep the saved credential.";

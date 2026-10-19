@@ -41,7 +41,7 @@ Incomplete proxy records with an explicit null `stop_reason`, positive input, ze
 ### Default selection (debug menu disabled)
 - If an Admin API key is configured, the Admin API strategy is used for Claude API spend/usage.
 - App runtime main pipeline: OAuth API → CLI PTY → Web API.
-- CLI runtime main pipeline: Web API → CLI PTY.
+- CLI runtime main pipeline: Web API → CLI PTY (Linux: Web API → OAuth API → CLI PTY).
 - Explicit picker modes (OAuth/Web/CLI) bypass automatic fallback.
 - Explicit OAuth retains the last successful quota measurement through recognized temporary network failures,
   including localized DNS/offline errors. Its original timestamp remains visible; authentication rejection still
@@ -299,6 +299,12 @@ is stored on the token account in the config file and does not change quota fetc
 
 - Multi-account manual tokens: add entries to `~/.codexbar/config.json` (`tokenAccounts`) and set Claude cookies to
   Manual. The menu can show all accounts stacked or a switcher bar (Preferences → Advanced → Display).
+- In Settings → Providers → Claude, **Edit** changes a saved account’s label and credential in place.
+  The credential field is masked and starts empty; leave it blank to keep the saved credential, or enter a
+  replacement and choose **Save**. **Cancel** discards the draft. Up/down controls persist account order in
+  the existing config file and menu switcher. Edits and moves preserve the selected account and account ID,
+  including its Claude config directory. Other providers with manual token accounts share the editor; editing
+  a dormant account does not select it.
 - Claude token accounts accept either `sessionKey` cookies or OAuth access tokens (`sk-ant-oat...`). OAuth-token
   accounts route to the OAuth path and disable cookie mode; session-key or cookie-header accounts stay in manual
   cookie mode. The exact edge-routing rules are documented in
@@ -316,6 +322,10 @@ is stored on the token account in the config file and does not change quota fetc
   Web success returns without launching Claude Code; authentication rejection or a Cloudflare challenge falls
   back to an available CLI using the existing Auto policy. Cancellation stops without launching the CLI.
   Explicit Web mode does not fall back. Use explicit OAuth mode for passive polling that must not launch the CLI.
+- Linux CLI Auto mode: the plan is Web → OAuth → CLI PTY. OAuth runs when Claude Code OAuth credentials
+  (`~/.claude/.credentials.json`) are usable without a prompt, so a logged-in user does not launch an interactive
+  `claude` session. Without usable OAuth credentials, the OAuth step is skipped and CLI remains the fallback.
+  OAuth request failures such as 401 or 429 also fall back to the CLI; cancellation stops without launching it.
 - Cookie name required:
   - `sessionKey` (value prefix `sk-ant-...`).
 - Cached cookies: Keychain cache `com.steipete.codexbar.cache` (account `cookie.claude`, source + timestamp).
@@ -592,6 +602,7 @@ Model-scoped weekly-window proof (synthetic data, no real accounts or credential
       - Additional embedded Claude Desktop project stores, when present:
         - `~/Library/Application Support/Claude/local-agent-mode-sessions/**/.claude/projects`
         - `~/Library/Application Support/Claude/claude-code-sessions/**/.claude/projects`
+      - Cowork `audit.jsonl` files within those Desktop session stores are also scanned, without traversing workspace outputs or dependencies.
     - Current Claude Desktop metadata under `claude-code-sessions` points to shared CLI session JSONL by
       `cliSessionId`; metadata-only directories are not treated as usage sources.
   - Supported pi-compatible sessions:
@@ -605,7 +616,7 @@ Model-scoped weekly-window proof (synthetic data, no real accounts or credential
   - Uses per-model token counts (input, cache read/create, output).
   - Oversized local token or cost values cannot crash history scanning. An overflowing token total stays unavailable while independent counts and finite dollar estimates remain visible; raw rows are retained for later repricing.
   - Deduplicates cumulative streaming chunks by `message.id + requestId`. When `requestId` is absent,
-    exact, nonblank `sessionId + message.id` identifies repeated response snapshots. Distinct explicit request
+    exact, nonblank `sessionId + message.id` (or Cowork's `session_id`) identifies repeated response snapshots. Distinct explicit request
     IDs and distinct fallback sessions remain separate. Rows without sufficient identity are counted individually.
     Within a file, the final complete cumulative chunk wins, including later appends. Copied records retain the
     existing preference for parent and non-sidechain records.

@@ -2665,3 +2665,7 @@
 "Show all accounts in Overview" = "在總覽中顯示所有帳戶";
 
 "Expand cached account usage. The six-provider limit still applies." = "使用快取的帳戶用量展開所選供應商。仍最多顯示六個供應商。";
+"Edit" = "編輯";
+"Move up" = "上移";
+"Move down" = "下移";
+"Leave blank to keep the saved credential." = "留空以保留已儲存的憑證。";

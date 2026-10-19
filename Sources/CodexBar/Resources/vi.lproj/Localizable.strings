@@ -2688,3 +2688,7 @@
 "Show all accounts in Overview" = "Hiển thị tất cả tài khoản trong Tổng quan";
 
 "Expand cached account usage. The six-provider limit still applies." = "Mở rộng các nhà cung cấp đã chọn bằng dữ liệu sử dụng tài khoản trong bộ nhớ đệm. Giới hạn sáu nhà cung cấp vẫn áp dụng.";
+"Edit" = "Sửa";
+"Move up" = "Di chuyển lên";
+"Move down" = "Di chuyển xuống";
+"Leave blank to keep the saved credential." = "Để trống để giữ thông tin xác thực đã lưu.";

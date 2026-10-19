@@ -2691,3 +2691,7 @@
 "Show all accounts in Overview" = "نمایش همهٔ حساب‌ها در نمای کلی";
 
 "Expand cached account usage. The six-provider limit still applies." = "ارائه‌دهندگان انتخاب‌شده را با داده‌های مصرف ذخیره‌شدهٔ حساب‌ها گسترش دهید. محدودیت شش ارائه‌دهنده همچنان برقرار است.";
+"Edit" = "ویرایش";
+"Move up" = "انتقال به بالا";
+"Move down" = "انتقال به پایین";
+"Leave blank to keep the saved credential." = "برای حفظ اطلاعات ورود ذخیره‌شده، خالی بگذارید.";

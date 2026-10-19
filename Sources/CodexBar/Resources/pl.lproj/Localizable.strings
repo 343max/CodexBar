@@ -2690,3 +2690,7 @@
 "Show all accounts in Overview" = "Pokaż wszystkie konta w przeglądzie";
 
 "Expand cached account usage. The six-provider limit still applies." = "Rozwiń wybranych dostawców, korzystając z danych użycia kont w pamięci podręcznej. Nadal obowiązuje limit sześciu dostawców.";
+"Edit" = "Edytuj";
+"Move up" = "Przenieś w górę";
+"Move down" = "Przenieś w dół";
+"Leave blank to keep the saved credential." = "Pozostaw puste, aby zachować zapisane dane uwierzytelniające.";
