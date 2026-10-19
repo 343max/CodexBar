@@ -16,6 +16,7 @@
 
 ### Fixed
 
+- TypeSafe: stop stretching the provider icon in the menu bar and Settings, so it keeps its shape at the size of the other provider icons; the website and HTTP dashboard use the same padded icon (#4619). Thanks @lg!
 - Antigravity: read OAuth quota summaries from the daily host to match the current Gemini allowances reported by agy (#4632). Thanks @toxakara!
 - Agent Sessions: keep Tailscale discovery from launching the VPN app, and add a local-only mode that disables remote discovery and SSH polling (#4624, #4583).
 
