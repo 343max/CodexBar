@@ -2,6 +2,7 @@
 
 ## 0.77.1 — Unreleased
 
+- Settings: edit saved token-account labels and credentials in place and reorder accounts without changing the active account (#4612). Thanks @lghsigma597!
 ### Fixed
 
 - Codex: open the Usage Dashboard on the overview tab to avoid incorrect redirects (#4607). Thanks @Alex-Keyes!
