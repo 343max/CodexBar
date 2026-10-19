@@ -29,7 +29,7 @@ struct CostUsageClaudeReportContextTests {
         if cold {
             let cacheURL = CostUsageClaudeCacheIO.cacheFileURL(provider: .claude, cacheRoot: fixture.env.cacheRoot)
             let memoURL = CostUsageClaudeReportMemo.reportMemoFileURL(cacheFileURL: cacheURL)
-            var memo = try #require(JSONSerialization.jsonObject(with: Data(contentsOf: memoURL)) as? [String: Any])
+            var memo = try claudeMemoObjectForTesting(at: memoURL)
             memo.removeValue(forKey: "hasWindowScopedRows")
             try JSONSerialization.data(withJSONObject: memo).write(to: memoURL, options: .atomic)
         }
