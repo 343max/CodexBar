@@ -4,6 +4,8 @@
 
 ### Added
 
+- CLI: expose OpenCode Go's local daily and per-model token/cost history through `codexbar cost` (#4606). Thanks @h3x89!
+
 - Pi: retain valid token-only history from unsupported Pi/OMP backends without borrowing native-provider prices (#4605). Thanks @h3x89!
 
 - Overview: optionally show every Claude adapter, managed Codex, and saved token account using cached usage, while retaining the six-provider selection limit (#4594). Thanks @pedrozimmermannsoares!
