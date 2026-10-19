@@ -486,11 +486,6 @@ extension CostUsageScanner {
         }
     }
 
-    static func isVertexAIUsageEntry(obj: Any) -> Bool {
-        guard let obj = ClaudeJSONObject(obj) else { return false }
-        return self.isVertexAIUsageEntry(obj: obj)
-    }
-
     static func isVertexAIUsageEntry(obj: ClaudeJSONObject) -> Bool {
         self.isVertexAIUsageEntry(obj: obj, message: obj.dictionary("message"))
     }

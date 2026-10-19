@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Claude cost history: retain a bounded set of reusable cache fragments for large transcript inventories (#4598). Thanks @cristbc!
 - Claude: try readable OAuth credentials before starting the CLI in Linux Auto mode, avoiding unnecessary interactive startup while preserving explicit source selection (#4613, #4615). Thanks @yeseoLee!
 - Claude: include Desktop Cowork audit transcripts in local token and cost history, using the existing response deduplication and ignoring result totals (#3209). Thanks @vinschger and @Akagilnc!
 

@@ -65,3 +65,10 @@ struct ClaudeJSONObjectTests {
         #expect(try #require(view.dictionary("object")).contains { _, _ in true } == false)
     }
 }
+
+extension CostUsageScanner {
+    static func isVertexAIUsageEntry(obj: Any) -> Bool {
+        guard let obj = ClaudeJSONObject(obj) else { return false }
+        return self.isVertexAIUsageEntry(obj: obj)
+    }
+}

@@ -112,3 +112,11 @@ extension CostUsageClaudeCacheIO {
         ArtifactMemo.shared.entries.removeObject(forKey: url.standardizedFileURL.resolvingSymlinksInPath() as NSURL)
     }
 }
+
+/// Test-only dictionary convenience for the typed Vertex classifier.
+extension CostUsageScanner {
+    static func isVertexAIUsageEntry(obj: Any) -> Bool {
+        guard let obj = ClaudeJSONObject(obj) else { return false }
+        return self.isVertexAIUsageEntry(obj: obj)
+    }
+}

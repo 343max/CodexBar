@@ -77,10 +77,14 @@ final class CostUsageClaudeFragments: @unchecked Sendable {
                             #endif
                             try append(data)
                         }
-                        files[key] = Fragment(metadata: identity, rows: file.claudeRows, range: start..<offset)
+                        // Bound metadata while building the memo, retaining reusable fragments of larger histories.
                         // Preserve the conservative retention budget, including row string storage.
-                        cost += (offset - start) * 2 + identity.count + key.count + 512
+                        let fragmentCost = (offset - start) * 2 + identity.count + key.count + 512
                             + (file.claudeRows?.count ?? 0) * MemoryLayout<CostUsageScanner.ClaudeUsageRow>.stride
+                        if files.count < 16384, fragmentCost <= self.byteLimit - cost {
+                            files[key] = Fragment(metadata: identity, rows: file.claudeRows, range: start..<offset)
+                            cost += fragmentCost
+                        }
                         return true
                     }
                     return true
@@ -96,7 +100,7 @@ final class CostUsageClaudeFragments: @unchecked Sendable {
             }
             guard let stamp = try commit() else { return nil }
             self.entries.removeAll { $0.url == url }
-            if cost <= self.byteLimit, files.count <= 16384 {
+            if !files.isEmpty {
                 self.entries.append((url, stamp, files, cost))
             }
             while self.entries.count > 4 || self.entries.reduce(0, { $0 + $1.cost }) > self.byteLimit {

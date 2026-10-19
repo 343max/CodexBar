@@ -437,6 +437,41 @@ struct CostUsageClaudeFragmentTests {
     }
 
     @Test
+    func `many small files reuse a bounded fragment set`() throws {
+        let memo = CostUsageClaudeFragments()
+        var cache = CostUsageClaudeCache()
+        for index in 0..<16385 {
+            cache.usage.files["file-\(index)"] = CostUsageFileUsage(
+                mtimeUnixMs: 0, size: 3, days: [:], claudeRows: [])
+        }
+        try FileManager.default.createDirectory(at: self.directory.url, withIntermediateDirectories: true)
+        let url = self.directory.url.appendingPathComponent("many-files")
+        func encode() throws -> Data {
+            var data = Data()
+            _ = try memo.write(
+                cache,
+                at: url,
+                encoder: self.encoder,
+                output: { chunk in
+                    if let chunk { data.append(chunk) } else { data.removeAll() }
+                },
+                commit: {
+                    try data.write(to: url, options: .atomic)
+                    return CostUsageClaudeFileStamp.read(at: url)
+                })
+            return data
+        }
+        _ = try encode()
+        cache.usage.files["file-0"]?.size += 1
+        let recorder = CostUsageScanner.ClaudeScanWorkRecorder()
+        let data = try CostUsageScanner.withClaudeScanWorkRecorderForTesting(recorder) {
+            try encode()
+        }
+        #expect(recorder.snapshot().fragmentEncodes == 2)
+        #expect(try data == (self.encoder.encode(cache)))
+    }
+
+    @Test
     func `range lengths preserve the previous conservative eviction budget`() throws {
         var file = self.file(1)
         file.claudeRows = try Array(repeating: #require(file.claudeRows?.first), count: 100)
