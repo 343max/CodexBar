@@ -42,6 +42,8 @@ Incomplete proxy records with an explicit null `stop_reason`, positive input, ze
 - If an Admin API key is configured, the Admin API strategy is used for Claude API spend/usage.
 - App runtime main pipeline: OAuth API → CLI PTY → Web API.
 - CLI runtime main pipeline: Web API → CLI PTY (Linux: Web API → OAuth API → CLI PTY).
+  Since 0.77.1, Auto `usage` first uses the active slot when the claude-swap integration is enabled;
+  explicit source/account selection bypasses it. See [CLI precedence](cli.md#command).
 - Explicit picker modes (OAuth/Web/CLI) bypass automatic fallback.
 - Explicit OAuth retains the last successful quota measurement through recognized temporary network failures,
   including localized DNS/offline errors. Its original timestamp remains visible; authentication rejection still
@@ -496,9 +498,12 @@ The accepted multi-account design in
   rule. Successful list refreshes and clearing the adapter publish a widget snapshot even with account widgets off.
   Retained quota keeps its original measurement time and is bound to the slot's opaque owner fingerprint; unavailable
   or replaced accounts never borrow another account's quota. Local cost history remains combined across Claude homes.
-- Terminal scope: this automatic precedence is cards-only and works on every supported CLI platform. An explicit
+- Terminal scope: cards expands the account list, while Auto `codexbar usage` follows its active slot on every
+  supported CLI platform (including single-slot lists). An explicit
   Claude provider or `--source auto` remains eligible, while `--account`, `--account-index`, `--all-accounts`, and
-  explicit non-auto source flags bypass the adapter. `codexbar usage` and serve `/usage`/`/cost` remain unchanged,
+  explicit non-auto source flags bypass the adapter. A configured non-auto source also bypasses it for `usage`.
+  Unavailable active-slot usage falls back to ordinary source selection with an explicit adapter fallback source label;
+  the returned identity belongs to that fallback source. Serve `/usage`/`/cost` remain unchanged,
   while `codexbar dashboard` and `GET /dashboard/v1/snapshot` additionally nest one entry per swap account in the
   Claude provider row, with full identity by default or redacted email local parts when `--identity redacted` is set.
 - Isolation: CodexBar never reads claude-swap or Claude Code credential storage for this feature; the

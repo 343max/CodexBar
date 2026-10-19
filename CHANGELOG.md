@@ -2,6 +2,9 @@
 
 ## 0.77.1 — Unreleased
 
+### Changed
+
+- CLI: Claude Auto usage follows the active claude-swap account, matching cards and dashboard; explicit source/account selections retain their behavior, and adapter fallbacks identify their actual source and account (#4599). Thanks @postoso!
 ### Added
 
 - Plugins: user plugins can declare a monochrome inline SVG icon (`icon.svg`, at most 8 KB, plain shapes only), drawn as a template image in the switcher and menu card; an SVG that fails validation falls back to the monogram (#4608). Thanks @shivanathd!
