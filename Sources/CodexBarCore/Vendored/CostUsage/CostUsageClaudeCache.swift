@@ -419,7 +419,7 @@ enum CostUsageClaudeCacheIO {
 
     #endif
 
-    // Claude and Vertex share the shard layout but keep separate artifacts and report windows.
+    // Provider-specific by design: Claude/Vertex share shards but keep separate artifacts and report windows.
 
     static func cacheFileURL(
         provider: UsageProvider,
