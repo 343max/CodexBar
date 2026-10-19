@@ -102,6 +102,7 @@ struct SettingsDefaultsState {
     var appLanguageRaw: String?
     var terminalAppRaw: String?
     var agentSessionsEnabled: Bool
+    var agentSessionsRemoteEnabled: Bool
     var agentSessionLabelStyleRaw: String
     var agentSessionsManualHosts: String
     var agentSessionsHideUnreachableHosts: Bool

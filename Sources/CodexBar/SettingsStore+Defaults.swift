@@ -1130,6 +1130,11 @@ extension SettingsStore {
         set { self.setDefault(\.agentSessionsEnabled, newValue, key: "agentSessionsEnabled") }
     }
 
+    var agentSessionsRemoteEnabled: Bool {
+        get { self.defaultsState.agentSessionsRemoteEnabled }
+        set { self.setDefault(\.agentSessionsRemoteEnabled, newValue, key: "agentSessionsRemoteEnabled") }
+    }
+
     var agentSessionLabelStyle: AgentSessionLabelStyle {
         get { AgentSessionLabelStyle(rawValue: self.defaultsState.agentSessionLabelStyleRaw) ?? .project }
         set { self.setDefault(\.agentSessionLabelStyleRaw, newValue.rawValue, key: "agentSessionLabelStyle") }
