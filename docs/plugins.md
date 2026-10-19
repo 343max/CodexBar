@@ -20,6 +20,11 @@ App refreshes are scoped to the installed plugin runtime and its fetch settings.
 reconfiguring a plugin prevents an older refresh from publishing usage or errors. A replacement refresh waits for retired
 work to finish and reads the current configuration when its fetch starts. Display-only preferences do not invalidate usage.
 
+When icons are merged and the source is **Current selection**, selecting a user plugin also selects its menu-bar
+quota. It uses the same quota as the switcher gauge: the most-used seven-day window, or the first available window.
+Before usage arrives, the plugin remains selected with unavailable usage. Other merged-icon sources retain their
+built-in provider behavior.
+
 ## Bundled provider registration
 
 For a bundled plugin with a simple API-key configuration, declare a public `PluginProviderSpec` named `spec` in its
@@ -366,6 +371,11 @@ Named extra windows accept an optional `usageKnown` boolean (default `true`). Se
 the window remains visible as **Unavailable**, and its placeholder `usedPercent` is not presented as measured usage.
 Detail rows accept optional `progress` (a finite consumed fraction from 0 through 1) and `usageValue` (finite raw usage).
 The host maps the fraction to native progress with `used: progress, total: 1`; `usageValue` is preserved independently.
+An optional row `severity: "normal" | "warning" | "critical"` uses the system green, orange, or red accent;
+warning and critical rows also show a labeled warning symbol. The plugin computes its own thresholds independently
+of `progress`. Omit `severity` (or pass null) to keep the existing provider tint. Invalid values fail the fetch.
+For example, a pool row can return `progress: used / total, severity: remaining < 20 ? "critical" :
+remaining < 50 ? "warning" : "normal"`; progress remains consumed usage, not remaining usage.
 Absent or null numeric fields leave existing text-only rows unchanged. A supplied `usageKnown` must be a boolean,
 including when the window uses the nested `window` form; null is invalid.
 An identity-only snapshot is useful for balance-only or zero-usage provider states and renders its available account,

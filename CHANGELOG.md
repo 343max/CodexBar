@@ -4,13 +4,17 @@
 
 ### Added
 
+- Plugins: detail rows can declare normal, warning, or critical severity independently of progress, with system colors and warning symbols (#4602). Thanks @DamonYoungWork!
+
+### Fixed
+
+- Menu bar: merged Current selection icons show the selected user plugin's quota instead of falling back to a built-in provider (#4604). Thanks @soimy!
 - CLI: expose OpenCode Go's local daily and per-model token/cost history through `codexbar cost` (#4606). Thanks @h3x89!
 
 - Pi: retain valid token-only history from unsupported Pi/OMP backends without borrowing native-provider prices (#4605). Thanks @h3x89!
 
 - Overview: optionally show every Claude adapter, managed Codex, and saved token account using cached usage, while retaining the six-provider selection limit (#4594). Thanks @pedrozimmermannsoares!
 - Settings: edit saved token-account labels and credentials in place and reorder accounts without changing the active account (#4612). Thanks @lghsigma597!
-### Fixed
 
 - OpenCode Go: honor the app's configured source and show the source that supplied usage (#4616). Thanks @ArietidsZ!
 - Pi: keep cache scope stable when the same session roots are discovered in a different order (#4618). Thanks @dhruva77!
