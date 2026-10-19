@@ -1439,6 +1439,7 @@
 "menu_bar_layout_size_regular" = "Normal";
 "menu_bar_layout_size_large" = "Grande";
 "menu_bar_layout_monospaced_digits" = "Dígitos monoespaciados";
+"menu_bar_layout_show_window_labels" = "Mostrar etiquetas de los períodos";
 "menu_bar_layout_gap" = "Separación";
 "menu_bar_layout_gap_tight" = "Estrecha";
 "menu_bar_layout_gap_regular" = "Normal";

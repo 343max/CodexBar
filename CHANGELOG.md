@@ -7,6 +7,7 @@
 - CLI: Claude Auto usage follows the active claude-swap account, matching cards and dashboard; explicit source/account selections retain their behavior, and adapter fallbacks identify their actual source and account (#4599). Thanks @postoso!
 ### Added
 
+- Menu bar: add a default-on Show window labels layout option; turn it off for bare Session, Weekly, and Scoped weekly percentages while retaining full VoiceOver descriptions (#4634). Thanks @erikburman!
 - Plugins: user plugins can declare a monochrome inline SVG icon (`icon.svg`, at most 8 KB, plain shapes only), drawn as a template image in the switcher and menu card; an SVG that fails validation falls back to the monogram (#4608). Thanks @shivanathd!
 - Plugins: detail rows can declare normal, warning, or critical severity independently of progress, with system colors and warning symbols (#4602). Thanks @DamonYoungWork!
 
