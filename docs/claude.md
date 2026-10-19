@@ -42,7 +42,7 @@ Incomplete proxy records with an explicit null `stop_reason`, positive input, ze
 - If an Admin API key is configured, the Admin API strategy is used for Claude API spend/usage.
 - App runtime main pipeline: OAuth API → CLI PTY → Web API.
 - CLI runtime main pipeline: Web API → CLI PTY (Linux: Web API → OAuth API → CLI PTY).
-  Since 0.77.1, Auto `usage` first uses the active slot when the claude-swap integration is enabled;
+  Since 0.78.0, Auto `usage` first uses the active slot when the claude-swap integration is enabled;
   explicit source/account selection bypasses it. See [CLI precedence](cli.md#command).
 - Explicit picker modes (OAuth/Web/CLI) bypass automatic fallback.
 - Explicit OAuth retains the last successful quota measurement through recognized temporary network failures,

@@ -74,7 +74,7 @@ sources and setup guide. The [provider ID list](provider-ids.md) is generated fr
     no denormalization — intended for agents that want a token-cheaper alternative to parsing JSON. `usage --format
     toon` is the only command that supports it; every other command still advertises and accepts only
     `--format text|json`, and treats `toon` like any other unrecognized value.
-  - Since 0.77.1, Claude usage in Auto follows the active claude-swap slot when the integration is enabled,
+  - Since 0.78.0, Claude usage in Auto follows the active claude-swap slot when the integration is enabled,
     including a single configured slot regardless of `claudeSwapShowSingleAccount`. Earlier versions always used
     the ordinary CLI source order (Web → CLI on macOS), so a browser signed into another account could supply usage.
     The result remains one Claude payload: `source` names the adapter and `usage.accountEmail` / `usage.identity.accountID`
