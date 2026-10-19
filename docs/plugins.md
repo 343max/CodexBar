@@ -131,8 +131,17 @@ defineProvider({
 - `id`: 1–64 lowercase ASCII letters, digits, or hyphens. It must not match a built-in provider or another installed
   plugin.
 - `name`: trimmed display name, 1–80 UTF-8 bytes.
-- `icon` (optional): `{monogram, tint}`. `monogram` is 1–3 characters; `tint` is `#RRGGBB`. The fallback is the first
-  letter of `name` with a neutral tint. File/SVG icons are not supported.
+- `icon` (optional): `{monogram, tint, svg}`. `monogram` is 1–3 characters; `tint` is `#RRGGBB`. The fallback is the first
+  letter of `name` with a neutral tint. `svg` (optional) is an inline monochrome SVG string of at most 8 KB, drawn as a
+  template image like built-in provider icons. Only `svg`, `g`, `path`, `circle`, `ellipse`, `rect`, `line`, `polyline`,
+  `polygon`, `title`, and `desc` elements with plain geometry/fill/stroke attributes are accepted: no scripts, styles,
+  links, `url(...)` references, raster images, `foreignObject`, or DOCTYPE/entities. Attribute values may use only
+  letters, digits, spaces and `.,#%+-()` (no CSS escapes, comments or declarations); `fill`/`stroke` must be a colour
+  keyword, `#hex`, or numeric `rgb()`/`rgba()`; `xmlns` must be the SVG namespace. An SVG that fails these checks is
+  ignored and the monogram is shown. The host rasterizes accepted icons into a 32×32 bitmap before display;
+  canvas sizes are checked before native decoding and limited to 4096×4096. Include a finite `viewBox` or paired
+  positive `width`/`height` (numbers or `px`); partial dimensions and other canvas units fall back to the monogram.
+  File icons are not supported.
 - `topLevel` (optional, default `true`): gives an enabled plugin its own provider-switcher tab when Merge Icons is on. Set to `false` to keep an appended card.
   Plugin tabs show a quota gauge from the most constrained reported seven-day window, otherwise the first available
   primary, secondary, tertiary, or extra window. They follow the used/remaining display preference; unknown usage

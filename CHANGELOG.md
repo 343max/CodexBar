@@ -4,6 +4,7 @@
 
 ### Added
 
+- Plugins: user plugins can declare a monochrome inline SVG icon (`icon.svg`, at most 8 KB, plain shapes only), drawn as a template image in the switcher and menu card; an SVG that fails validation falls back to the monogram (#4608). Thanks @shivanathd!
 - Plugins: detail rows can declare normal, warning, or critical severity independently of progress, with system colors and warning symbols (#4602). Thanks @DamonYoungWork!
 
 ### Fixed

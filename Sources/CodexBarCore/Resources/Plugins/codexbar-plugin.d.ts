@@ -303,7 +303,8 @@ interface CodexBarPluginContext {
 interface CodexBarProviderDefinition {
   id: string;
   name: string;
-  icon?: { monogram?: string; tint?: string };
+  /** `svg`: optional monochrome SVG (≤ 8 KB, canvas ≤ 4096; see docs/plugins.md) shown as a template image; invalid SVG falls back to the monogram. */
+  icon?: { monogram?: string; tint?: string; svg?: string };
   /** Defaults to true: a switcher tab when Merge Icons is on. False keeps an appended card. */
   topLevel?: boolean;
   endpoints: CodexBarEndpoint[];
