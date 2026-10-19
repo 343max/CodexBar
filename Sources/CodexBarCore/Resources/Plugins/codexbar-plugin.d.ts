@@ -88,6 +88,8 @@ interface CodexBarDetailRow {
   label: string;
   value: string;
   secondaryValue?: string | null;
+  /** Plugin-computed severity; does not change the consumed-progress convention. */
+  severity?: "normal" | "warning" | "critical" | null;
   /** Finite consumed fraction, from 0 through 1 inclusive. */
   progress?: number | null;
   /** Finite raw usage, independent of the display string and progress. */

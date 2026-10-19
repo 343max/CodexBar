@@ -2,8 +2,13 @@
 
 ## 0.77.1 — Unreleased
 
+### Added
+
+- Plugins: detail rows can declare normal, warning, or critical severity independently of progress, with system colors and warning symbols (#4602). Thanks @DamonYoungWork!
+
 ### Fixed
 
+- Menu bar: merged Current selection icons show the selected user plugin's quota instead of falling back to a built-in provider (#4604). Thanks @soimy!
 - Claude: try readable OAuth credentials before starting the CLI in Linux Auto mode, avoiding unnecessary interactive startup while preserving explicit source selection (#4613, #4615). Thanks @yeseoLee!
 - Claude: include Desktop Cowork audit transcripts in local token and cost history, using the existing response deduplication and ignoring result totals (#3209). Thanks @vinschger and @Akagilnc!
 
