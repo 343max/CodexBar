@@ -2675,3 +2675,7 @@
 /* Munito provider credentials */
 "Key with Read account data (Admin API) permission. Or set MUNITO_API_KEY." = "具有读取账户数据（Admin API）权限的密钥。或设置 MUNITO_API_KEY。";
 "Munito reports Admin API spend and limits, not local token cost history." = "Munito 报告 Admin API 的支出和限额，而非本地 token 成本历史。";
+
+"Show all accounts in Overview" = "在概览中显示所有账户";
+
+"Expand cached account usage. The six-provider limit still applies." = "使用缓存的账户用量展开所选提供商。仍最多显示六个提供商。";

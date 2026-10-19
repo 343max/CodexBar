@@ -2,6 +2,8 @@
 
 ## 0.77.1 — Unreleased
 
+- Overview: optionally show every Claude adapter, managed Codex, and saved token account using cached usage, while retaining the six-provider selection limit (#4594). Thanks @pedrozimmermannsoares!
+
 ## 0.77.0 — 2026-10-16
 
 ### Highlights
