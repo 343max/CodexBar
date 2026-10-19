@@ -1444,6 +1444,7 @@
 "menu_bar_layout_size_regular" = "ปกติ";
 "menu_bar_layout_size_large" = "ใหญ่";
 "menu_bar_layout_monospaced_digits" = "ตัวเลขความกว้างคงที่";
+"menu_bar_layout_show_window_labels" = "แสดงป้ายกำกับช่วงเวลา";
 "menu_bar_layout_gap" = "ระยะห่าง";
 "menu_bar_layout_gap_tight" = "ชิด";
 "menu_bar_layout_gap_regular" = "ปกติ";

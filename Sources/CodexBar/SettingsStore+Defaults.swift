@@ -474,6 +474,11 @@ extension SettingsStore {
         set { self.setDefault(\.menuBarLayoutMonospacedDigits, newValue, key: "menuBarLayoutMonospacedDigits") }
     }
 
+    var menuBarLayoutShowWindowLabels: Bool {
+        get { self.defaultsState.menuBarLayoutShowWindowLabels }
+        set { self.setDefault(\.menuBarLayoutShowWindowLabels, newValue, key: "menuBarLayoutShowWindowLabels") }
+    }
+
     var menuBarLayoutSize: MenuBarLayoutSize {
         get { MenuBarLayoutSize(rawValue: self.defaultsState.menuBarLayoutSizeRaw) ?? .regular }
         set { self.setDefault(\.menuBarLayoutSizeRaw, newValue.rawValue, key: "menuBarLayoutSize") }

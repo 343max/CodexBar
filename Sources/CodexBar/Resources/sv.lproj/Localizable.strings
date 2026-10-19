@@ -1439,6 +1439,7 @@
 "menu_bar_layout_size_regular" = "Normal";
 "menu_bar_layout_size_large" = "Stor";
 "menu_bar_layout_monospaced_digits" = "Siffror med fast bredd";
+"menu_bar_layout_show_window_labels" = "Visa periodetiketter";
 "menu_bar_layout_gap" = "Mellanrum";
 "menu_bar_layout_gap_tight" = "Tätt";
 "menu_bar_layout_gap_regular" = "Normal";
