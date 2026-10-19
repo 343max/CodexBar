@@ -3472,6 +3472,13 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "This exact shared construct dispatches a provider-owned capability at the generic integration boundary."),
         AllowedProviderConstruct(
             path: "Sources/CodexBarCore/PiSessionCostScanner.swift",
+            anchor: "guard !backend.isEmpty, let model, !model.isEmpty else { return nil }",
+            expectedProviderIDs: ["pi"],
+            expectedReferenceCount: 1,
+            expectedReferenceFingerprint: ["pi@0"],
+            reason: "Unsupported backends retain tokens only in standalone Pi history without native-provider pricing."),
+        AllowedProviderConstruct(
+            path: "Sources/CodexBarCore/PiSessionCostScanner.swift",
             anchor: "guard provider == .codex || provider == .claude || provider == .pi else {",
             expectedProviderIDs: ["claude", "codex", "pi"],
             expectedReferenceCount: 3,
