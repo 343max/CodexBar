@@ -37,7 +37,7 @@ Incomplete proxy records with an explicit null `stop_reason`, positive input, ze
 ### Default selection (debug menu disabled)
 - If an Admin API key is configured, the Admin API strategy is used for Claude API spend/usage.
 - App runtime main pipeline: OAuth API → CLI PTY → Web API.
-- CLI runtime main pipeline: Web API → CLI PTY.
+- CLI runtime main pipeline: Web API → CLI PTY (Linux: Web API → OAuth API → CLI PTY).
 - Explicit picker modes (OAuth/Web/CLI) bypass automatic fallback.
 - Explicit OAuth retains the last successful quota measurement through recognized temporary network failures,
   including localized DNS/offline errors. Its original timestamp remains visible; authentication rejection still
@@ -312,6 +312,10 @@ is stored on the token account in the config file and does not change quota fetc
   Web success returns without launching Claude Code; authentication rejection or a Cloudflare challenge falls
   back to an available CLI using the existing Auto policy. Cancellation stops without launching the CLI.
   Explicit Web mode does not fall back. Use explicit OAuth mode for passive polling that must not launch the CLI.
+- Linux CLI Auto mode: the plan is Web → OAuth → CLI PTY. OAuth runs when Claude Code OAuth credentials
+  (`~/.claude/.credentials.json`) are usable without a prompt, so a logged-in user does not launch an interactive
+  `claude` session. Without usable OAuth credentials, the OAuth step is skipped and CLI remains the fallback.
+  OAuth request failures such as 401 or 429 also fall back to the CLI; cancellation stops without launching it.
 - Cookie name required:
   - `sessionKey` (value prefix `sk-ant-...`).
 - Cached cookies: Keychain cache `com.steipete.codexbar.cache` (account `cookie.claude`, source + timestamp).
