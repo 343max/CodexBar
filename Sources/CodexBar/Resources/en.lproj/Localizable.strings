@@ -1454,6 +1454,7 @@
 "menu_bar_layout_size_regular" = "Regular";
 "menu_bar_layout_size_large" = "Large";
 "menu_bar_layout_monospaced_digits" = "Monospaced digits";
+"menu_bar_layout_show_window_labels" = "Show window labels";
 "menu_bar_layout_gap" = "Gap";
 "menu_bar_layout_gap_tight" = "Tight";
 "menu_bar_layout_gap_regular" = "Regular";
@@ -2207,6 +2208,10 @@
 "Stored in ~/.codexbar/config.json. Create one at console.x.ai under Settings > Management Keys; inference API keys are not accepted." = "Stored in ~/.codexbar/config.json. Create one at console.x.ai under Settings > Management Keys; inference API keys are not accepted.";
 "xai-..." = "xai-...";
 "Team ID" = "Team ID";
+"Vercel access token" = "Vercel access token";
+"Optional. Shows your personal budget instead of team credits. Saved in CodexBar's local config file. Or set VERCEL_ACCESS_TOKEN." = "Optional. Shows your personal budget instead of team credits. Saved in CodexBar's local config file. Or set VERCEL_ACCESS_TOKEN.";
+"Open Vercel tokens" = "Open Vercel tokens";
+"Required with a Vercel access token. Or set VERCEL_TEAM_ID." = "Required with a Vercel access token. Or set VERCEL_TEAM_ID.";
 "Required. Shown in the xAI Console URL and team settings." = "Required. Shown in the xAI Console URL and team settings.";
 "Sakana AI cost summary is not supported." = "Sakana AI cost summary is not supported.";
 "Stored in ~/.codexbar/config.json. Copy the Sakana AI console Cookie request header." = "Stored in ~/.codexbar/config.json. Copy the Sakana AI console Cookie request header.";
@@ -2698,3 +2703,5 @@
 "Move up" = "Move up";
 "Move down" = "Move down";
 "Leave blank to keep the saved credential." = "Leave blank to keep the saved credential.";
+
+"No personal budget configured" = "No personal budget configured";

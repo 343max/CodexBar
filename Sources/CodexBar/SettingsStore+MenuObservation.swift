@@ -47,6 +47,7 @@ extension SettingsStore {
         _ = self.menuBarLayout
         _ = self.menuBarLayoutOverrides
         _ = self.menuBarLayoutMonospacedDigits
+        _ = self.menuBarLayoutShowWindowLabels
         _ = self.menuBarLayoutSize
         _ = self.menuBarLayoutGap
         _ = self.menuBarLayoutVerticalAdjustment
