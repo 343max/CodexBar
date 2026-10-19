@@ -2682,3 +2682,11 @@
 /* Munito provider credentials */
 "Key with Read account data (Admin API) permission. Or set MUNITO_API_KEY." = "Clé avec la permission Lecture des données du compte (Admin API). Ou définissez MUNITO_API_KEY.";
 "Munito reports Admin API spend and limits, not local token cost history." = "Munito signale les dépenses et limites de l'API Admin, pas l'historique local des coûts de jetons.";
+
+"Edit" = "Modifier";
+
+"Move up" = "Monter";
+
+"Move down" = "Descendre";
+
+"Leave blank to keep the saved credential." = "Laissez ce champ vide pour conserver les identifiants enregistrés.";

@@ -2661,3 +2661,11 @@
 /* Munito provider credentials */
 "Key with Read account data (Admin API) permission. Or set MUNITO_API_KEY." = "具備讀取帳戶資料（Admin API）權限的金鑰。或設定 MUNITO_API_KEY。";
 "Munito reports Admin API spend and limits, not local token cost history." = "Munito 回報 Admin API 的支出與上限，而非本機 token 成本歷史。";
+
+"Edit" = "編輯";
+
+"Move up" = "上移";
+
+"Move down" = "下移";
+
+"Leave blank to keep the saved credential." = "留空以保留已儲存的憑證。";
