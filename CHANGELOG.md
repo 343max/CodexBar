@@ -15,6 +15,8 @@
 
 ### Fixed
 
+- Claude/Vertex cost history: persist changed project shards and source inventories instead of rewriting whole caches, reducing disk I/O for large transcript histories (#4598). Thanks @cristbc!
+
 - Settings: disable Restore default order when provider order is already at its default, and clarify the enabled-provider filter (#4592). Thanks @elijahfriedman!
 - Claude: preserve model-specific weekly usage beside malformed limit entries in OAuth and Web responses, and ignore boolean percentages (#4614, #4126). Thanks @Akagilnc!
 - Grok: restore CLI billing through the ACP extension method, including current usage, reset, plan, and prepaid balance fields (#4595). Thanks @noisy!

@@ -1,4 +1,5 @@
 import Foundation
+import Testing
 @testable import CodexBarCore
 
 /// Keep metrics and fixture orchestration in the test target; core only emits work events.
@@ -10,7 +11,6 @@ extension CostUsageScanner {
         var reconciliations = 0
         var cacheEncodes = 0
         var fragmentEncodes = 0
-        var fragmentFallbacks = 0
         var repricedRows = 0
         var normalizationCacheMisses = 0
         var vertexMetadataWalks = 0
@@ -39,7 +39,6 @@ extension CostUsageScanner {
             case .reconcile: self.metrics.reconciliations += 1
             case .cacheEncode: self.metrics.cacheEncodes += 1
             case .fragmentEncode: self.metrics.fragmentEncodes += 1
-            case .fragmentFallback: self.metrics.fragmentFallbacks += 1
             case .artifactRead: self.artifactIO.reads += 1
             case .artifactWrite: self.artifactIO.writes += 1
             case .reprice: self.metrics.repricedRows += 1
@@ -99,17 +98,15 @@ extension CostUsageScanner {
 
 extension CostUsageClaudeCacheIO {
     static func withIsolatedCachesForTesting(operation: @Sendable () async throws -> Void) async throws {
-        try await ArtifactMemo.$shared.withValue(ArtifactMemo()) {
-            try await CostUsageClaudeReportMemo.$shared.withValue(CostUsageClaudeReportMemo()) {
-                try await CostUsageClaudeFragments.$shared.withValue(CostUsageClaudeFragments()) {
-                    try await operation()
-                }
+        try await CostUsageClaudeReportMemo.$shared.withValue(CostUsageClaudeReportMemo()) {
+            try await CostUsageClaudeFragments.$shared.withValue(CostUsageClaudeFragments()) {
+                try await operation()
             }
         }
     }
 
     static func evictArtifactMemoForTesting(at url: URL) {
-        ArtifactMemo.shared.entries.removeObject(forKey: url.standardizedFileURL.resolvingSymlinksInPath() as NSURL)
+        CostUsageClaudeFragments.shared.evict(at: url.standardizedFileURL.resolvingSymlinksInPath())
     }
 }
 
@@ -147,4 +144,23 @@ extension CostUsageScanner {
             range: range,
             pricingResolver: CostUsagePricing.ClaudeResolver(now: now, cacheRoot: modelsDevCacheRoot))
     }
+}
+
+/// Reconstitute the legacy memo envelope for schema-mutation regression fixtures.
+func claudeMemoObjectForTesting(at url: URL) throws -> [String: Any] {
+    let raw = try Data(contentsOf: url)
+    let object = try #require(JSONSerialization.jsonObject(with: raw) as? [String: Any])
+    guard let encoded = object["header"] as? String, let header = Data(base64Encoded: encoded) else { return object }
+    var envelope = try #require(JSONSerialization.jsonObject(with: header) as? [String: Any])
+    let shards = object["shards"] as? [String: [String: Any]] ?? [:]
+    var inventory: [String: Any] = [:]
+    for shard in shards.values {
+        let digest = try #require(shard["digest"] as? String)
+        let data = try Data(contentsOf: url.appendingPathExtension("fragments")
+            .appendingPathComponent(digest + ".json"))
+        let entries = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        inventory.merge(entries) { _, new in new }
+    }
+    envelope["sourceInventory"] = inventory
+    return envelope
 }
