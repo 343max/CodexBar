@@ -662,6 +662,8 @@
 "overview_rows_follow_order" = "Las filas de Resumen siempre siguen el orden de los proveedores.";
 "overview_no_providers_selected" = "No hay proveedores seleccionados";
 "agent_sessions_title" = "Sesiones de agentes";
+"agent_sessions_remote_title" = "Sesiones remotas (Tailscale / SSH)";
+"agent_sessions_remote_subtitle" = "Descubre equipos remotos y conéctate a ellos. Desactívalo para supervisar solo este Mac.";
 "agent_sessions_subtitle" = "Muestra en el menú las sesiones de Codex y Claude Code locales y detectadas mediante SSH.";
 "agent_sessions_hosts_title" = "Hosts SSH adicionales";
 "agent_sessions_footer" = "Los Mac de tu tailnet se detectan automáticamente. Las sesiones locales se actualizan cada 30 segundos; los hosts remotos, cada 60 segundos y al abrir el menú.";

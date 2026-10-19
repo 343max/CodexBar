@@ -563,6 +563,10 @@ extension SettingsStore {
         if userDefaults.string(forKey: "iCloudSyncDeviceID") == nil {
             userDefaults.set(iCloudSyncDeviceID, forKey: "iCloudSyncDeviceID")
         }
+        if userDefaults.object(forKey: "agentSessionsRemoteEnabled") == nil {
+            // Preserve existing remote monitoring, but keep first-time Agent Sessions local-only.
+            userDefaults.set(userDefaults.bool(forKey: "agentSessionsEnabled"), forKey: "agentSessionsRemoteEnabled")
+        }
         return SettingsDefaultsState(
             refreshFrequency: refreshFrequency,
             adaptiveActivityScanConsent: adaptiveActivityScanConsent,
@@ -707,6 +711,7 @@ extension SettingsStore {
             appLanguageRaw: userDefaults.string(forKey: "appLanguage"),
             terminalAppRaw: userDefaults.string(forKey: "terminalApp"),
             agentSessionsEnabled: userDefaults.object(forKey: "agentSessionsEnabled") as? Bool ?? false,
+            agentSessionsRemoteEnabled: userDefaults.bool(forKey: "agentSessionsRemoteEnabled"),
             agentSessionLabelStyleRaw: userDefaults.string(forKey: "agentSessionLabelStyle")
                 ?? AgentSessionLabelStyle.project.rawValue,
             agentSessionsManualHosts: userDefaults.string(forKey: "agentSessionsManualHosts") ?? "",

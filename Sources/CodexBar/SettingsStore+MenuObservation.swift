@@ -81,6 +81,7 @@ extension SettingsStore {
         _ = self.providerStorageFootprintsEnabled
         _ = self.stayAwakeEnabled
         _ = self.agentSessionsEnabled
+        _ = self.agentSessionsRemoteEnabled
         _ = self.agentSessionLabelStyle
         _ = self.agentSessionsManualHosts
         _ = self.agentSessionsHideUnreachableHosts
