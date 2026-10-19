@@ -2,6 +2,10 @@
 
 ## 0.77.1 — Unreleased
 
+### Added
+
+- CLI: expose OpenCode Go's local daily and per-model token/cost history through `codexbar cost` (#4606). Thanks @h3x89!
+
 ### Fixed
 
 - Claude: try readable OAuth credentials before starting the CLI in Linux Auto mode, avoiding unnecessary interactive startup while preserving explicit source selection (#4613, #4615). Thanks @yeseoLee!
