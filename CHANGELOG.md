@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Codex: open the Usage Dashboard on the overview tab to avoid incorrect redirects (#4607). Thanks @Alex-Keyes!
 - Claude: try readable OAuth credentials before starting the CLI in Linux Auto mode, avoiding unnecessary interactive startup while preserving explicit source selection (#4613, #4615). Thanks @yeseoLee!
 - Claude: include Desktop Cowork audit transcripts in local token and cost history, using the existing response deduplication and ignoring result totals (#3209). Thanks @vinschger and @Akagilnc!
 
