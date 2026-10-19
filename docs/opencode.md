@@ -102,6 +102,7 @@ usage is a separate [OpenAI provider](openai.md), not Codex subscription quota.
   overlays authoritative API windows when an API key is configured, then falls back through the API and legacy web
   sources when local history is unavailable. Auto stays web-first when a Cookie token account, manual cookie, or workspace
   override scopes the request, because local history is device-wide.
+- The app honors an explicit API or Web source even when a manual Cookie is configured. Its source label shows the configured source before a successful fetch, then the source that actually supplied the result.
 - The local monthly window is an estimate anchored at the earliest local row and can drift from the real billing
   cycle. The local strategy prefers API-reported rolling/weekly/monthly percentages and reset timestamps. When no API
   key is configured, a cached, manual, or automatically discovered session can overlay Console quotas (plus Zen

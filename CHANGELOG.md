@@ -6,6 +6,7 @@
 - Settings: edit saved token-account labels and credentials in place and reorder accounts without changing the active account (#4612). Thanks @lghsigma597!
 ### Fixed
 
+- OpenCode Go: honor the app's configured source and show the source that supplied usage (#4616). Thanks @ArietidsZ!
 - Pi: keep cache scope stable when the same session roots are discovered in a different order (#4618). Thanks @dhruva77!
 - Claude cost history: preserve the last valid cache when transcript roots or directories are unreadable (#4617). Thanks @dhruva77!
 - Codex: open the Usage Dashboard on the overview tab to avoid incorrect redirects (#4607). Thanks @Alex-Keyes!
