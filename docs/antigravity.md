@@ -175,7 +175,7 @@ be polled within the readiness deadline.
 - `POST https://cloudcode-pa.googleapis.com/v1internal:onboardUser`
 - `POST https://cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels`
 - `POST https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota`
-- `POST https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuotaSummary` (preferred when it returns measured
+- `POST https://daily-cloudcode-pa.googleapis.com/v1internal:retrieveUserQuotaSummary` (preferred when it returns measured
   groups; older model-bucket responses use the model-endpoint fallback)
 
 ## Data sources + fallback order
