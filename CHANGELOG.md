@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Widgets: replace verified stale widget extension processes once after an app update, then request fresh timelines (#2838, #3339).
 - Devin: stream origin-filtered browser Local Storage with SweetCookieKit 0.5.9, avoiding large memory spikes and retained data from unrelated sites (#4649). Thanks @drewbitt!
 - CLI: accept catalog provider IDs in `--provider`, and keep Linux custom-provider results matched to the requested provider (#4643). Thanks @quantmind-br!
 - TypeSafe: send a browser User-Agent so Cloudflare no longer blocks Linux requests (the default user agent contains `curl/`), which made valid sessions look expired (#4648). Thanks @johan456789!
