@@ -197,6 +197,7 @@ sources and setup guide. The [provider ID list](provider-ids.md) is generated fr
   - Stable guard exit codes: `0` means safe, `1` means below threshold, `64` (`EX_USAGE`) means invalid arguments, and `69` (`EX_UNAVAILABLE`) means the quota could not be checked or the selected window is unavailable. `--fail-open` changes only unavailable results from `69` to `0`; JSON still reports `decision: "unknown"` and the reason.
   - Guard fetches are read-only and use background interaction policy, matching `codexbar usage`; they never request interactive Keychain access.
 - `--provider <id|both|all>` (default: enabled providers in config; falls back to defaults when missing).
+  - Accepts raw IDs from `codexbar config providers --format json` as well as CLI names and aliases. For example, `alibabatokenplan` and `alibaba-token-plan` select the same provider; existing CLI names and aliases take precedence if names overlap.
   - Use a registered [provider ID](provider-ids.md) or CLI alias. Enabled providers and ordering live in the config file.
   - With three or more providers enabled, the default stays scoped to enabled providers; use `--provider all` to query
     every registered provider.

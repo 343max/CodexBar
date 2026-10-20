@@ -176,7 +176,9 @@ identity visibility, refresh interval, status, local spending, notifications, an
 tray visibility. Account selectors choose displayed usage; they do not change the
 provider CLI's login. Choose `custom` to pick providers from the installed CLI's catalog and move them
 up or down. Only that ordered list is queried, sequentially; a failed provider
-retains its previous result while healthy providers update. Account selectors
+retains its previous result while healthy providers update. Responses must match
+the requested catalog ID; a mismatched response retains that provider's previous
+result or reports it unavailable instead of showing another provider's usage. Account selectors
 apply to a single-provider query; custom lists use each provider's default account.
 
 Sign in and Sign out open the Codex or Claude CLI in the default terminal using
