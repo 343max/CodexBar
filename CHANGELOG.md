@@ -2,6 +2,10 @@
 
 ## 0.78.1 — Unreleased
 
+### Fixed
+
+- Codex: stop hidden OpenAI dashboard pages at the refresh deadline, including stalled page preparation and JavaScript, while retaining verified API usage (#4641, #4642, #4645). Thanks @mchami02 and @enzonaute!
+
 ## 0.78.0 — 2026-10-19
 
 ### Highlights
