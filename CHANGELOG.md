@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Antigravity: scan larger local histories without dropping complete cost reports while retaining bounded work and cancellation (#4639). Thanks @arhmnsh!
 - Cursor: show current monthly additional spend for unified personal accounts while retaining summary spend and caps when billing is unavailable (#4593). Thanks @yazcaleb!
 - Vercel: recognize personal budgets with native or prefixed user IDs and label monetary usage as spend (#4650, #4623). Thanks @sf-jin-ku!
 - Linux CLI: keep FoundationXML (`libxml2.so.2`) out of the glibc CLI again by validating plugin SVG icons only on macOS, so the CLI starts on Ubuntu 26.04 and a CI check now fails any build that links libxml2 (#4652, #4653). Thanks @simonsteiner and @harjothkhara!
