@@ -3182,7 +3182,7 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "This exact app-runtime bridge coordinates provider-owned state through the shared controller."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/UsageStore+WidgetSnapshot.swift",
-            anchor: "guard let entry, entry.provider == .claude else { return nil }",
+            anchor: "guard var entry, entry.provider == .claude else { return nil }",
             expectedProviderIDs: ["claude"],
             expectedReferenceCount: 1,
             expectedReferenceFingerprint: ["claude@0"],
