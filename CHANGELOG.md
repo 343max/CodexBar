@@ -2,6 +2,9 @@
 
 ## 0.78.1 — Unreleased
 
+### Added
+
+- Settings: add Israeli new shekel (`ILS`, `₪`) to Preferred Currency with daily exchange rates and offline conversion (#4646). Thanks @elijahfriedman!
 ### Fixed
 
 - Antigravity: scan larger local histories without dropping complete cost reports while retaining bounded work and cancellation (#4639). Thanks @arhmnsh!
