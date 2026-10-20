@@ -1,28 +1,33 @@
 # Changelog
 
-## 0.78.1 — Unreleased
+## 0.79.0 — 2026-10-20
 
-### Fixed
+### Highlights
 
-- Widgets: replace verified stale widget extension processes once after an app update, then request fresh timelines (#2838, #3339).
-- Claude cost history: lower peak memory during incremental cache refreshes back to pre-0.78 levels (#4598).
-- Linux desktop: use standard home directories when XDG config or data paths are empty or relative, preserving preferences and disabled autostart during reinstallation (#4661). Thanks @Lucenx9!
-- Devin: stream origin-filtered browser Local Storage with SweetCookieKit 0.5.9, avoiding large memory spikes and retained data from unrelated sites (#4649). Thanks @drewbitt!
-- CLI: accept catalog provider IDs in `--provider`, and keep Linux custom-provider results matched to the requested provider (#4643). Thanks @quantmind-br!
-- TypeSafe: send a browser User-Agent so Cloudflare no longer blocks Linux requests (the default user agent contains `curl/`), which made valid sessions look expired (#4648). Thanks @johan456789!
-- Antigravity: prefer measured ordinary Gemini quotas for the Gemini representative and keep Linux quota rows and alerts matched to their buckets, while preserving model-specific allowances and cadence/icon selection (#4659). Thanks @SilentKnight87!
+- Linux: the CLI starts again on Ubuntu 26.04 and other systems without libxml2, and CI plus the release builds now check the binary's linked libraries so it can't regress silently; the installer uses standard directories when XDG paths are empty or relative, TypeSafe works on Linux, and the community DankMaterialShell widget is linked.
+- Widgets: after an update, CodexBar replaces a widget extension that is still running the previous version, so widgets resume updating without the manual `killall` workaround.
+- Memory and CPU: Devin no longer loads a browser's entire Local Storage (about 263 MiB down to 2.5 MiB extra on a large store), hidden OpenAI dashboard pages stop at the refresh deadline instead of spinning a CPU core, and incremental Claude cost refreshes are back to pre-0.78 peak memory.
+- Providers and settings: Vercel personal budgets are recognized, Cursor unified accounts show monthly additional spend, Antigravity represents Gemini by its ordinary quota and scans larger histories, the Israeli shekel is a preferred currency, and `--provider` accepts catalog IDs.
 
 ### Added
 
+- Cursor: show current monthly additional spend for unified personal accounts while retaining summary spend and caps when billing is unavailable (#4593). Thanks @yazcaleb!
+- Settings: add Israeli new shekel (`ILS`, `₪`) to Preferred Currency with daily exchange rates and offline conversion (#4646). Thanks @elijahfriedman!
 - Linux: link the community codexbar-dms widget for DankMaterialShell, sharing the Linux desktop backend (#4658). Thanks @quantmind-br!
 
-- Settings: add Israeli new shekel (`ILS`, `₪`) to Preferred Currency with daily exchange rates and offline conversion (#4646). Thanks @elijahfriedman!
+### Fixed
 
-- Antigravity: scan larger local histories without dropping complete cost reports while retaining bounded work and cancellation (#4639). Thanks @arhmnsh!
-- Cursor: show current monthly additional spend for unified personal accounts while retaining summary spend and caps when billing is unavailable (#4593). Thanks @yazcaleb!
-- Vercel: recognize personal budgets with native or prefixed user IDs and label monetary usage as spend (#4650, #4623). Thanks @sf-jin-ku!
 - Linux CLI: keep FoundationXML (`libxml2.so.2`) out of the glibc CLI again by validating plugin SVG icons only on macOS, so the CLI starts on Ubuntu 26.04 and a CI check now fails any build that links libxml2 (#4652, #4653). Thanks @simonsteiner and @harjothkhara!
+- Widgets: replace verified stale widget extension processes once after an app update, then request fresh timelines (#2838, #3339).
+- Devin: stream origin-filtered browser Local Storage with SweetCookieKit 0.5.9, avoiding large memory spikes and retained data from unrelated sites (#4649). Thanks @drewbitt!
 - Codex: stop hidden OpenAI dashboard pages at the refresh deadline, including stalled page preparation and JavaScript, while retaining verified API usage (#4641, #4642, #4645). Thanks @mchami02 and @enzonaute!
+- Claude cost history: lower peak memory during incremental cache refreshes back to pre-0.78 levels (#4598).
+- Vercel: recognize personal budgets with native or prefixed user IDs and label monetary usage as spend (#4650, #4623). Thanks @sf-jin-ku!
+- Antigravity: prefer measured ordinary Gemini quotas for the Gemini representative and keep Linux quota rows and alerts matched to their buckets, while preserving model-specific allowances and cadence/icon selection (#4659). Thanks @SilentKnight87!
+- Antigravity: scan larger local histories without dropping complete cost reports while retaining bounded work and cancellation (#4639). Thanks @arhmnsh!
+- TypeSafe: send a browser User-Agent so Cloudflare no longer blocks Linux requests (the default user agent contains `curl/`), which made valid sessions look expired (#4648). Thanks @johan456789!
+- CLI: accept catalog provider IDs in `--provider`, and keep Linux custom-provider results matched to the requested provider (#4643). Thanks @quantmind-br!
+- Linux desktop: use standard home directories when XDG config or data paths are empty or relative, preserving preferences and disabled autostart during reinstallation (#4661). Thanks @Lucenx9!
 
 ## 0.78.0 — 2026-10-19
 
