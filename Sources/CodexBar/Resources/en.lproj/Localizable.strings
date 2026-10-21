@@ -609,7 +609,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Menu bar style";
-"menu_bar_style_subtitle" = "How the menu bar item is drawn.";
 "menu_bar_inactive_display_contrast_title" = "Improve visibility on inactive displays";
 "menu_bar_inactive_display_contrast_subtitle" = "Use high-contrast rendering to keep the icon and metric readable on other displays.";
 "menu_bar_style_critters" = "Critters";
@@ -1423,6 +1422,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Layout";
 "menu_bar_layout_footer" = "Drag tokens to arrange the menu bar. Click a token to append it; select a placed token and press Delete to remove it.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Layout applies only to the “%@” menu bar style. Choose that style above to edit it.";
 "menu_bar_layout_group_identity" = "Identity";
 "menu_bar_layout_group_usage" = "Usage";
 "menu_bar_layout_group_time" = "Time";

@@ -620,7 +620,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Menyradsstil";
-"menu_bar_style_subtitle" = "Hur menyradsobjektet visas.";
 "menu_bar_inactive_display_contrast_title" = "Förbättra synligheten på inaktiva skärmar";
 "menu_bar_inactive_display_contrast_subtitle" = "Använder kontrastrik rendering så att ikonen och mätvärdet förblir läsbara på andra skärmar.";
 "menu_bar_style_critters" = "Figurer";
@@ -1410,6 +1409,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Layout";
 "menu_bar_layout_footer" = "Dra brickor för att ordna menyraden. Klicka på en bricka för att lägga till den; markera en placerad bricka och tryck Delete för att ta bort den.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Layouten gäller endast för menyradsstilen ”%@”. Välj den stilen ovan för att redigera den.";
 "menu_bar_layout_group_identity" = "Identitet";
 "menu_bar_layout_group_usage" = "Användning";
 "menu_bar_layout_group_time" = "Tid";

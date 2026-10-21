@@ -618,7 +618,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "メニューバーのスタイル";
-"menu_bar_style_subtitle" = "メニューバー項目の表示方法です。";
 "menu_bar_inactive_display_contrast_title" = "非アクティブなディスプレイでの視認性を向上";
 "menu_bar_inactive_display_contrast_subtitle" = "高コントラスト表示を使用し、ほかのディスプレイでもアイコンと指標を読みやすくします。";
 "menu_bar_style_critters" = "クリッター";
@@ -1412,6 +1411,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "レイアウト";
 "menu_bar_layout_footer" = "トークンをドラッグしてメニューバーを並べます。クリックすると追加でき、配置済みのトークンを選択して Delete キーを押すと削除できます。";
+"menu_bar_layout_footer_requires_icon_and_percent" = "レイアウトは「%@」メニューバーのスタイルにのみ適用されます。編集するには、上でそのスタイルを選択してください。";
 "menu_bar_layout_group_identity" = "識別情報";
 "menu_bar_layout_group_usage" = "使用量";
 "menu_bar_layout_group_time" = "時間";

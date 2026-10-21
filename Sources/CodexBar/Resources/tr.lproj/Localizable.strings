@@ -627,7 +627,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Menü çubuğu stili";
-"menu_bar_style_subtitle" = "Menü çubuğu öğesinin nasıl çizileceğini belirler.";
 "menu_bar_inactive_display_contrast_title" = "Etkin olmayan ekranlarda görünürlüğü artır";
 "menu_bar_inactive_display_contrast_subtitle" = "Simge ve ölçümün diğer ekranlarda okunabilir kalması için yüksek kontrastlı işleme kullanır.";
 "menu_bar_style_critters" = "Canavarlar";
@@ -1413,6 +1412,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Düzen";
 "menu_bar_layout_footer" = "Menü çubuğunu düzenlemek için öğeleri sürükleyin. Eklemek için bir öğeye tıklayın; yerleştirilmiş bir öğeyi seçip silmek için Delete tuşuna basın.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Düzen yalnızca “%@” menü çubuğu stili için geçerlidir. Düzenlemek için yukarıdan bu stili seçin.";
 "menu_bar_layout_group_identity" = "Kimlik";
 "menu_bar_layout_group_usage" = "Kullanım";
 "menu_bar_layout_group_time" = "Zaman";

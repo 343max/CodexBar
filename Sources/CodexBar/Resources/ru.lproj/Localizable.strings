@@ -622,7 +622,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Стиль строки меню";
-"menu_bar_style_subtitle" = "Как выглядит элемент строки меню.";
 "menu_bar_inactive_display_contrast_title" = "Повысить видимость на неактивных дисплеях";
 "menu_bar_inactive_display_contrast_subtitle" = "Использует высококонтрастную отрисовку, чтобы значок и показатель оставались читаемыми на других дисплеях.";
 "menu_bar_style_critters" = "Декоративные индикаторы";
@@ -1413,6 +1412,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Компоновка";
 "menu_bar_layout_footer" = "Перетаскивайте элементы, чтобы настроить строку меню. Нажмите элемент, чтобы добавить его; выберите размещённый элемент и нажмите Delete, чтобы удалить его.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Компоновка применяется только к стилю строки меню «%@». Выберите этот стиль выше, чтобы изменить её.";
 "menu_bar_layout_group_identity" = "Идентификация";
 "menu_bar_layout_group_usage" = "Использование";
 "menu_bar_layout_group_time" = "Время";

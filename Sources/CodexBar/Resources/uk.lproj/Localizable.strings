@@ -621,7 +621,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Стиль рядка меню";
-"menu_bar_style_subtitle" = "Визначає вигляд елемента рядка меню.";
 "menu_bar_inactive_display_contrast_title" = "Покращити видимість на неактивних дисплеях";
 "menu_bar_inactive_display_contrast_subtitle" = "Використовує висококонтрастне відтворення, щоб піктограма й показник залишалися читабельними на інших дисплеях.";
 "menu_bar_style_critters" = "Тварини";
@@ -1411,6 +1410,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Компонування";
 "menu_bar_layout_footer" = "Перетягуйте елементи, щоб упорядкувати смугу меню. Натисніть елемент, щоб додати його; виберіть розміщений елемент і натисніть Delete, щоб видалити його.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Компонування застосовується лише до стилю рядка меню «%@». Виберіть цей стиль вище, щоб змінити його.";
 "menu_bar_layout_group_identity" = "Ідентифікація";
 "menu_bar_layout_group_usage" = "Використання";
 "menu_bar_layout_group_time" = "Час";

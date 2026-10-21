@@ -618,7 +618,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Estilo da barra de menus";
-"menu_bar_style_subtitle" = "Como o item da barra de menus é desenhado.";
 "menu_bar_inactive_display_contrast_title" = "Melhorar a visibilidade em telas inativas";
 "menu_bar_inactive_display_contrast_subtitle" = "Usa renderização de alto contraste para manter o ícone e a métrica legíveis em outras telas.";
 "menu_bar_style_critters" = "Bichinhos";
@@ -1412,6 +1411,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Disposição";
 "menu_bar_layout_footer" = "Arraste os itens para organizar a barra de menus. Clique em um item para adicioná-lo; selecione um item posicionado e pressione Delete para removê-lo.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "A disposição se aplica apenas ao estilo da barra de menus “%@”. Escolha esse estilo acima para editá-la.";
 "menu_bar_layout_group_identity" = "Identidade";
 "menu_bar_layout_group_usage" = "Uso";
 "menu_bar_layout_group_time" = "Tempo";

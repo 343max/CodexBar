@@ -598,7 +598,6 @@
 "automatic" = "自动";
 "primary_api_key_limit" = "主要（API 密钥限制）";
 "menu_bar_style_title" = "菜单栏样式";
-"menu_bar_style_subtitle" = "菜单栏项目的绘制方式。";
 "menu_bar_inactive_display_contrast_title" = "提高非活跃显示器上的可见性";
 "menu_bar_inactive_display_contrast_subtitle" = "使用高对比度绘制，让其他显示器上的图标和指标仍清晰可读。";
 "menu_bar_style_critters" = "小动物";
@@ -1417,6 +1416,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "布局";
 "menu_bar_layout_footer" = "拖动项目以排列菜单栏。点按项目可追加；选择已放置的项目并按 Delete 键可将其移除。";
+"menu_bar_layout_footer_requires_icon_and_percent" = "布局仅适用于“%@”菜单栏样式。请在上方选择该样式以进行编辑。";
 "menu_bar_layout_group_identity" = "身份";
 "menu_bar_layout_group_usage" = "用量";
 "menu_bar_layout_group_time" = "时间";

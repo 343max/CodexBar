@@ -627,7 +627,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "รูปแบบแถบเมนู";
-"menu_bar_style_subtitle" = "รูปแบบการแสดงรายการในแถบเมนู";
 "menu_bar_inactive_display_contrast_title" = "เพิ่มการมองเห็นบนจอแสดงผลที่ไม่ได้ใช้งาน";
 "menu_bar_inactive_display_contrast_subtitle" = "ใช้การแสดงผลแบบคอนทราสต์สูงเพื่อให้ไอคอนและค่าชี้วัดอ่านได้บนจออื่น";
 "menu_bar_style_critters" = "ตัวการ์ตูน";
@@ -1415,6 +1414,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "เค้าโครง";
 "menu_bar_layout_footer" = "ลากโทเค็นเพื่อจัดเรียงแถบเมนู คลิกโทเค็นเพื่อเพิ่ม เลือกโทเค็นที่วางแล้วและกด Delete เพื่อลบ";
+"menu_bar_layout_footer_requires_icon_and_percent" = "เค้าโครงใช้ได้เฉพาะกับรูปแบบแถบเมนู “%@” เท่านั้น เลือกรูปแบบนั้นด้านบนเพื่อแก้ไข";
 "menu_bar_layout_group_identity" = "ข้อมูลระบุตัวตน";
 "menu_bar_layout_group_usage" = "การใช้";
 "menu_bar_layout_group_time" = "เวลา";

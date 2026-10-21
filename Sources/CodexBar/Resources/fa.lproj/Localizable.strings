@@ -627,7 +627,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "سبک نوار منو";
-"menu_bar_style_subtitle" = "نحوه نمایش آیتم نوار منو.";
 "menu_bar_inactive_display_contrast_title" = "بهبود خوانایی در نمایشگرهای غیرفعال";
 "menu_bar_inactive_display_contrast_subtitle" = "از نمایش با کنتراست بالا استفاده می‌کند تا نماد و معیار در نمایشگرهای دیگر خوانا بمانند.";
 "menu_bar_style_critters" = "موجودات";
@@ -1415,6 +1414,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "چیدمان";
 "menu_bar_layout_footer" = "نشانه‌ها را برای چیدمان نوار منو بکشید. برای افزودن روی نشانه کلیک کنید؛ نشانهٔ قرارگرفته را انتخاب کنید و برای حذف Delete را بزنید.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "چیدمان فقط برای سبک نوار منو «%@» اعمال می‌شود. برای ویرایش آن، آن سبک را از بالا انتخاب کنید.";
 "menu_bar_layout_group_identity" = "هویت";
 "menu_bar_layout_group_usage" = "کاربرد";
 "menu_bar_layout_group_time" = "زمان";

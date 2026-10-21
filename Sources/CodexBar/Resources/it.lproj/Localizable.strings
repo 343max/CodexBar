@@ -629,7 +629,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Stile barra menu";
-"menu_bar_style_subtitle" = "Come viene rappresentato l'elemento della barra menu.";
 "menu_bar_inactive_display_contrast_title" = "Migliora la visibilità sugli schermi inattivi";
 "menu_bar_inactive_display_contrast_subtitle" = "Usa un rendering ad alto contrasto per mantenere leggibili icona e metrica sugli altri schermi.";
 "menu_bar_style_critters" = "Creature";
@@ -1415,6 +1414,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Disposizione";
 "menu_bar_layout_footer" = "Trascina i token per disporre la barra dei menu. Fai clic su un token per aggiungerlo; seleziona un token posizionato e premi Canc per rimuoverlo.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "La disposizione si applica solo allo stile barra menu «%@». Seleziona quello stile qui sopra per modificarla.";
 "menu_bar_layout_group_identity" = "Identità";
 "menu_bar_layout_group_usage" = "Utilizzo";
 "menu_bar_layout_group_time" = "Tempo";

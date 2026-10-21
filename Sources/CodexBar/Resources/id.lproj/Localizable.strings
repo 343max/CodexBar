@@ -629,7 +629,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Gaya menu bar";
-"menu_bar_style_subtitle" = "Cara item menu bar digambar.";
 "menu_bar_inactive_display_contrast_title" = "Tingkatkan visibilitas di layar tidak aktif";
 "menu_bar_inactive_display_contrast_subtitle" = "Gunakan rendering kontras tinggi agar ikon dan metrik tetap terbaca di layar lain.";
 "menu_bar_style_critters" = "Critter";
@@ -1416,6 +1415,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Tata letak";
 "menu_bar_layout_footer" = "Seret token untuk mengatur bar menu. Klik token untuk menambahkannya; pilih token yang sudah ditempatkan lalu tekan Delete untuk menghapusnya.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Tata letak hanya berlaku untuk gaya menu bar “%@”. Pilih gaya tersebut di atas untuk mengeditnya.";
 "menu_bar_layout_group_identity" = "Identitas";
 "menu_bar_layout_group_usage" = "Penggunaan";
 "menu_bar_layout_group_time" = "Waktu";

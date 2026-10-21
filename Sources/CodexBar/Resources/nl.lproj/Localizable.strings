@@ -621,7 +621,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Menubalkstijl";
-"menu_bar_style_subtitle" = "Hoe het menubalkitem wordt weergegeven.";
 "menu_bar_inactive_display_contrast_title" = "Zichtbaarheid op inactieve beeldschermen verbeteren";
 "menu_bar_inactive_display_contrast_subtitle" = "Gebruikt weergave met hoog contrast zodat het pictogram en de metriek leesbaar blijven op andere beeldschermen.";
 "menu_bar_style_critters" = "Beestjes";
@@ -1411,6 +1410,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Indeling";
 "menu_bar_layout_footer" = "Sleep tokens om de menubalk in te delen. Klik op een token om deze toe te voegen; selecteer een geplaatst token en druk op Delete om het te verwijderen.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "De indeling is alleen van toepassing op de menubalkstijl ‘%@’. Kies die stijl hierboven om deze te bewerken.";
 "menu_bar_layout_group_identity" = "Identiteit";
 "menu_bar_layout_group_usage" = "Gebruik";
 "menu_bar_layout_group_time" = "Tijd";

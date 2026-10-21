@@ -595,7 +595,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Estilo da barra de menús";
-"menu_bar_style_subtitle" = "Como se debuxa o elemento da barra de menús.";
 "menu_bar_inactive_display_contrast_title" = "Mellorar a visibilidade nas pantallas inactivas";
 "menu_bar_inactive_display_contrast_subtitle" = "Usa unha representación de alto contraste para manter lexibles a icona e a métrica nas outras pantallas.";
 "menu_bar_style_critters" = "Animaliños";
@@ -1411,6 +1410,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Disposición";
 "menu_bar_layout_footer" = "Arrastra fichas para ordenar a barra de menús. Preme nunha ficha para engadila; selecciona unha ficha colocada e preme Suprimir para retirala.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "A disposición só se aplica ao estilo da barra de menús «%@». Escolle ese estilo arriba para editala.";
 "menu_bar_layout_group_identity" = "Identidade";
 "menu_bar_layout_group_usage" = "Uso";
 "menu_bar_layout_group_time" = "Tempo";

@@ -617,7 +617,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Kiểu thanh menu";
-"menu_bar_style_subtitle" = "Cách hiển thị mục trên thanh menu.";
 "menu_bar_inactive_display_contrast_title" = "Cải thiện khả năng hiển thị trên màn hình không hoạt động";
 "menu_bar_inactive_display_contrast_subtitle" = "Sử dụng hiển thị tương phản cao để biểu tượng và chỉ số vẫn dễ đọc trên các màn hình khác.";
 "menu_bar_style_critters" = "Sinh vật";
@@ -1412,6 +1411,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Bố cục";
 "menu_bar_layout_footer" = "Kéo các thẻ để sắp xếp thanh menu. Bấm vào thẻ để thêm; chọn thẻ đã đặt rồi nhấn Delete để xóa.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Bố cục chỉ áp dụng cho kiểu thanh menu “%@”. Chọn kiểu đó ở trên để chỉnh sửa.";
 "menu_bar_layout_group_identity" = "Danh tính";
 "menu_bar_layout_group_usage" = "Mức sử dụng";
 "menu_bar_layout_group_time" = "Thời gian";

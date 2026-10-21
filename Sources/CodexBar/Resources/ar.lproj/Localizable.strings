@@ -627,7 +627,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "نمط شريط القوائم";
-"menu_bar_style_subtitle" = "كيفية رسم عنصر شريط القوائم.";
 "menu_bar_inactive_display_contrast_title" = "تحسين الوضوح على الشاشات غير النشطة";
 "menu_bar_inactive_display_contrast_subtitle" = "استخدم عرضًا عالي التباين لإبقاء الأيقونة والمقياس قابلين للقراءة على الشاشات الأخرى.";
 "menu_bar_style_critters" = "الكائنات الصغيرة";
@@ -1415,6 +1414,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "التخطيط";
 "menu_bar_layout_footer" = "اسحب العناصر لترتيب شريط القوائم. انقر على عنصر لإضافته؛ حدّد عنصراً موضوعاً واضغط Delete لإزالته.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "لا ينطبق التخطيط إلا على نمط شريط القوائم «%@». اختر هذا النمط أعلاه لتحريره.";
 "menu_bar_layout_group_identity" = "الهوية";
 "menu_bar_layout_group_usage" = "الاستخدام";
 "menu_bar_layout_group_time" = "الوقت";
