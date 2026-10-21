@@ -2705,3 +2705,5 @@
 "Leave blank to keep the saved credential." = "Leave blank to keep the saved credential.";
 
 "No personal budget configured" = "No personal budget configured";
+
+"monthly_daily_target_format" = "≈ %@ / day to last until reset";
