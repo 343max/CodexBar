@@ -525,6 +525,8 @@ unavailable (`costUSD: null`). This opt-in CLI mode does not change ordinary cos
     Priority trace scans resume after ordinary log pruning when enough distributed content anchors still match;
     changed source rows, replaced databases, or insufficient matching anchors require a fresh scan. Temporary
     trace-database failures retain the last validated report pricing and leave scan freshness unchanged for retry.
+    Idle WAL trace databases without sidecars use a read-only immutable fallback when ordinary reads fail.
+    The fallback leaves the database and sidecars untouched; a file change during the read keeps validation pending for retry.
     Successful historical queries update their own pricing window independently of the live scan cursor, including
     results with no priority turns; validated pricing outside that window remains intact.
 - Window: configurable 1-365 day rolling history.
