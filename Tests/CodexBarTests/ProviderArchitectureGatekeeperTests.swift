@@ -2490,11 +2490,11 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "This exact shared renderer maps provider-owned presentation data into the generic UI model."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/StatusItemController+CountdownRefresh.swift",
-            anchor: "if providers.contains(.codex) {",
+            anchor: "guard !self.menuBarUsageSource(for: .codex).isFleet else { return false }",
             expectedProviderIDs: ["codex"],
-            expectedReferenceCount: 2,
-            expectedReferenceFingerprint: ["codex@0", "codex@11"],
-            reason: "This exact app-runtime bridge coordinates provider-owned state through the shared controller."),
+            expectedReferenceCount: 3,
+            expectedReferenceFingerprint: ["codex@0", "codex@1", "codex@12"],
+            reason: "Codex reset observation follows the local credit projection and excludes remote fleet usage."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/StatusItemController+HostedSubmenus.swift",
             anchor: "projects: provider == .codex ? tokenSnapshot.projects : [],",
@@ -2525,7 +2525,7 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "This exact app-runtime bridge coordinates provider-owned state through the shared controller."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/StatusItemController+MenuBarLayout.swift",
-            anchor: "if provider == .codex,",
+            anchor: "if includeLocalDerivedData, provider == .codex,",
             expectedProviderIDs: ["codex"],
             expectedReferenceCount: 1,
             expectedReferenceFingerprint: ["codex@0"],
@@ -2546,7 +2546,7 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "This exact app-runtime bridge coordinates provider-owned state through the shared controller."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/StatusItemController+MenuTypes.swift",
-            anchor: "self.store.enabledProviders().isEmpty ? .codex : nil",
+            anchor: "self.store.enabledProviders().isEmpty && self.menuBarEligibleProviders().isEmpty ? .codex : nil",
             expectedProviderIDs: ["codex"],
             expectedReferenceCount: 1,
             expectedReferenceFingerprint: ["codex@0"],
@@ -2588,7 +2588,7 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "This exact app-runtime bridge coordinates provider-owned state through the shared controller."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/StatusItemController.swift",
-            anchor: "if provider == .codex {",
+            anchor: "if provider == .codex, !self.menuBarUsageSource(for: provider).isFleet {",
             expectedProviderIDs: ["codex"],
             expectedReferenceCount: 1,
             expectedReferenceFingerprint: ["codex@0"],

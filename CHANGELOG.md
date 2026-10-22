@@ -15,6 +15,7 @@
 - Menu bar: align leading window labels so stacked meters and percentages share a column, including stacked provider rows. (#4581) Thanks @happut!
 - Widgets: explain when the configured provider is unavailable instead of promising refreshed usage data (#4669, #4671). Thanks @vincent-peng!
 - Menu cost charts: preserve zero-usage calendar days for every provider, including Claude and Pi, while keeping incomplete and unpriced history unknown (#4664).
+- iCloud Sync: show last-known fleet usage in the menu bar for enabled providers without local usage, while keeping open menus stable and local accounts and derived costs separate. (#4582) Thanks @seasonhuang!
 
 ### Fixed
 
