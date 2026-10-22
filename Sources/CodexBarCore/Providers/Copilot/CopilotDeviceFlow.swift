@@ -131,7 +131,8 @@ public struct CopilotDeviceFlow: Sendable {
         let deadline = ContinuousClock.now.advanced(by: .seconds(max(0, expiresIn)))
         var pollingInterval = max(1, interval)
         while ContinuousClock.now < deadline {
-            try await Task.sleep(until: min(.now.advanced(by: .seconds(pollingInterval)), deadline), clock: .continuous)
+            try await Task.sleep(
+                until: min(ContinuousClock.now.advanced(by: .seconds(pollingInterval)), deadline), clock: .continuous)
             try Task.checkCancellation()
             guard ContinuousClock.now < deadline else { throw URLError(.timedOut) }
 
