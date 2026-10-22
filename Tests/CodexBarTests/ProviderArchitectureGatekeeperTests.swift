@@ -1958,11 +1958,11 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "This exact shared renderer maps provider-owned presentation data into the generic UI model."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/MenuCardView+ProviderDetailLocalization.swift",
-            anchor: "if provider == .amp {",
-            expectedProviderIDs: ["amp", "openrouter"],
-            expectedReferenceCount: 2,
-            expectedReferenceFingerprint: ["amp@0", "openrouter@8"],
-            reason: "Localizes Amp's static unit/pool copy and OpenRouter's cap disclosure; balances stay canonical."),
+            anchor: "if provider == .kimi {",
+            expectedProviderIDs: ["amp", "kimi", "openrouter"],
+            expectedReferenceCount: 3,
+            expectedReferenceFingerprint: ["kimi@0", "amp@3", "openrouter@11"],
+            reason: "Kimi gift balance expiry uses the shared localized expiry phrase; server titles stay canonical."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/MenuCardView+ProviderDetailLocalization.swift",
             anchor: "case .deepseek:",
