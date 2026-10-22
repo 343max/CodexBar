@@ -223,6 +223,12 @@ model-generic token label while the rendered menu-bar prefix and accessibility l
 
 Pace compares your actual usage against the expected consumption rate for the current window. Most providers use an even-consumption budget; Codex can use historical pace data when historical tracking is available.
 
+Monthly allowance cards also show a daily target: remaining allowance divided by the local calendar days
+until reset, counting today and any partial reset day (at least one day). A reset exactly at midnight does
+not add another day. The target keeps the reported credits, requests, currency, or percentage units and
+follows the existing pace visibility setting. Unknown usage, missing resets, and expired windows show no
+target. This is a budget for the remaining period, not a measurement of today's usage or an alert threshold.
+
 The **Work days** setting selects the weekly pace model. **Automatic** uses Codex historical pace when enough data is available. Historical daily credits follow local calendar-day boundaries, including midnight daylight-saving transitions. Selecting 4, 5, 6, or 7 days uses that explicit schedule for pace and ETA instead; CodexBar continues collecting history in the background, but does not use historical predictions until the setting returns to Automatic. Six days counts Monday through Saturday and excludes Sunday, including in the session forecast's remaining capacity.
 
 - **On pace** – usage matches the expected rate.
