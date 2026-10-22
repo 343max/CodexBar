@@ -2,6 +2,7 @@
 
 ## 0.79.1 — Unreleased
 
+- Kiro: skip background CLI probes when the usage service is unreachable, preventing repeated offline sign-in tabs while retaining last-good usage (#4589). Thanks @dnicolson!
 - Linux: link the community CodexBar GTK front-end using the shared CLI (#4697). Thanks @SaahiilM!
 - Cursor: show the X Subscription weekly pool as the main meter while preserving legacy plans and separate on-demand spend (#4545, #4695). Thanks @Abelo9996 and @ViDtje!
 - Kimi: show promotional gift balances and expiry dates even when the monthly subscription allowance is exhausted (#4691). Thanks @codertesla!
