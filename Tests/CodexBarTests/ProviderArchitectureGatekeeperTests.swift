@@ -1667,11 +1667,6 @@ struct ProviderArchitectureGatekeeperTests {
             expectedProviderIDs: ["antigravity"],
             reason: "Gemini's upstream deprecation response names the Antigravity migration destination."),
         SuppressedProviderReference(
-            path: "Sources/CodexBarCore/Providers/OpenCodeGo/OpenCodeGoLocalUsageReader.swift",
-            anchor: ".appendingPathComponent(\"opencode\", isDirectory: true)",
-            expectedProviderIDs: ["opencode"],
-            reason: "OpenCode Go reads the upstream OpenCode shared storage directory by contract."),
-        SuppressedProviderReference(
             path: "Sources/CodexBarCore/Providers/ProviderVersionDetector.swift",
             anchor: "return whichHook(\"claude\") != nil",
             expectedProviderIDs: ["claude"],
