@@ -2,6 +2,7 @@
 
 ## 0.79.1 — Unreleased
 
+- Cursor: show the X Subscription weekly pool as the main meter while preserving legacy plans and separate on-demand spend (#4545, #4695). Thanks @Abelo9996 and @ViDtje!
 - Kimi: show promotional gift balances and expiry dates even when the monthly subscription allowance is exhausted (#4691). Thanks @codertesla!
 - Antigravity: preserve separate versioned Gemini quota names, including Gemini 4 Argon, instead of repeating the generic Gemini label (#4585). Thanks @jangisaac-dev!
 - Claude: explain how to recover a temporarily unavailable macOS Keychain cache, with translated guidance (#4576). Thanks @mpses!
