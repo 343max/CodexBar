@@ -394,11 +394,14 @@ final class MenuBarLayoutRenderer {
         // both, leaving VoiceOver unable to tell which value belongs to which provider. Naming the
         // provider here, independent of the visible tokens, keeps that identification correct for
         // every layout, not just the ones that happen to render it.
-        if top.attributedTitle.length == 0 {
-            return self.namingProvider(bottomProviderName, in: bottom)
-        }
-        if bottom.attributedTitle.length == 0 {
-            return self.namingProvider(topProviderName, in: top)
+        if top.attributedTitle.length == 0 || bottom.attributedTitle.length == 0 {
+            let (providerName, row) = top.attributedTitle.length == 0
+                ? (bottomProviderName, bottom) : (topProviderName, top)
+            return MenuBarLayoutRenderedTitle(
+                attributedTitle: row.attributedTitle,
+                accessibilityLabel: "\(providerName), \(row.accessibilityLabel)",
+                leadingIcon: row.leadingIcon,
+                statusImage: row.statusImage)
         }
 
         let result = NSMutableAttributedString(attributedString: top.attributedTitle)
@@ -414,18 +417,6 @@ final class MenuBarLayoutRenderer {
             accessibilityLabel: accessibilityLabel,
             leadingIcon: nil,
             statusImage: Self.statusImage(title: result, foregroundColor: .controlTextColor))
-    }
-
-    private static func namingProvider(
-        _ providerName: String,
-        in row: MenuBarLayoutRenderedTitle)
-        -> MenuBarLayoutRenderedTitle
-    {
-        MenuBarLayoutRenderedTitle(
-            attributedTitle: row.attributedTitle,
-            accessibilityLabel: "\(providerName), \(row.accessibilityLabel)",
-            leadingIcon: row.leadingIcon,
-            statusImage: row.statusImage)
     }
 
     private static func renderUncached(
@@ -464,15 +455,7 @@ final class MenuBarLayoutRenderer {
             ? NSFont.monospacedDigitSystemFont(ofSize: fontSize, weight: .regular)
             : NSFont.systemFont(ofSize: fontSize)
         let providerTintColor = Self.effectiveProviderTintColor(for: data.provider, options: options)
-        let foregroundColor = if let providerTintColor {
-            providerTintColor
-        } else if options.highContrast {
-            NSColor.labelColor
-        } else if options.isStale {
-            NSColor.secondaryLabelColor
-        } else {
-            NSColor.controlTextColor
-        }
+        let foregroundColor = providerTintColor ?? Self.neutralForegroundColor(options)
         let isTintActive = providerTintColor != nil
         let paragraphStyle = NSMutableParagraphStyle()
         if isStacked {
@@ -742,8 +725,7 @@ final class MenuBarLayoutRenderer {
         case let .pace(window):
             let accessibilityPrefix = item.editorLabel(provider: data.provider)
             var attributes = style.attributes
-            attributes[.foregroundColor] = options.highContrast ? NSColor.labelColor
-                : options.isStale ? NSColor.secondaryLabelColor : NSColor.controlTextColor
+            attributes[.foregroundColor] = Self.neutralForegroundColor(options)
             if options.colorPace, let delta = Self.paceDelta(window, data: data), delta.isFinite, delta != 0 {
                 // Use the same rounded numeric delta as the displayed text, never its localized sign.
                 let color: NSColor = delta < 0 ? .systemGreen : .systemRed
@@ -1126,6 +1108,10 @@ final class MenuBarLayoutRenderer {
         }
         tintedImage.isTemplate = isMonochrome
         return tintedImage
+    }
+
+    private static func neutralForegroundColor(_ options: MenuBarLayoutRenderOptions) -> NSColor {
+        options.highContrast ? .labelColor : options.isStale ? .secondaryLabelColor : .controlTextColor
     }
 
     /// Provider color is decoration; native monochrome owns stale, selected and accessible states.

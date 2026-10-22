@@ -8,6 +8,7 @@
 
 - CLI: add `codexbar config login --provider copilot` with device-code sign-in, token-free JSON events, and safe reuse of existing GitHub accounts (#4706). Thanks @DreamyTalesPAN!
 - Soniox: show prepaid balance and monthly spend using an organization API key, with an optional monthly budget meter. (#4678) Thanks @JiehoonKwak!
+- Menu bar: show both primary and secondary user-plugin quotas in the merged meter icon, using the same thick and thin lanes as built-in providers (#4709). Thanks @soimy!
 - Linux desktop: show a readable provider initial when a bundled logo is unavailable (#4693). Thanks @SaahiilM!
 - Claude cost history: price Mythos 5.1 and Mythos 5 from published Anthropic rates and refresh cached estimates without rereading unchanged transcripts (#4578). Thanks @urda!
 - Kiro: skip background CLI probes when the usage service is unreachable, preventing repeated offline sign-in tabs while retaining last-good usage (#4589). Thanks @dnicolson!
