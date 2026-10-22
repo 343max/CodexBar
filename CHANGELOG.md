@@ -38,6 +38,9 @@
 - Linux CLI: prevent static musl builds from crashing when scanning non-empty Codex session files, with a regression check for musl and glibc builds (#4672, #4673). Thanks @harjothkhara and @psl75011!
 - Pi: use the official blue accent and coral/blue/yellow confetti palette, and open the current Pi repository from the dashboard link. (#4668) Thanks @oryband!
 
+- Claude cost history: count Cowork audit and embedded transcript copies once and rebuild previously inflated cached reports (#4712).
+- HTTP dashboard: rebuild expired snapshots before responding, including when switching between used and remaining percentages (#4707).
+
 ## 0.79.0 — 2026-10-20
 
 ### Highlights
