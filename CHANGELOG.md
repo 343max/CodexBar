@@ -14,6 +14,7 @@
 
 ### Fixed
 
+- Spend: keep Claude’s priced subtotal as a lower bound when some requests use models without known prices (#4579, #4588). Thanks @harjothkhara and @DevilVed!
 - Grok: restore the weekly Credits window on zero-usage weeks when ACP omits the percentage, while preserving prepaid balances and leaving unvalidated usage unknown (#4674, #4679). Thanks @LeoLin990405 and @psl75011!
 - Localization: correct Ukrainian quota labels, keep countdowns in the selected language, and fix Japanese and Korean countdown units and composed time labels. (#4676) Thanks @toxakara!
 - Linux CLI: prevent static musl builds from crashing when scanning non-empty Codex session files, with a regression check for musl and glibc builds (#4672, #4673). Thanks @harjothkhara and @psl75011!
