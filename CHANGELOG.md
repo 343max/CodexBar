@@ -4,6 +4,7 @@
 
 - Pace: show how much of a monthly allowance can be used per day until reset, using the remaining allowance and local calendar days. (#4677) Thanks @anthonybvila!
 - Settings: explain that Highest usage compares quotas only and recommend Current selection for providers without quotas (#4666). Thanks @oryband!
+- Settings: include Acknowledgements in shared Back and Forward history, keeping About navigation and the window title consistent. (#4590) Thanks @elijahfriedman!
 - Linux: preserve autostart preferences on reinstall when desktop entries contain whitespace, comments, or other groups. (#4662) Thanks @Lucenx9!
 - Menu Bar settings: explain that the Layout editor requires the “Icon & percent” style instead of showing drag instructions for a disabled editor (#4665, #4680). Thanks @LeoLin990405!
 - Menu bar: align leading window labels so stacked meters and percentages share a column, including stacked provider rows. (#4581) Thanks @happut!
