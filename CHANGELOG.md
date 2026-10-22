@@ -2,6 +2,11 @@
 
 ## 0.79.1 — Unreleased
 
+- Kimi: keep membership usage visible when a lapsed Code subscription no longer returns Code quota pools (#4700). Thanks @codertesla!
+- Trae CN: show account credit usage from your signed-in dashboard (#4682). Thanks @liuyuplus!
+- Codex accounts: record bounded, identity-free registry mutation diagnostics in the existing debug log to help investigate saved-account loss (#4699, #4499). Thanks @LeoLin990405!
+
+- CLI: add `codexbar config login --provider copilot` with device-code sign-in, token-free JSON events, and safe reuse of existing GitHub accounts (#4706). Thanks @DreamyTalesPAN!
 - Soniox: show prepaid balance and monthly spend using an organization API key, with an optional monthly budget meter. (#4678) Thanks @JiehoonKwak!
 - Linux desktop: show a readable provider initial when a bundled logo is unavailable (#4693). Thanks @SaahiilM!
 - Claude cost history: price Mythos 5.1 and Mythos 5 from published Anthropic rates and refresh cached estimates without rereading unchanged transcripts (#4578). Thanks @urda!
@@ -12,6 +17,7 @@
 - Antigravity: preserve separate versioned Gemini quota names, including Gemini 4 Argon, instead of repeating the generic Gemini label (#4585). Thanks @jangisaac-dev!
 - Claude: explain how to recover a temporarily unavailable macOS Keychain cache, with translated guidance (#4576). Thanks @mpses!
 - Plugins: release each user-plugin network session when its request completes, avoiding retained clients after plugins reload (#4584). Thanks @SebTardif!
+- Tavily: keep plan, key, and pay-as-you-go usage when a free account reports a null pay-as-you-go limit instead of failing refresh (#4710, #4711). Thanks @harjothkhara and @Driedsandwich!
 
 - Pace: show how much of a monthly allowance can be used per day until reset, using the remaining allowance and local calendar days. (#4677) Thanks @anthonybvila!
 - Settings: explain that Highest usage compares quotas only and recommend Current selection for providers without quotas (#4666). Thanks @oryband!
@@ -34,6 +40,10 @@
 - Localization: correct Ukrainian quota labels, keep countdowns in the selected language, and fix Japanese and Korean countdown units and composed time labels. (#4676) Thanks @toxakara!
 - Linux CLI: prevent static musl builds from crashing when scanning non-empty Codex session files, with a regression check for musl and glibc builds (#4672, #4673). Thanks @harjothkhara and @psl75011!
 - Pi: use the official blue accent and coral/blue/yellow confetti palette, and open the current Pi repository from the dashboard link. (#4668) Thanks @oryband!
+- Claude: show limits unavailable after a successful response with no quota windows, while preserving spend-only views (#4537, #4687). Thanks @LeoLin990405!
+
+- Claude cost history: count Cowork audit and embedded transcript copies once and rebuild previously inflated cached reports (#4712).
+- HTTP dashboard: rebuild expired snapshots before responding, including when switching between used and remaining percentages (#4707).
 
 ## 0.79.0 — 2026-10-20
 
