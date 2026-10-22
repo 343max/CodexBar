@@ -2,6 +2,7 @@
 
 ## 0.79.1 — Unreleased
 
+- Kimi: keep membership usage visible when a lapsed Code subscription no longer returns Code quota pools (#4700). Thanks @codertesla!
 - Trae CN: show account credit usage from your signed-in dashboard (#4682). Thanks @liuyuplus!
 - Codex accounts: record bounded, identity-free registry mutation diagnostics in the existing debug log to help investigate saved-account loss (#4699, #4499). Thanks @LeoLin990405!
 
