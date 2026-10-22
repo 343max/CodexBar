@@ -2,6 +2,7 @@
 
 ## 0.79.1 — Unreleased
 
+- Linux: run the portable checks for `make check` and `make lint`, avoiding the macOS-only installer test (#4688). Thanks @Lucenx9!
 - Settings: use the native sidebar, search, toolbar, and Liquid Glass on macOS 26 and later, retaining the existing layout on older macOS versions (#4708). Thanks @elijahfriedman!
 - Kimi: keep membership usage visible when a lapsed Code subscription no longer returns Code quota pools (#4700). Thanks @codertesla!
 - Trae CN: show account credit usage from your signed-in dashboard (#4682). Thanks @liuyuplus!
