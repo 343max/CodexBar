@@ -204,7 +204,6 @@ struct MenuBarLayoutRenderKey: Hashable {
     let monospacedDigits: Bool
     let showWindowLabels: Bool
     let colorPace: Bool
-    let colorByProvider: Bool
     let highContrast: Bool
     let showUsed: Bool
     let conditionals: [MenuBarLayoutConditional]
@@ -223,16 +222,17 @@ struct MenuBarLayoutRenderKey: Hashable {
 }
 
 struct MenuBarLayoutResetText: Hashable {
-    let countdown: String?
-    let absolute: String?
+    let value: String?
 
-    init(window: MenuBarLayoutRenderWindow?, provider: UsageProvider, now: Date) {
+    init(window: MenuBarLayoutRenderWindow?, provider: UsageProvider, now: Date, absolute: Bool) {
         let metadata = ProviderDescriptorRegistry.descriptor(for: provider).metadata
         // Balance-only providers keep their documented legacy reset-token balance aliases.
         let fallback = metadata.usesDetailBackedWindow && !metadata.balanceOnly ? nil : window?.resetDescription
-        self.countdown = window?.resetsAt
-            .map { UsageFormatter.resetCountdownDescription(from: $0, now: now) } ?? fallback
-        self.absolute = window?.resetsAt.map { UsageFormatter.resetDescription(from: $0, now: now) } ?? fallback
+        self.value = window?.resetsAt.map { date in
+            absolute
+                ? UsageFormatter.resetDescription(from: date, now: now)
+                : UsageFormatter.resetCountdownDescription(from: date, now: now)
+        } ?? fallback
     }
 }
 
@@ -328,12 +328,17 @@ final class MenuBarLayoutRenderer {
         options: MenuBarLayoutRenderOptions)
         -> MenuBarLayoutRenderedTitle
     {
-        let resetWindows = Set(layout.flattenedTokens(conditionals: options.conditionals).compactMap(\.resetWindow))
-        let resetText = PercentWindow.allCases
-            .filter { $0 == .automatic || resetWindows.contains($0) }
-            .map {
-                MenuBarLayoutResetText(window: Self.window($0, data: data), provider: data.provider, now: options.now)
+        var seenResetWindows: [Bool: Set<PercentWindow>] = [:]
+        let resetText = layout.flattenedTokens(conditionals: options.conditionals).compactMap { token in
+            token.resetWindow.flatMap { window in
+                seenResetWindows[token.resetIsAbsolute, default: []].insert(window).inserted
+                    ? MenuBarLayoutResetText(
+                        window: Self.window(window, data: data),
+                        provider: data.provider,
+                        now: options.now,
+                        absolute: token.resetIsAbsolute) : nil
             }
+        }
         // Evaluate each conditional exactly once per render: the outcome is both a cache-key component
         // and what the token resolver needs, so re-testing per placement would only duplicate work.
         let outcomes = Dictionary(
@@ -347,7 +352,6 @@ final class MenuBarLayoutRenderer {
             monospacedDigits: options.monospacedDigits,
             showWindowLabels: options.showWindowLabels,
             colorPace: options.colorPace,
-            colorByProvider: options.colorByProvider,
             highContrast: options.highContrast,
             showUsed: options.showUsed,
             conditionals: options.conditionals,
@@ -751,24 +755,20 @@ final class MenuBarLayoutRenderer {
                 unavailableLabel: L("%@ unavailable", accessibilityPrefix),
                 accessibilityPrefix: accessibilityPrefix,
                 attributes: attributes)
-        case .resetCountdown, .resetAbsolute:
-            let text = MenuBarLayoutResetText(window: data.automatic, provider: data.provider, now: options.now)
-            return self.optionalTextToken(
-                item.resetIsAbsolute ? text.absolute : text.countdown,
-                unavailableLabel: item.resetIsAbsolute ? L("Reset time unavailable") : L("Reset countdown unavailable"),
-                accessibilityPrefix: L("Resets"),
-                attributes: style.attributes)
-        case let .windowResetCountdown(window), let .windowResetAbsolute(window):
-            let text = MenuBarLayoutResetText(
+        case .resetCountdown, .resetAbsolute, .windowResetCountdown, .windowResetAbsolute:
+            let window = item.resetWindow ?? .automatic
+            let qualified = item != .resetCountdown && item != .resetAbsolute
+            let label = qualified ? Self.windowAccessibilityLabel(window, data: data) : L("Resets")
+            let value = MenuBarLayoutResetText(
                 window: Self.window(window, data: data),
                 provider: data.provider,
-                now: options.now)
-            let label = item.editorLabel(provider: data.provider)
-            let value = item.resetIsAbsolute ? text.absolute : text.countdown
+                now: options.now,
+                absolute: item.resetIsAbsolute).value
             return self.optionalTextToken(
                 value,
-                unavailableLabel: L("%@ unavailable", label),
-                accessibilityText: value.map { L("%@: %@", Self.windowAccessibilityLabel(window, data: data), $0) },
+                unavailableLabel: qualified ? L("%@ unavailable", item.editorLabel(provider: data.provider))
+                    : (item.resetIsAbsolute ? L("Reset time unavailable") : L("Reset countdown unavailable")),
+                accessibilityText: value.map { qualified ? L("%@: %@", label, $0) : "\(label) \($0)" },
                 attributes: style.attributes)
         case .runsOut, .runsOutCompact:
             let isCompact = item == .runsOutCompact

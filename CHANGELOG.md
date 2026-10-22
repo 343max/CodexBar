@@ -26,6 +26,7 @@
 
 ### Fixed
 
+- Menu bar: avoid formatting reset styles absent from the layout and keep absolute-only titles cached as countdowns advance (#4676).
 - Codex: keep local spend scans moving after Codex closes a WAL trace database without sidecars, using a read-only immutable fallback (#4577). Thanks @urda!
 - OpenCode Go: read v2-only local history, include attributed compaction costs, and retain valid v2 usage when a legacy copy has invalid costs (#4587). Thanks @sreejithraman!
 - Spend: keep Claude’s priced subtotal as a lower bound when some requests use models without known prices (#4579, #4588). Thanks @harjothkhara and @DevilVed!
