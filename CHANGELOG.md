@@ -13,6 +13,8 @@
 - Reliability: close subprocess output captures only once, preventing reused-file-descriptor crashes during Antigravity CLI discovery and other probes (#4748). Thanks @nyan-mikan!
 - DeepSeek: allow Auto on Linux to use a configured API key instead of rejecting it for requiring web support (#4747). Thanks @johan456789!
 - Docs: explain Kiro's separate usage/context chat probes and the known empty-session persistence issue (#4746). Thanks @hcoronel1!
+- Settings: let the native detail pane and frosted toolbar backing fill wide windows on macOS 26 and later (#4741). Thanks @elijahfriedman!
+- Updates: repair stale Homebrew app bundles when the cask receipt is already current, while keeping installation behind the Update action (#4745). Thanks @dnicolson!
 - Antigravity: prevent passive agy version and usage probes from triggering CLI auto-update downloads (#4739). Thanks @thezelium!
 - CodeRabbit: disable CLI auto-updates during passive usage probes (#4739).
 - Trae CN: import automatic sessions from the parent domain while preserving API-origin manual cookies (#4732). Thanks @liuyuplus!
