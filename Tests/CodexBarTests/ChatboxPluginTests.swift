@@ -120,6 +120,48 @@ struct ChatboxPluginTests {
     }
 
     @Test(arguments: BundledPluginTestSupport.engines)
+    func `reward fallback excludes expired grants and never inherits plan resets`(
+        engine: ProviderPluginEngineKind) async throws
+    {
+        var data = try Self.data()
+        data.removeValue(forKey: "aggregated_reward_details")
+        data["unified_token_usage_details"] = [
+            ["type": "plan", "token_usage": 200, "token_limit": 1000],
+            ["type": "invitation_reward", "token_usage": 100, "token_limit": 500],
+            [
+                "type": "trial",
+                "token_usage": 25,
+                "token_limit": 200,
+                "expires_at": "2026-11-01T00:00:00Z",
+            ],
+            [
+                "type": "invitation_reward",
+                "token_usage": 0,
+                "token_limit": 900,
+                "expires_at": "2026-10-19T00:00:00Z",
+            ],
+        ]
+        let usage = try await Self.fetch(Self.body(data), engine: engine)
+        let rewards = try #require(usage.details.flatMap(\.rows).first { $0.label == "Credits" })
+        #expect(rewards.value == "575 / 700")
+        #expect(usage.primary?.usedPercent == 20)
+        #expect(usage.extraRateWindows == nil)
+        #expect(usage.tertiary == nil)
+    }
+
+    @Test(arguments: BundledPluginTestSupport.engines)
+    func `expired plan dates retain balances without a primary meter`(
+        engine: ProviderPluginEngineKind) async throws
+    {
+        var data = try Self.data()
+        data["token_expire_time"] = "2026-10-19T00:00:00Z"
+        let usage = try await Self.fetch(Self.body(data), engine: engine)
+        #expect(usage.primary == nil)
+        #expect(usage.details.flatMap(\.rows).first { $0.label == "Plan" }?.value == "800 / 1,000")
+        #expect(usage.secondary?.usedPercent == 12.5)
+    }
+
+    @Test(arguments: BundledPluginTestSupport.engines)
     func `malformed payloads fail without echoing secrets`(engine: ProviderPluginEngineKind) async {
         for body in [
             "private-response-key",
@@ -131,6 +173,18 @@ struct ChatboxPluginTests {
             #"{"data":{"unified_token_usage":true,"unified_token_limit":100}}"#,
             #"{"data":{"unified_token_usage":9007199254740992,"unified_token_limit":100}}"#,
             #"{"data":{"unified_token_usage_details":{}}}"#,
+            #"{"data":null,"error":{"message":"private-response-key"}}"#,
+            #"{"data":{"unified_token_usage":0,"unified_token_limit":100},"error":{"code":"fixture-error"}}"#,
+            #"""
+            {"data":{"unified_token_usage_details":[
+            {"type":"plan","token_usage":0,"token_limit":1},
+            {"type":"plan","token_usage":0,"token_limit":1}]}}
+            """#,
+            #"""
+            {"data":{"unified_token_usage_details":[
+            {"type":"reward","token_usage":0,"token_limit":9007199254740991},
+            {"type":"trial","token_usage":0,"token_limit":1}]}}
+            """#,
         ] {
             await Self.expectFailure(body, engine: engine, kind: .parseFailure)
         }
@@ -205,6 +259,7 @@ struct ChatboxPluginTests {
                 Issue.record("Expected the manual key to be rejected")
             } catch let error as ProviderFetchClassifiedError {
                 #expect(error.kind == .authenticationExpired)
+                #expect(error.message == "Invalid Chatbox AI license key.")
                 #expect(!error.message.contains(key))
             }
         }
@@ -296,6 +351,15 @@ struct ChatboxPluginTests {
             Issue.record("Expected classified failure")
         } catch let error as ProviderFetchClassifiedError {
             #expect(error.kind == kind)
+            let message = switch kind {
+            case .authenticationExpired:
+                "Chatbox AI rejected the license key. Update the key in Settings."
+            case .parseFailure:
+                "Chatbox AI returned an unrecognized license response."
+            default:
+                "Chatbox AI returned HTTP \(status)."
+            }
+            #expect(error.message == message)
             #expect(!error.message.contains("private-response-key"))
             #expect(!error.message.contains("fixture-key"))
             if status == 429 { #expect(error.retryAfterSeconds == 10) }

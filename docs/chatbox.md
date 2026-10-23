@@ -16,6 +16,8 @@ Enable Chatbox AI in Settings → Providers, then paste your Chatbox **License K
 This provider uses the standard credential field and storage policy. It does not read the Chatbox
 desktop profile, discover account sessions, or activate/deactivate a license. When changing licenses,
 update the key in CodexBar. Keep License Keys private: they can authorize AI requests as well as quota reads.
+Signing into the Chatbox app does not configure this provider. Account-login users also need a manually
+copyable License Key; accounts that do not expose one cannot be connected through this plugin.
 
 ## Public-client contract
 
@@ -41,7 +43,9 @@ Tests use synthetic keys and injected HTTP responses on both plugin engines; liv
 
 ## Quota mapping
 
-The shared UI's existing translated labels are reused; no provider-specific settings or localization flow is added.
+The shared UI's existing translated labels are reused across all 23 app catalogs. Plugin error diagnostics remain
+in English because the existing plugin host has no app-language context and menu errors are displayed verbatim.
+No shared error presentation changes or provider-specific localization flow are added.
 The detail section shows **remaining / total** counts:
 
 - **Plan**: the `plan` item in `unified_token_usage_details`; this also supplies the primary meter.
