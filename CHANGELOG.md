@@ -2,6 +2,10 @@
 
 ## 0.80.1 — Unreleased
 
+### Fixed
+
+- Linux desktop: fix launcher, Settings/Spending actions, and login startup when home paths contain quotes, dollar signs, backticks, backslashes, or percent signs (#4715). Thanks @Lucenx9!
+
 ## 0.80.0 — 2026-10-23
 
 ### Highlights
