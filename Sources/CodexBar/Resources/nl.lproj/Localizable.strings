@@ -2707,3 +2707,7 @@
 "Trae CN request failed. Try refreshing later." = "Het Trae CN-verzoek is mislukt. Probeer later opnieuw te vernieuwen.";
 "Use --provider copilot." = "Gebruik --provider copilot.";
 "Config changed during login. Please try again." = "De configuratie is gewijzigd tijdens het inloggen. Probeer het opnieuw.";
+
+"Primary" = "Primair";
+"Secondary" = "Secundair";
+"Tertiary" = "Tertiair";

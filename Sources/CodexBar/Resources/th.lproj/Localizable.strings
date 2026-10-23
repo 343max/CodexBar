@@ -2712,3 +2712,7 @@
 "Trae CN request failed. Try refreshing later." = "คำขอ Trae CN ล้มเหลว ลองรีเฟรชอีกครั้งในภายหลัง";
 "Use --provider copilot." = "ใช้ --provider copilot";
 "Config changed during login. Please try again." = "การกำหนดค่ามีการเปลี่ยนแปลงระหว่างเข้าสู่ระบบ โปรดลองอีกครั้ง";
+
+"Primary" = "หลัก";
+"Secondary" = "รอง";
+"Tertiary" = "ลำดับที่สาม";

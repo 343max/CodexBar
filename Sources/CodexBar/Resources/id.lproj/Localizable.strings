@@ -2712,3 +2712,7 @@
 "Trae CN request failed. Try refreshing later." = "Permintaan Trae CN gagal. Coba segarkan lagi nanti.";
 "Use --provider copilot." = "Gunakan --provider copilot.";
 "Config changed during login. Please try again." = "Konfigurasi berubah saat masuk. Silakan coba lagi.";
+
+"Primary" = "Utama";
+"Secondary" = "Sekunder";
+"Tertiary" = "Tersier";

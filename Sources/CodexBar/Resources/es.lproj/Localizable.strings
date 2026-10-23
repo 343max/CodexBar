@@ -2708,3 +2708,7 @@
 "Trae CN request failed. Try refreshing later." = "La solicitud a Trae CN ha fallado. Intenta actualizar más tarde.";
 "Use --provider copilot." = "Usa --provider copilot.";
 "Config changed during login. Please try again." = "La configuración cambió durante el inicio de sesión. Inténtalo de nuevo.";
+
+"Primary" = "Principal";
+"Secondary" = "Secundaria";
+"Tertiary" = "Terciaria";

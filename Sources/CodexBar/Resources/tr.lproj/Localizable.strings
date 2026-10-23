@@ -2713,3 +2713,7 @@
 "Trae CN request failed. Try refreshing later." = "Trae CN isteği başarısız oldu. Daha sonra yeniden yenileyin.";
 "Use --provider copilot." = "--provider copilot kullanın.";
 "Config changed during login. Please try again." = "Giriş sırasında yapılandırma değişti. Lütfen tekrar deneyin.";
+
+"Primary" = "Birincil";
+"Secondary" = "İkincil";
+"Tertiary" = "Üçüncül";
