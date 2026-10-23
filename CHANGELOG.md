@@ -10,6 +10,7 @@
 
 ### Fixed
 
+- Updates: repair stale Homebrew app bundles when the cask receipt is already current, while keeping installation behind the Update action (#4745). Thanks @dnicolson!
 - Antigravity: prevent passive agy version and usage probes from triggering CLI auto-update downloads (#4739). Thanks @thezelium!
 - CodeRabbit: disable CLI auto-updates during passive usage probes (#4739).
 - Trae CN: import automatic sessions from the parent domain while preserving API-origin manual cookies (#4732). Thanks @liuyuplus!
