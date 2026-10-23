@@ -2,6 +2,10 @@
 
 ## 0.80.1 — Unreleased
 
+### Fixed
+
+- Menu bar: improve stacked text legibility with medium weight while preserving regular weight for single-line layouts (#4713). Thanks @arnodirlam!
+
 ## 0.80.0 — 2026-10-23
 
 ### Highlights
