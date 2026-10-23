@@ -16,7 +16,7 @@ defineProvider({
         return code < 32 || (code >= 127 && code <= 159);
       })
     ) {
-      throw ctx.fail.authenticationExpired("Invalid Chatbox AI license key.");
+      throw ctx.fail.authenticationExpired("Invalid Chatbox AI license key. Paste a valid License Key in Settings.");
     }
     const response = await ctx.http.get("https://api.chatboxai.app/api/license/detail/realtime", {
       headers: { "Cache-Control": "no-store" },
@@ -31,21 +31,36 @@ defineProvider({
         return undefined;
       }
     };
-    const message = `Chatbox AI returned HTTP ${response.status}.`;
     if (response.status === 401) {
-      throw ctx.fail.authenticationExpired("Chatbox AI rejected the license key. Update the key in Settings.");
+      throw ctx.fail.authenticationExpired(
+        "Chatbox AI rejected the license key (HTTP 401). Update the License Key in Settings.",
+      );
     }
-    if (response.status === 403) throw ctx.fail.permissionDenied(message);
+    if (response.status === 403) {
+      throw ctx.fail.permissionDenied(
+        "Chatbox AI denied access (HTTP 403). Check that your license permits access to Chatbox AI.",
+      );
+    }
     if (response.status === 429) {
       const delay = Number(response.headers["retry-after"] ?? 1);
-      throw ctx.fail.rateLimited(message, {
+      throw ctx.fail.rateLimited("Chatbox AI is rate limiting requests (HTTP 429). Wait a moment, then refresh.", {
         retryAfterSeconds: Number.isFinite(delay) && delay >= 0 ? Math.min(delay, 10) : 1,
       });
     }
-    if (response.status >= 500) throw ctx.fail.providerUnavailable(message);
-    if (response.status !== 200) throw ctx.fail.apiFailure(message);
+    if (response.status >= 500) {
+      throw ctx.fail.providerUnavailable(
+        `Chatbox AI is temporarily unavailable (HTTP ${response.status}). Try refreshing later.`,
+      );
+    }
+    if (response.status !== 200) {
+      throw ctx.fail.apiFailure(
+        `Chatbox AI request failed (HTTP ${response.status}). Try refreshing; if it persists, check your license in Chatbox.`,
+      );
+    }
     const fail = (): never => {
-      throw ctx.fail.parseFailure("Chatbox AI returned an unrecognized license response.");
+      throw ctx.fail.parseFailure(
+        "Chatbox AI returned an unrecognized license response. Try refreshing; if it persists, update CodexBar.",
+      );
     };
     const root = decode(response.bodyText);
     const data = record(root?.data);

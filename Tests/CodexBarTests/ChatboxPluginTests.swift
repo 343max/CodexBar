@@ -199,6 +199,8 @@ struct ChatboxPluginTests {
             (403, .permissionDenied),
             (409, .apiFailure),
             (429, .rateLimited),
+            (500, .providerUnavailable),
+            (502, .providerUnavailable),
             (503, .providerUnavailable),
         ] {
             await Self.expectFailure("private-response-key", engine: engine, status: status, kind: kind)
@@ -259,7 +261,7 @@ struct ChatboxPluginTests {
                 Issue.record("Expected the manual key to be rejected")
             } catch let error as ProviderFetchClassifiedError {
                 #expect(error.kind == .authenticationExpired)
-                #expect(error.message == "Invalid Chatbox AI license key.")
+                #expect(error.message == "Invalid Chatbox AI license key. Paste a valid License Key in Settings.")
                 #expect(!error.message.contains(key))
             }
         }
@@ -353,11 +355,19 @@ struct ChatboxPluginTests {
             #expect(error.kind == kind)
             let message = switch kind {
             case .authenticationExpired:
-                "Chatbox AI rejected the license key. Update the key in Settings."
+                "Chatbox AI rejected the license key (HTTP 401). Update the License Key in Settings."
+            case .permissionDenied:
+                "Chatbox AI denied access (HTTP 403). Check that your license permits access to Chatbox AI."
+            case .rateLimited:
+                "Chatbox AI is rate limiting requests (HTTP 429). Wait a moment, then refresh."
+            case .providerUnavailable:
+                "Chatbox AI is temporarily unavailable (HTTP \(status)). Try refreshing later."
             case .parseFailure:
-                "Chatbox AI returned an unrecognized license response."
+                "Chatbox AI returned an unrecognized license response. " +
+                    "Try refreshing; if it persists, update CodexBar."
             default:
-                "Chatbox AI returned HTTP \(status)."
+                "Chatbox AI request failed (HTTP \(status)). " +
+                    "Try refreshing; if it persists, check your license in Chatbox."
             }
             #expect(error.message == message)
             #expect(!error.message.contains("private-response-key"))
