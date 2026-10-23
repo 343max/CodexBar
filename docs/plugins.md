@@ -155,6 +155,8 @@ defineProvider({
   `https://api.example.com` (no path, query, fragment, or user info). A settings-derived endpoint is
   `{setting: "BASE_URL", policy: "https"}`, `{setting: "BASE_URL", policy: "https-or-loopback-http"}`, or
   `{setting: "BASE_URL", policy: "https-or-private-network-http"}`. Its setting must be declared as `plain`.
+  A missing, empty, or whitespace-only value is required configuration, not an invalid manifest. CodexBar identifies
+  the plugin and missing setting; fetching stays blocked until a valid endpoint is configured and approved.
   `https-or-loopback-http` preserves the unauthenticated loopback-only rule. `https-or-private-network-http` also permits
   authenticated HTTP for loopback, RFC 1918 IPv4, IPv4 link-local, IPv6 unique-local/link-local, and `.local` targets,
   but only through the separate typed approval described below. Public targets always require HTTPS.
