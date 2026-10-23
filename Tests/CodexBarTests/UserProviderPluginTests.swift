@@ -1435,4 +1435,32 @@ extension UserProviderPluginTests {
     }
 }
 
+extension UserProviderPluginTests {
+    @Test
+    func `plugin CLI renders all standard window titles and JSON retains them`() async throws {
+        let fixture = try Fixture()
+        defer { fixture.remove() }
+        let plugin = try fixture.loader(transport: RecordingTransport(responseJSON: "{}"))
+            .load(fileURL: fixture.write(name: "titles.js", source: """
+            defineProvider({
+              id: "window-titles", name: "Window Titles", endpoints: ["https://example.test"], settings: [],
+              fetchUsage() { return {
+                primary: {title:"Requests",usedPercent:25},
+                secondary: {usedPercent:40},
+                tertiary: {title:"Credits",usedPercent:60}
+              }; }
+            });
+            """))
+        try fixture.approvals.record(plugin.approvalBinding(settings: [:]))
+        let snapshot = try await plugin.fetchUsage(
+            settings: [:], secrets: [:], environment: [:], approvalStore: fixture.approvals)
+        #expect(CodexBarCLI.pluginSnapshotLines(plugin: plugin, snapshot: snapshot) == [
+            "Window Titles", "Requests: 25% used", "Secondary: 40% used", "Credits: 60% used",
+        ])
+        let json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(snapshot)) as? [String: Any])
+        #expect((json["primary"] as? [String: Any])?["title"] as? String == "Requests")
+        #expect((json["secondary"] as? [String: Any])?["title"] == nil)
+        #expect((json["tertiary"] as? [String: Any])?["title"] as? String == "Credits")
+    }
+}
 #endif
