@@ -4,6 +4,7 @@
 
 ### Added
 
+- Chatbox AI: track plan points, rewards, top-up credits, and image quotas with a pasted license key through the bundled plugin (#4736). Thanks @Andy115951!
 - Usage & Spend: search and sort session summaries, then inspect bounded request accounting for the selected native Codex session without retaining request details during ordinary refreshes (#4730). Thanks @PumpkinsLemon!
 - Plugins: support custom usage-window titles, shared reset text, and existing external usage/quota hooks for installed providers (#4722, #4723, #4724). Thanks @coygeek!
 
@@ -16,6 +17,7 @@
 - Menu bar: improve stacked text legibility with medium weight while preserving regular weight for single-line layouts (#4713). Thanks @arnodirlam!
 - Linux desktop: fix launcher, Settings/Spending actions, and login startup when home paths contain quotes, dollar signs, backticks, backslashes, or percent signs (#4715). Thanks @Lucenx9!
 - Plugins: show refresh failures alongside last-good usage and clear the error after recovery (#4726). Thanks @coygeek!
+- Plugins: show how old retained usage is after a refresh fails, updating the card layout for capture age and app language (#4726, #4733). Thanks @LeoLin990405!
 - Plugins: identify missing endpoint settings as required configuration while preserving URL validation and approval (#4721, #4727). Thanks @harjothkhara and @coygeek!
 
 ## 0.80.0 — 2026-10-23
