@@ -228,7 +228,9 @@ extension CostUsageStore {
         wipe: Bool,
         usageRows: [CostUsageStoreUsageRow],
         fileAggregates: [CostUsageStoreDayAggregate],
-        globalDeltas: [CostUsageStoreDayAggregate]) -> Bool
+        globalDeltas: [CostUsageStoreDayAggregate],
+        reevalDeleteRowIndices: [Int64] = [],
+        reevalOldDeltas: [CostUsageStoreDayAggregate] = []) -> Bool
     {
         guard file.belongsToOpenCodeLocalHistory else { return false }
         guard usageRows.allSatisfy({ $0.path == file.path }) else { return false }
@@ -253,6 +255,13 @@ extension CostUsageStore {
 
                     // 2–6.
                     var deltas = globalDeltas
+                    if !reevalDeleteRowIndices.isEmpty {
+                        // Mutation swaps: remove rows whose previous contribution is
+                        // replaced; their own negative contribution rolls in next.
+                        try Self.deleteUsageRowsByIndices(
+                            database, path: file.path, rowIndices: reevalDeleteRowIndices)
+                    }
+                    deltas += reevalOldDeltas
                     if wipe {
                         let previousAggregates = try Self.readFileDayAggregates(
                             database, path: file.path)
@@ -308,6 +317,25 @@ extension CostUsageStore {
         """ )
         defer { sqlite3_finalize(statement) }
         Self.bind(path, to: statement, at: 1)
+        try Self.stepDone(statement, database: database)
+    }
+
+    static func deleteUsageRowsByIndices(
+        _ database: OpaquePointer,
+        path: String,
+        rowIndices: [Int64]) throws
+    {
+        guard !rowIndices.isEmpty else { return }
+        let placeholders = rowIndices.map { _ in "?" }.joined(separator: ",")
+        let statement = try Self.prepare(database, """
+        DELETE FROM usage_rows
+        WHERE file_id = (SELECT id FROM files WHERE path = ?) AND row_index IN (\(placeholders))
+        """ )
+        defer { sqlite3_finalize(statement) }
+        Self.bind(path, to: statement, at: 1)
+        for (index, value) in rowIndices.enumerated() {
+            sqlite3_bind_int64(statement, Int32(index + 2), Int64(value))
+        }
         try Self.stepDone(statement, database: database)
     }
 

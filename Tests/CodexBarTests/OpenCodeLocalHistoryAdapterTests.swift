@@ -112,6 +112,10 @@ struct OpenCodeLocalHistoryAdapterTests {
             return sqlite3_last_insert_rowid(db)
         }
 
+        static func bindInsertForUpdate(db: OpaquePointer?, sql: String, binds: [String]) throws {
+            try self.bindInsert(db: db, sql: sql, binds: binds)
+        }
+
         private static func bindInsert(db: OpaquePointer?, sql: String, binds: [String]) throws {
             var stmt: OpaquePointer?
             guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { throw SQLiteTestError.prepare }
@@ -121,6 +125,20 @@ struct OpenCodeLocalHistoryAdapterTests {
                 sqlite3_bind_text(stmt, Int32(index + 1), value, -1, transient)
             }
             guard sqlite3_step(stmt) == SQLITE_DONE else { throw SQLiteTestError.step }
+        }
+
+        func updateMessage(id: String, createdMs: Int64, newCost: Double, updatedMs: Int64) throws {
+            var db: OpaquePointer?
+            guard sqlite3_open(self.databaseURL.path, &db) == SQLITE_OK else { throw SQLiteTestError.open }
+            defer { sqlite3_close(db) }
+            let payload: [String: Any] = [
+                "providerID": "openai", "role": "assistant", "modelID": "gpt-5.1-codex",
+                "cost": newCost, "time": ["created": createdMs],
+            ]
+            let data = try JSONSerialization.data(withJSONObject: payload)
+            try Self.bindInsert(db: db, sql: """
+                UPDATE message SET data = ?, time_updated = ? WHERE id = ?
+                """, binds: [String(data: data, encoding: .utf8) ?? "{}", "\(updatedMs)", id])
         }
 
         func checkpoint() async -> OpenCodeSourceCheckpoint? {
@@ -339,6 +357,75 @@ struct OpenCodeLocalHistoryAdapterTests {
         #expect(checkpoint != nil)
         // High boundary is exactly the last consumed raw rowid; nothing further.
         #expect(checkpoint?.tables.message.high == appendedRowid)
+    }
+
+    // MARK: - Stage 3: mutation reconciliation (#4752 point 4)
+
+    @Test
+    func `an updated message replaces its prior contribution exactly`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        _ = try fixture.insertMessage(id: "m1", createdMs: now, cost: 1.0)
+        let _ = try await fixture.runPass()
+        try fixture.updateMessage(id: "m1", createdMs: now, newCost: 2.5, updatedMs: now + 5_000)
+
+        _ = try await fixture.runPass()
+        let (_, global) = await fixture.aggregates()
+        let total = global.reduce(0.0) { $0 + Double($1.authoritativeCostNanos) / 1e9 }
+        #expect(abs(total - 2.5) < 0.0001)
+        let requests = global.reduce(Int64(0)) { $0 + $1.requestCount }
+        #expect(requests == 1) // one message, one contribution — never both versions
+    }
+
+    @Test
+    func `a late step-finish on an ingested message replaces the fallback`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        _ = try fixture.insertMessage(id: "late", createdMs: now, cost: 5.0)
+        _ = try await fixture.runPass()
+        let (_, firstGlobal) = await fixture.aggregates()
+        #expect(firstGlobal.reduce(Int64(0)) { $0 + $1.requestCount } == 1)
+
+        // The part arrives during streaming after the pass: contribution identity swaps
+        // from fallback-cost to part-cost without ever having both.
+        _ = try fixture.insertPart(messageID: "late", createdMs: now, cost: 2.0)
+        _ = try await fixture.runPass()
+
+        let (_, global) = await fixture.aggregates()
+        let total = global.reduce(0.0) { $0 + Double($1.authoritativeCostNanos) / 1e9 }
+        #expect(abs(total - 2.0) < 0.0001)
+        let requests = global.reduce(Int64(0)) { $0 + $1.requestCount }
+        #expect(requests == 1)
+    }
+
+    @Test
+    func `an updated session row moves its contribution`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        _ = try fixture.insertSessionMessage(id: "s1", createdMs: now, cost: 1.0, model: "gpt-5.2")
+        _ = try await fixture.runPass()
+
+        var db: OpaquePointer?
+        guard sqlite3_open(fixture.databaseURL.path, &db) == SQLITE_OK else { throw SQLiteTestError.open }
+        defer { sqlite3_close(db) }
+        let payload: [String: Any] = [
+            "model": ["providerID": "openai", "id": "gpt-5.2"],
+            "cost": 3.0, "time": ["created": now],
+        ]
+        let data = try JSONSerialization.data(withJSONObject: payload)
+        try OpenCodeLocalHistoryAdapterTests.Fixture.bindInsertForUpdate(
+            db: db,
+            sql: "UPDATE session_message SET data = ?, time_updated = ? WHERE id = ?",
+            binds: [String(data: data, encoding: .utf8) ?? "{}", "\(now + 5_000)", "s1"])
+
+        _ = try await fixture.runPass()
+        let (_, global) = await fixture.aggregates()
+        let total = global.reduce(0.0) { $0 + Double($1.authoritativeCostNanos) / 1e9 }
+        #expect(abs(total - 3.0) < 0.0001)
+        #expect(global.reduce(Int64(0)) { $0 + $1.requestCount } == 1)
     }
 }
 

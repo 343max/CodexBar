@@ -364,6 +364,39 @@ extension CostUsageStore {
         return values
     }
 
+    /// Point-lookup of usage-row payloads for a replacement swap: the adapter re-evaluates
+    /// an updated source row and must negate the previously emitted contribution of the
+    /// row it is about to replace (#4752 point 4, mutation reconciliation).
+    static func readUsagePayloads(
+        _ database: OpaquePointer,
+        path: String,
+        rowIndices: [Int64]) throws -> [Int64: Data]
+    {
+        guard !rowIndices.isEmpty else { return [:] }
+        let placeholders = rowIndices.map { _ in "?" }.joined(separator: ",")
+        let statement = try Self.prepare(database, """
+        SELECT r.row_index, r.payload
+        FROM usage_rows r
+        WHERE r.file_id = (SELECT id FROM files WHERE path = ?) AND r.row_index IN (\(placeholders))
+        """)
+        defer { sqlite3_finalize(statement) }
+        Self.bind(path, to: statement, at: 1)
+        for (index, value) in rowIndices.enumerated() {
+            sqlite3_bind_int64(statement, Int32(index + 2), Int64(value))
+        }
+        var values: [Int64: Data] = [:]
+        var result = sqlite3_step(statement)
+        while result == SQLITE_ROW {
+            let rowIndex = sqlite3_column_int64(statement, 0)
+            if let payload = self.columnData(statement, at: 1) {
+                values[rowIndex] = payload
+            }
+            result = sqlite3_step(statement)
+        }
+        guard result == SQLITE_DONE else { throw StoreError.sqlite(result) }
+        return values
+    }
+
     static func readFileDayAggregates(
         _ database: OpaquePointer,
         path: String?) throws -> [CostUsageStoreFileDayAggregate]

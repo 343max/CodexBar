@@ -241,13 +241,106 @@ extension OpenCodeLocalHistoryAdapter {
             coverageUntilDay: decode.aggregates.max { $0.day < $1.day }?.day ?? stored?.coverageUntilDay,
             updatedAtUnixMs: Int64(Date().timeIntervalSince1970 * 1000))
 
+        // 5. Resolve OLD contributions for mutation swaps before committing (#4752
+        //    point 4). Fetched payloads decode into the previous emitted turn, so the
+        //    store sees exact signed deltas. The same reads also recover the previously
+        //    stored file-level bucket values — per-file aggregates are absolute, not
+        //    deltas — so an append or swap cannot erase prior passes' contribution.
+        let touchedIndices = Array(Set(decode.replacementRowIndices + decode.deleteRowIndices))
+        var oldByBucket: [String: CostUsageStoreDayAggregate] = [:]
+        if !touchedIndices.isEmpty {
+            let oldPayloads = await store.withDatabase(default: [Int64: Data]()) { database in
+                try CostUsageStore.readUsagePayloads(database, path: path, rowIndices: touchedIndices)
+            }
+            for payload in oldPayloads.values {
+                guard let oldTurn = try? JSONDecoder().decode(Turn.self, from: payload) else { continue }
+                guard oldTurn.createdMs > 0 else { continue }
+                let day = Self.dayKey(fromUnixMs: oldTurn.createdMs)
+                let key = day + "␟" + oldTurn.modelID
+                var negated = oldByBucket[key] ?? CostUsageStoreDayAggregate.zero(
+                    day: day, model: oldTurn.modelID)
+                negated.inputTokens -= Int64(oldTurn.inputTokens ?? 0)
+                negated.cachedTokens -= Int64((oldTurn.cacheReadTokens ?? 0) + (oldTurn.cacheCreationTokens ?? 0))
+                negated.outputTokens -= Int64(oldTurn.outputTokens ?? 0)
+                negated.reasoningTokens -= Int64(oldTurn.reasoningTokens ?? 0)
+                negated.requestCount -= 1
+                negated.authoritativeCostNanos -= Int64((oldTurn.costUSD * 1e9).rounded())
+                negated.standardInputTokens -= Int64(oldTurn.inputTokens ?? 0)
+                negated.standardCachedTokens -= Int64((oldTurn.cacheReadTokens ?? 0) + (oldTurn.cacheCreationTokens ?? 0))
+                negated.standardOutputTokens -= Int64(oldTurn.outputTokens ?? 0)
+                negated.standardTokens -= Int64((oldTurn.inputTokens ?? 0)
+                    + ((oldTurn.cacheReadTokens ?? 0) + (oldTurn.cacheCreationTokens ?? 0))
+                    + (oldTurn.outputTokens ?? 0))
+                oldByBucket[key] = negated
+            }
+        }
+
+        let storedAggregates = await store.withDatabase(
+            default: [CostUsageStoreFileDayAggregate]())
+        { database in
+            try CostUsageStore.readFileDayAggregates(database, path: path)
+        }
+        var absByBucket: [String: CostUsageStoreDayAggregate] = [:]
+        for storedAggregate in storedAggregates {
+            absByBucket[storedAggregate.aggregate.day + "␟" + storedAggregate.aggregate.model] = storedAggregate.aggregate
+        }
+        // Contribution additions (append + re-evaluated emissions).
+        for contribution in decode.aggregates {
+            let key = contribution.day + "␟" + contribution.model
+            var absolute = absByBucket[key]
+                ?? CostUsageStoreDayAggregate.zero(day: contribution.day, model: contribution.model)
+            absolute.inputTokens += contribution.inputTokens
+            absolute.cachedTokens += contribution.cachedTokens
+            absolute.outputTokens += contribution.outputTokens
+            absolute.reasoningTokens += contribution.reasoningTokens
+            absolute.requestCount += contribution.requestCount
+            absolute.authoritativeCostNanos += contribution.authoritativeCostNanos
+            absolute.standardInputTokens += contribution.standardInputTokens
+            absolute.standardCachedTokens += contribution.standardCachedTokens
+            absolute.standardOutputTokens += contribution.standardOutputTokens
+            absolute.priorityInputTokens += contribution.priorityInputTokens
+            absolute.priorityCachedTokens += contribution.priorityCachedTokens
+            absolute.priorityOutputTokens += contribution.priorityOutputTokens
+            absolute.standardTokens += contribution.standardTokens
+            absolute.priorityTokens += contribution.priorityTokens
+            absByBucket[key] = absolute
+        }
+        // Signed subtractions from superseded payloads.
+        for (key, negated) in oldByBucket {
+            var absolute = absByBucket[key]
+                ?? CostUsageStoreDayAggregate.zero(day: negated.day, model: negated.model)
+            absolute.inputTokens += negated.inputTokens
+            absolute.cachedTokens += negated.cachedTokens
+            absolute.outputTokens += negated.outputTokens
+            absolute.reasoningTokens += negated.reasoningTokens
+            absolute.requestCount += negated.requestCount
+            absolute.authoritativeCostNanos += negated.authoritativeCostNanos
+            absolute.standardInputTokens += negated.standardInputTokens
+            absolute.standardCachedTokens += negated.standardCachedTokens
+            absolute.standardOutputTokens += negated.standardOutputTokens
+            absolute.priorityInputTokens += negated.priorityInputTokens
+            absolute.priorityCachedTokens += negated.priorityCachedTokens
+            absolute.priorityOutputTokens += negated.priorityOutputTokens
+            absolute.standardTokens += negated.standardTokens
+            absolute.priorityTokens += negated.priorityTokens
+            absByBucket[key] = absolute
+        }
+        // Only buckets this pass actually touched are upserted; untouched file buckets
+        // carry over unaffected (#4752 performance contract).
+        let touchedKeys = Set(decode.aggregates.map { $0.day + "␟" + $0.model })
+            .union(oldByBucket.keys)
+        let fileAggregates = absByBucket.filter { touchedKeys.contains($0.key) }
+            .map(\.value).sorted { ($0.day, $0.model) < ($1.day, $1.model) }
+
         let accepted = await store.applyOpenCodeLocalHistoryPass(
             file: file,
             expectedBaselineResumePayload: baselinePayload,
             wipe: decode.wipe,
             usageRows: decode.usageRows,
-            fileAggregates: decode.aggregates,
-            globalDeltas: decode.globalDeltas)
+            fileAggregates: fileAggregates,
+            globalDeltas: decode.globalDeltas,
+            reevalDeleteRowIndices: decode.deleteRowIndices,
+            reevalOldDeltas: Array(oldByBucket.values))
         guard accepted else { return .skipped(.staleBaseline) }
         return .applied(PassSummary(
             rawRowsRead: decode.rawRowsRead,
@@ -286,6 +379,12 @@ extension OpenCodeLocalHistoryAdapter {
         var usageRows: [CostUsageStoreUsageRow]
         var aggregates: [CostUsageStoreDayAggregate]
         var globalDeltas: [CostUsageStoreDayAggregate]
+        /// Mutation swaps: row indices whose previous contribution is replaced by the
+        /// re-evaluated content also present in `usageRows`, or outright deleted
+        /// (a session row that became excluded). The pass resolves the stored negative
+        /// contributions before committing (#4752 point 4).
+        var replacementRowIndices: [Int64]
+        var deleteRowIndices: [Int64]
     }
 
     /// Decodes at most `rowBudget` raw source rows beyond the baseline checkpoint inside
@@ -328,7 +427,9 @@ extension OpenCodeLocalHistoryAdapter {
                 rawRowsRead: 0,
                 usageRows: [],
                 aggregates: [],
-                globalDeltas: [])
+                globalDeltas: [],
+                replacementRowIndices: [],
+                deleteRowIndices: [])
         }
 
         // A source swap beneath the registration invalidates prior windows: fresh wipe
@@ -349,6 +450,14 @@ extension OpenCodeLocalHistoryAdapter {
         var rawRowsRead = 0
         var usageRows: [CostUsageStoreUsageRow] = []
         var accumulator = AggregateAccumulator()
+        var replacements: [Int64] = []
+        var deletions: [Int64] = []
+
+        // The durable append boundaries before any pass activity: rowids strictly above
+        // these are handled by the append walks, so mutation probes must not double-emit
+        // them. Session/news rowswitch.
+        let messageBoundaryAtStart = checkpoint.tables.message.high
+        let sessionBoundaryAtStart = checkpoint.tables.sessionMessage.high
 
         // 1. Resume any unfinished oversized message at its exact part position.
         if let pending = checkpoint.pendingPartContinuation, budget > 0 {
@@ -485,6 +594,93 @@ extension OpenCodeLocalHistoryAdapter {
             budget = result.remainingBudget
         }
 
+        // 4. Mutation probes (#4752 point 4): upstream UPDATEs rows in place while
+        //    streaming. Rows with a newer `time_updated` than the durable watermark are
+        //    re-evaluated (their containing message or the session row), replacing the
+        //    previously committed contribution at the same identity. Rows above the
+        //    current append boundary are skipped — the append pass already covers them.
+        //    The watermark advances only to fully processed checkpoint positions.
+        if hasMessage, budget > 0 {
+            let probe = try Self.probeUpdates(
+                db,
+                table: "message",
+                sinceMs: checkpoint.tables.messageUpdatedMs,
+                budget: budget,
+                rawRowsRead: &rawRowsRead,
+                checkCancellation: checkCancellation)
+            budget = probe.remainingBudget
+            checkpoint.tables.messageUpdatedMs = probe.exhausted
+                ? probe.maxWatermarkedMs
+                : max(checkpoint.tables.messageUpdatedMs, probe.maxWatermarkedMs)
+            for hit in probe.hits {
+                guard hit.rowid <= messageBoundaryAtStart else { continue }
+                try Self.reevaluateMessage(
+                    db,
+                    messageRowid: hit.rowid,
+                    messageID: hit.id,
+                    hasPart: hasPart,
+                    remaining: &budget,
+                    registeredPath: registeredPath,
+                    usageRows: &usageRows,
+                    accumulator: &accumulator,
+                    replacements: &replacements,
+                    deletions: &deletions)
+            }
+        }
+        if hasPart, budget > 0 {
+            let probe = try Self.probeUpdates(
+                db,
+                table: "part",
+                sinceMs: checkpoint.tables.partUpdatedMs,
+                budget: budget,
+                rawRowsRead: &rawRowsRead,
+                checkCancellation: checkCancellation)
+            budget = probe.remainingBudget
+            checkpoint.tables.partUpdatedMs = max(checkpoint.tables.partUpdatedMs, probe.maxWatermarkedMs)
+            for hit in probe.hits {
+                guard hit.rowid <= messageBoundaryAtStart else { continue }
+                try Self.reevaluateMessage(
+                    db,
+                    messageRowid: hit.rowid,
+                    messageID: hit.id,
+                    hasPart: true,
+                    remaining: &budget,
+                    registeredPath: registeredPath,
+                    usageRows: &usageRows,
+                    accumulator: &accumulator,
+                    replacements: &replacements,
+                    deletions: &deletions)
+            }
+        }
+        if hasSession, budget > 0 {
+            let probe = try Self.probeUpdates(
+                db,
+                table: "session_message",
+                sinceMs: checkpoint.tables.sessionMessageUpdatedMs,
+                budget: budget,
+                rawRowsRead: &rawRowsRead,
+                checkCancellation: checkCancellation)
+            budget = probe.remainingBudget
+            checkpoint.tables.sessionMessageUpdatedMs = max(
+                checkpoint.tables.sessionMessageUpdatedMs, probe.maxWatermarkedMs)
+            for hit in probe.hits where hit.rowid <= sessionBoundaryAtStart {
+                // Session rows update in place; when a row becomes excluded or invalid
+                // the re-evaluation itself deletes its prior contribution.
+                try Self.reevaluateSessionRow(
+                    db,
+                    sessionRowID: hit.rowid,
+                    sessionID: hit.id,
+                    hasLegacyMessages: hasMessage,
+                    hasParts: hasPart,
+                    remaining: &budget,
+                    registeredPath: registeredPath,
+                    usageRows: &usageRows,
+                    accumulator: &accumulator,
+                    replacements: &replacements,
+                    deletions: &deletions)
+            }
+        }
+
         let complete = (!hasMessage || checkpoint.tables.message.low == 0)
             && (!hasSession || checkpoint.tables.sessionMessage.low == 0)
             && checkpoint.pendingPartContinuation == nil
@@ -496,7 +692,9 @@ extension OpenCodeLocalHistoryAdapter {
             rawRowsRead: rawRowsRead,
             usageRows: usageRows,
             aggregates: accumulator.fileAggregates,
-            globalDeltas: accumulator.globalDeltas)
+            globalDeltas: accumulator.globalDeltas,
+            replacementRowIndices: replacements,
+            deleteRowIndices: deletions)
     }
 
     // MARK: - Aggregation
@@ -961,6 +1159,364 @@ extension OpenCodeLocalHistoryAdapter {
             exhausted: exhausted,
             remainingBudget: max(remaining, 0),
             continuation: nil)
+    }
+
+    // MARK: - Mutation probe + re-evaluation (#4752 point 4)
+
+    struct UpdateHit {
+        var rowid: Int64
+        var id: String
+    }
+
+    struct UpdateProbe {
+        var hits: [UpdateHit]
+        var remainingBudget: Int
+        var maxWatermarkedMs: Int64
+        var exhausted: Bool
+    }
+
+    /// Walks rows whose `time_updated` moved since the durable watermark, in a single
+    /// read-only source transaction, with the same raw-lookahead budget semantics as the
+    /// append walks. For `part`, hits resolve to their parent message (via the parts
+    /// message_id index); hits never double-emit rows already covered by the append
+    /// walk — the call sites filter by the durable append boundary.
+    static func probeUpdates(
+        _ db: OpaquePointer?,
+        table: String,
+        sinceMs: Int64,
+        budget: Int,
+        rawRowsRead: inout Int,
+        checkCancellation: CostUsageScanner.CancellationCheck?) throws -> UpdateProbe
+    {
+        var remaining = budget
+        var sql: String
+        switch table {
+        case "message":
+            sql = """
+            SELECT rowid, id, time_updated
+            FROM message
+            WHERE time_updated > \(sinceMs)
+              AND json_valid(data)
+              AND json_extract(data, '$.providerID') = 'openai'
+              AND json_extract(data, '$.role') = 'assistant'
+            ORDER BY time_updated ASC
+            LIMIT \(remaining + 1)
+            """
+        case "part":
+            sql = """
+            SELECT m.rowid, m.id, p.time_updated
+            FROM part p
+            JOIN message m ON m.id = p.message_id
+            WHERE p.time_updated > \(sinceMs)
+              AND json_valid(m.data)
+              AND json_extract(m.data, '$.providerID') = 'openai'
+              AND json_extract(m.data, '$.role') = 'assistant'
+            ORDER BY p.time_updated ASC
+            LIMIT \(remaining + 1)
+            """
+        case "session_message":
+            sql = """
+            SELECT s.rowid, s.id, s.time_updated
+            FROM session_message s
+            WHERE s.time_updated > \(sinceMs)
+              AND s.type = 'assistant' AND json_valid(s.data)
+              AND json_extract(s.data, '$.model.providerID') = 'openai'
+            ORDER BY s.time_updated ASC
+            LIMIT \(remaining + 1)
+            """
+        default:
+            return UpdateProbe(hits: [], remainingBudget: remaining, maxWatermarkedMs: sinceMs, exhausted: true)
+        }
+        var stmt: OpaquePointer?
+        let prepareResult = sqlite3_prepare_v2(db, sql, -1, &stmt, nil)
+        guard prepareResult == SQLITE_OK else {
+            throw OpenCodeAdapterSourceFailure(db: db, resultCode: prepareResult)
+        }
+        defer { _ = sqlite3_finalize(stmt) }
+        var hits: [UpdateHit] = []
+        var exhausted = true
+        var maxMs = sinceMs
+        while true {
+            let step = sqlite3_step(stmt)
+            if step == SQLITE_DONE {
+                break
+            }
+            guard step == SQLITE_ROW else {
+                throw OpenCodeAdapterSourceFailure(db: db, resultCode: step)
+            }
+            guard remaining > 0 else {
+                exhausted = false
+                break
+            }
+            remaining -= 1
+            rawRowsRead += 1
+            let rowid = sqlite3_column_int64(stmt, 0)
+            let id = sqlite3_column_text(stmt, 1).map { String(cString: $0) } ?? ""
+            let updated = max(sqlite3_column_int64(stmt, 2), 0)
+            maxMs = max(maxMs, updated)
+            hits.append(UpdateHit(rowid: rowid, id: id))
+            try checkCancellation?()
+        }
+        return UpdateProbe(
+            hits: hits,
+            remainingBudget: max(remaining, 0),
+            maxWatermarkedMs: maxMs,
+            exhausted: exhausted)
+    }
+
+    /// Fully re-evaluates one message at its identity (valid `step-finish` parts now, or
+    /// the message-level fallback), and records its re-emitted identity IDs as
+    /// replacement swaps plus deletes for contribution footprints that no longer exist.
+    /// Old payloads resolve against the store at commit time (#4752 point 4).
+    static func reevaluateMessage(
+        _ db: OpaquePointer?,
+        messageRowid: Int64,
+        messageID: String,
+        hasPart: Bool,
+        remaining: inout Int,
+        registeredPath: String,
+        usageRows: inout [CostUsageStoreUsageRow],
+        accumulator: inout AggregateAccumulator,
+        replacements: inout [Int64],
+        deletions: inout [Int64]) throws
+    {
+        var stmt: OpaquePointer?
+        let prepareResult = sqlite3_prepare_v2(
+            db,
+            "SELECT time_created, data FROM message WHERE rowid = \(messageRowid)",
+            -1,
+            &stmt,
+            nil)
+        guard prepareResult == SQLITE_OK else {
+            throw OpenCodeAdapterSourceFailure(db: db, resultCode: prepareResult)
+        }
+        defer { _ = sqlite3_finalize(stmt) }
+        guard sqlite3_step(stmt) == SQLITE_ROW else { return }
+        let message = RawMessage(
+            rowid: messageRowid,
+            id: messageID,
+            timeCreatedMs: sqlite3_column_int64(stmt, 0),
+            data: sqlite3_column_text(stmt, 1).map { String(cString: $0) } ?? "")
+
+        var emitted: [Int64] = []
+        if hasPart {
+            var emittedParts = 0
+            _ = try Self.evaluateMessageInto(
+                db,
+                message: message,
+                fromPartRowid: nil,
+                modelID: Self.messageModelID(message.data),
+                remaining: &remaining,
+                usageRows: &usageRows,
+                accumulator: &accumulator,
+                registeredPath: registeredPath,
+                emittedIdentities: &emitted,
+                partsEmitted: &emittedParts)
+            if emittedParts > 0 {
+                // A message with a valid step-finish cannot keep its old fallback.
+                deletions.append(Self.rowIdentity(namespace: .message, sourceID: message.id))
+            } else {
+                // No valid part now: the fallback rule still applies only when the
+                // message itself is usable; otherwise every prior footprint dies.
+                let fallbackID = Self.rowIdentity(namespace: .message, sourceID: message.id)
+                if !emitted.contains(fallbackID) {
+                    deletions.append(fallbackID)
+                }
+            }
+        } else {
+            _ = Self.appendFallbackOnly(
+                message: message,
+                modelID: Self.messageModelID(message.data),
+                usageRows: &usageRows,
+                accumulator: &accumulator,
+                registeredPath: registeredPath)
+            emitted.append(Self.rowIdentity(namespace: .message, sourceID: message.id))
+        }
+        replacements.append(contentsOf: emitted)
+    }
+
+    /// Re-evaluates a session row; when it is now excluded by the usable-legacy
+    /// projection or invalid, the call reports so — the caller deletes its prior
+    /// contribution — otherwise its new emission replaces the old at the same identity.
+    static func reevaluateSessionRow(
+        _ db: OpaquePointer?,
+        sessionRowID: Int64,
+        sessionID: String,
+        hasLegacyMessages: Bool,
+        hasParts: Bool,
+        remaining: inout Int,
+        registeredPath: String,
+        usageRows: inout [CostUsageStoreUsageRow],
+        accumulator: inout AggregateAccumulator,
+        replacements: inout [Int64],
+        deletions: inout [Int64]) throws
+    {
+        let identity = Self.rowIdentity(namespace: .session_message, sourceID: sessionID)
+        var stmt: OpaquePointer?
+        let usableLegacy = hasParts
+            ? """
+              EXISTS (
+                SELECT 1 FROM part p
+                WHERE p.message_id = m.id AND json_valid(p.data)
+                  AND json_extract(p.data, '$.type') = 'step-finish'
+                  AND json_type(p.data, '$.cost') IN ('integer', 'real')
+                  AND CAST(json_extract(p.data, '$.cost') AS REAL) >= 0
+              )
+              OR (json_type(m.data, '$.cost') IN ('integer', 'real')
+                  AND CAST(json_extract(m.data, '$.cost') AS REAL) >= 0)
+            """
+            : """
+              (json_type(m.data, '$.cost') IN ('integer', 'real')
+               AND CAST(json_extract(m.data, '$.cost') AS REAL) >= 0)
+            """
+        let legacyGuard = hasLegacyMessages
+            ? """
+              AND NOT (
+                SELECT COUNT(*) > 0
+                FROM message m
+                WHERE m.id = s.id AND json_valid(m.data)
+                  AND json_extract(m.data, '$.providerID') = 'openai'
+                  AND json_extract(m.data, '$.role') = 'assistant'
+                  AND \(usableLegacy))
+            """
+            : ""
+        let sql = """
+        SELECT s.time_created, s.data
+        FROM session_message s
+        WHERE s.rowid = \(sessionRowID)
+          AND s.type = 'assistant' AND json_valid(s.data)
+          AND json_extract(s.data, '$.model.providerID') = 'openai'
+          AND json_type(s.data, '$.cost') IN ('integer', 'real')
+          AND CAST(json_extract(s.data, '$.cost') AS REAL) >= 0\(legacyGuard)
+        """
+        let prepareResult = sqlite3_prepare_v2(db, sql, -1, &stmt, nil)
+        guard prepareResult == SQLITE_OK else {
+            throw OpenCodeAdapterSourceFailure(db: db, resultCode: prepareResult)
+        }
+        defer { _ = sqlite3_finalize(stmt) }
+        guard remaining > 0 || true else { return }
+        let step = sqlite3_step(stmt)
+        if step != SQLITE_ROW {
+            // Excluded or invalid now: a previous contribution must be removed.
+            deletions.append(identity)
+            return
+        }
+        let dataString = sqlite3_column_text(stmt, 1).map { String(cString: $0) } ?? ""
+        guard let data = try? JSONDecoder().decode(SessionPayload.self, from: Data(dataString.utf8)),
+              let cost = data.cost, cost >= 0, cost.isFinite
+        else {
+            deletions.append(identity)
+            return
+        }
+        let turn = Turn(
+            namespace: Namespace.session_message.rawValue,
+            sourceID: sessionID,
+            createdMs: data.time?.created ?? sqlite3_column_int64(stmt, 0),
+            costUSD: cost,
+            modelID: data.model?.id ?? "",
+            totalTokens: data.tokens?.computedTotal,
+            inputTokens: data.tokens?.input,
+            outputTokens: data.tokens?.output,
+            reasoningTokens: data.tokens?.reasoning,
+            cacheReadTokens: data.tokens?.cache?.read,
+            cacheCreationTokens: data.tokens?.cache?.write)
+        try Self.append(
+            turn: turn,
+            usageRows: &usageRows,
+            accumulator: &accumulator,
+            registeredPath: registeredPath)
+        replacements.append(identity)
+    }
+
+    /// evaluateMessage variant reporting emitted identity namespaces and the valid-part
+    /// count, so re-evaluation swaps can delete the superseded footprints exactly.
+    private static func evaluateMessageInto(
+        _ db: OpaquePointer?,
+        message: RawMessage,
+        fromPartRowid: Int64?,
+        modelID: String,
+        remaining: inout Int,
+        usageRows: inout [CostUsageStoreUsageRow],
+        accumulator: inout AggregateAccumulator,
+        registeredPath: String,
+        emittedIdentities: inout [Int64],
+        partsEmitted: inout Int) throws -> OpenCodeSourceCheckpoint.PartContinuation?
+    {
+        var stmt: OpaquePointer?
+        let clause = fromPartRowid.map { " AND rowid > \($0)" } ?? ""
+        let sql = """
+        SELECT rowid, id, time_created, data
+        FROM part
+        WHERE message_id = ?\(clause)
+        ORDER BY rowid ASC
+        """
+        let prepareResult = sqlite3_prepare_v2(db, sql, -1, &stmt, nil)
+        guard prepareResult == SQLITE_OK else {
+            throw OpenCodeAdapterSourceFailure(db: db, resultCode: prepareResult)
+        }
+        defer { _ = sqlite3_finalize(stmt) }
+        sqlite3_bind_text(stmt, 1, message.id, -1, unsafeBitCast(-1, to: sqlite3_destructor_type.self))
+
+        var validParts = 0
+        var lastProcessedPartRowid = fromPartRowid ?? 0
+        while true {
+            let step = sqlite3_step(stmt)
+            if step == SQLITE_DONE {
+                break
+            }
+            guard step == SQLITE_ROW else {
+                throw OpenCodeAdapterSourceFailure(db: db, resultCode: step)
+            }
+            guard remaining > 0 else {
+                return OpenCodeSourceCheckpoint.PartContinuation(
+                    messageRowid: message.rowid,
+                    partRowid: lastProcessedPartRowid)
+            }
+            remaining -= 1
+            lastProcessedPartRowid = sqlite3_column_int64(stmt, 0)
+            let rawData = sqlite3_column_text(stmt, 3).map { String(cString: $0) } ?? ""
+            guard let partData = try? JSONDecoder().decode(PartPayload.self, from: Data(rawData.utf8)),
+                  partData.type == "step-finish",
+                  let cost = partData.cost,
+                  cost >= 0, cost.isFinite
+            else { continue }
+            validParts += 1
+            partsEmitted += 1
+            let turn = Turn(
+                namespace: Namespace.part.rawValue,
+                sourceID: sqlite3_column_text(stmt, 1).map { String(cString: $0) } ?? "",
+                createdMs: partData.time?.created ?? sqlite3_column_int64(stmt, 2),
+                costUSD: cost,
+                modelID: modelID,
+                totalTokens: partData.tokens?.computedTotal,
+                inputTokens: partData.tokens?.input,
+                outputTokens: partData.tokens?.output,
+                reasoningTokens: partData.tokens?.reasoning,
+                cacheReadTokens: partData.tokens?.cache?.read,
+                cacheCreationTokens: partData.tokens?.cache?.write)
+            emittedIdentities.append(
+                Self.rowIdentity(namespace: .part, sourceID: turn.sourceID))
+            try Self.append(
+                turn: turn,
+                usageRows: &usageRows,
+                accumulator: &accumulator,
+                registeredPath: registeredPath)
+        }
+        if validParts == 0,
+           let fallback = Self.fallbackTurn(
+               id: message.id,
+               timeCreatedMs: message.timeCreatedMs,
+               data: message.data)
+        {
+            emittedIdentities.append(
+                Self.rowIdentity(namespace: .message, sourceID: fallback.sourceID))
+            try Self.append(
+                turn: fallback,
+                usageRows: &usageRows,
+                accumulator: &accumulator,
+                registeredPath: registeredPath)
+        }
+        return nil
     }
 
     // MARK: - SQL + payload helpers
