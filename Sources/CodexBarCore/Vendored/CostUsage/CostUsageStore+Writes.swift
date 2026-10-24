@@ -12,6 +12,17 @@ extension CostUsageStore {
     @discardableResult
     func upsertFile(_ file: CostUsageStoreFile) -> Bool {
         self.withDatabase(default: false) { database in
+            try Self.upsertFileIn(database, file: file)
+            return true
+        }
+    }
+
+    /// The `upsertFile` statement against an open database, for use inside an enclosing
+    /// transaction (the adapter's atomic pass). Throws on bind/step failures.
+    static func upsertFileIn(
+        _ database: OpaquePointer,
+        file: CostUsageStoreFile) throws
+    {
             let state = try JSONEncoder().encode(file.scanState)
             let statement = try Self.prepare(database, """
             INSERT INTO files (
@@ -52,9 +63,8 @@ extension CostUsageStore {
             Self.bind(file.coverageUntilDay, to: statement, at: 14)
             sqlite3_bind_int64(statement, 15, file.updatedAtUnixMs)
             try Self.stepDone(statement, database: database)
-            return true
         }
-    }
+    
 
     @discardableResult
     func appendTokenSnapshots(_ snapshots: [CostUsageStoreTokenSnapshot]) -> Bool {
@@ -139,6 +149,178 @@ extension CostUsageStore {
         }
     }
 
+    /// Per-`(file, day, model)` upserts. Unlike `replaceFileDayAggregates` (which rebuilds
+    /// the file's whole day map from scratch), this is the bounded incremental write an
+    /// append-only pass needs: one database registered as one file must not rewrite every
+    /// historical day for a single append (#4752 adjustment 5).
+    @discardableResult
+    func upsertFileDayAggregates(
+        path: String,
+        aggregates: [CostUsageStoreDayAggregate]) -> Bool
+    {
+        guard !aggregates.isEmpty else { return true }
+        return self.withDatabase(default: false) { database in
+            try Self.inTransaction(database) {
+                try Self.insertFileDayAggregates(database, path: path, aggregates: aggregates)
+            }
+            return true
+        }
+    }
+
+    static func insertFileDayAggregates(
+        _ database: OpaquePointer,
+        path: String,
+        aggregates: [CostUsageStoreDayAggregate]) throws
+    {
+        let insert = try Self.prepare(database, """
+        INSERT INTO file_day_aggregates (
+            file_id, day, model, input_tokens, cached_tokens, output_tokens,
+            reasoning_tokens, request_count, authoritative_cost_nanos,
+            standard_input_tokens, standard_cached_tokens, standard_output_tokens,
+            priority_input_tokens, priority_cached_tokens, priority_output_tokens,
+            standard_tokens, priority_tokens
+        ) VALUES ((SELECT id FROM files WHERE path = ?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(file_id, day, model) DO UPDATE SET
+            input_tokens = excluded.input_tokens,
+            cached_tokens = excluded.cached_tokens,
+            output_tokens = excluded.output_tokens,
+            reasoning_tokens = excluded.reasoning_tokens,
+            request_count = excluded.request_count,
+            authoritative_cost_nanos = excluded.authoritative_cost_nanos,
+            standard_input_tokens = excluded.standard_input_tokens,
+            standard_cached_tokens = excluded.standard_cached_tokens,
+            standard_output_tokens = excluded.standard_output_tokens,
+            priority_input_tokens = excluded.priority_input_tokens,
+            priority_cached_tokens = excluded.priority_cached_tokens,
+            priority_output_tokens = excluded.priority_output_tokens,
+            standard_tokens = excluded.standard_tokens,
+            priority_tokens = excluded.priority_tokens
+        """)
+        defer { sqlite3_finalize(insert) }
+        for aggregate in aggregates {
+            sqlite3_reset(insert)
+            sqlite3_clear_bindings(insert)
+            Self.bind(path, to: insert, at: 1)
+            Self.bind(aggregate.day, to: insert, at: 2)
+            Self.bind(aggregate.model, to: insert, at: 3)
+            Self.bindAggregateValues(aggregate, to: insert, startingAt: 4)
+            try Self.stepDone(insert, database: database)
+        }
+    }
+
+    /// Atomically applies one OpenCode adapter pass against its registered source file
+    /// (#4752 adjustments 4–6). One transaction covers, in order:
+    /// 1. baseline revalidation under the writer lock — the durable resume payload must
+    ///    still match what the pass's reads were proven against; a mismatch means another
+    ///    producer advanced the same source, so the pass aborts with `false` and the
+    ///    caller re-derives from the committed state instead of double-applying,
+    /// 2. optional whole-file wipe of adapter-written rows (fresh re-ingest),
+    /// 3. the new file record (its checkpoint travels in `scan_state.resumePayload`),
+    /// 4. idempotent usage-row upserts (rows carry hash-stable identities),
+    /// 5. bounded per-file aggregate upserts,
+    /// 6. exact global day-aggregate deltas — including the negated previous file
+    ///    contribution when the file was wiped.
+    /// Any failure rolls everything back whole: the checkpoint never outlives the rows
+    /// and aggregates it describes.
+    func applyOpenCodeLocalHistoryPass(
+        file: CostUsageStoreFile,
+        expectedBaselineResumePayload: Data?,
+        wipe: Bool,
+        usageRows: [CostUsageStoreUsageRow],
+        fileAggregates: [CostUsageStoreDayAggregate],
+        globalDeltas: [CostUsageStoreDayAggregate]) -> Bool
+    {
+        guard file.belongsToOpenCodeLocalHistory else { return false }
+        guard usageRows.allSatisfy({ $0.path == file.path }) else { return false }
+        struct StaleBaseline: Error {}
+        return self.withDatabase(default: false) { database in
+            do {
+                try Self.inTransaction(database) {
+                    // 1. Baseline revalidation.
+                    let stored = try Self.readFiles(database).first { $0.path == file.path }
+                    switch (stored, expectedBaselineResumePayload) {
+                    case (nil, nil):
+                        break
+                    case let (existing?, expected?):
+                        guard existing.scanState.resumePayload == expected else {
+                            // Throw so the transaction rolls back — an aborted pass
+                            // never leaves partial rows behind.
+                            throw StaleBaseline()
+                        }
+                    default:
+                        throw StaleBaseline()
+                    }
+
+                    // 2–6.
+                    var deltas = globalDeltas
+                    if wipe {
+                        let previousAggregates = try Self.readFileDayAggregates(
+                            database, path: file.path)
+                        deltas += previousAggregates.map { Self.negatedAggregate($0.aggregate) }
+                        try Self.deleteUsageRows(database, path: file.path)
+                        try Self.deleteFileDayAggregates(database, path: file.path)
+                    }
+                    try Self.upsertFileIn(database, file: file)
+                    if !usageRows.isEmpty {
+                        try Self.insertUsageRows(database, rows: usageRows)
+                    }
+                    if !fileAggregates.isEmpty {
+                        try Self.insertFileDayAggregates(
+                            database, path: file.path, aggregates: fileAggregates)
+                    }
+                    if !deltas.isEmpty {
+                        try Self.mergeDayAggregatesIn(database, deltas: deltas)
+                    }
+                }
+            } catch is StaleBaseline {
+                return false
+            }
+            return true
+        }
+    }
+
+    static func negatedAggregate(
+        _ aggregate: CostUsageStoreDayAggregate) -> CostUsageStoreDayAggregate
+    {
+        CostUsageStoreDayAggregate(
+            day: aggregate.day,
+            model: aggregate.model,
+            inputTokens: -aggregate.inputTokens,
+            cachedTokens: -aggregate.cachedTokens,
+            outputTokens: -aggregate.outputTokens,
+            reasoningTokens: -aggregate.reasoningTokens,
+            requestCount: -aggregate.requestCount,
+            authoritativeCostNanos: -aggregate.authoritativeCostNanos,
+            standardInputTokens: -aggregate.standardInputTokens,
+            standardCachedTokens: -aggregate.standardCachedTokens,
+            standardOutputTokens: -aggregate.standardOutputTokens,
+            priorityInputTokens: -aggregate.priorityInputTokens,
+            priorityCachedTokens: -aggregate.priorityCachedTokens,
+            priorityOutputTokens: -aggregate.priorityOutputTokens,
+            standardTokens: -aggregate.standardTokens,
+            priorityTokens: -aggregate.priorityTokens)
+    }
+
+    static func deleteUsageRows(_ database: OpaquePointer, path: String) throws {
+        let statement = try Self.prepare(database, """
+        DELETE FROM usage_rows
+        WHERE file_id = (SELECT id FROM files WHERE path = ?)
+        """ )
+        defer { sqlite3_finalize(statement) }
+        Self.bind(path, to: statement, at: 1)
+        try Self.stepDone(statement, database: database)
+    }
+
+    static func deleteFileDayAggregates(_ database: OpaquePointer, path: String) throws {
+        let statement = try Self.prepare(database, """
+        DELETE FROM file_day_aggregates
+        WHERE file_id = (SELECT id FROM files WHERE path = ?)
+        """ )
+        defer { sqlite3_finalize(statement) }
+        Self.bind(path, to: statement, at: 1)
+        try Self.stepDone(statement, database: database)
+    }
+
     @discardableResult
     func replaceFileDayAggregates(
         path: String,
@@ -183,6 +365,18 @@ extension CostUsageStore {
         guard !deltas.isEmpty else { return true }
         return self.withDatabase(default: false) { database in
             try Self.inTransaction(database) {
+                try Self.mergeDayAggregatesIn(database, deltas: deltas)
+            }
+            return true
+        }
+    }
+
+    /// The `mergeDayAggregates` additive merge against an open database inside an
+    /// enclosing transaction (the adapter's atomic pass). Deltas may be negative.
+    static func mergeDayAggregatesIn(
+        _ database: OpaquePointer,
+        deltas: [CostUsageStoreDayAggregate]) throws
+    {
                 let statement = try Self.prepare(database, """
                 INSERT INTO day_aggregates (
                     day, model, input_tokens, cached_tokens, output_tokens, reasoning_tokens,
@@ -217,9 +411,7 @@ extension CostUsageStore {
                     try Self.stepDone(statement, database: database)
                 }
             }
-            return true
-        }
-    }
+    
 
     @discardableResult
     func replaceDayAggregates(_ aggregates: [CostUsageStoreDayAggregate]) -> Bool {

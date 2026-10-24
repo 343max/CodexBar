@@ -303,6 +303,67 @@ extension CostUsageStore {
         return values
     }
 
+    /// Windowed file day aggregates for one registered source file. The adapter's
+    /// read-side summary (#4752 point 2) must stay bounded by the reporting window —
+    /// never a whole-history row array.
+    static func readFileDayAggregates(
+        _ database: OpaquePointer,
+        path: String,
+        sinceDay: String?,
+        untilDay: String) throws -> [CostUsageStoreFileDayAggregate]
+    {
+        var sql = """
+        SELECT f.path, a.day, a.model, a.input_tokens, a.cached_tokens, a.output_tokens,
+               a.reasoning_tokens, a.request_count, a.authoritative_cost_nanos,
+               a.standard_input_tokens, a.standard_cached_tokens, a.standard_output_tokens,
+               a.priority_input_tokens, a.priority_cached_tokens, a.priority_output_tokens,
+               a.standard_tokens, a.priority_tokens
+        FROM file_day_aggregates a JOIN files f ON f.id = a.file_id
+        WHERE f.path = ? AND a.day <= ?
+        """
+        var boundValues: [String] = [path, untilDay]
+        if let sinceDay {
+            sql += " AND a.day >= ?"
+            boundValues.append(sinceDay)
+        }
+        sql += " ORDER BY a.day, a.model"
+        let statement = try Self.prepare(database, sql)
+        defer { sqlite3_finalize(statement) }
+        for (index, value) in boundValues.enumerated() {
+            Self.bind(value, to: statement, at: Int32(index + 1))
+        }
+        var values: [CostUsageStoreFileDayAggregate] = []
+        var result = sqlite3_step(statement)
+        while result == SQLITE_ROW {
+            guard let path = Self.columnText(statement, at: 0),
+                  let day = Self.columnText(statement, at: 1),
+                  let model = Self.columnText(statement, at: 2)
+            else { throw StoreError.invalidData }
+            values.append(CostUsageStoreFileDayAggregate(
+                path: path,
+                aggregate: CostUsageStoreDayAggregate(
+                    day: day,
+                    model: model,
+                    inputTokens: sqlite3_column_int64(statement, 3),
+                    cachedTokens: sqlite3_column_int64(statement, 4),
+                    outputTokens: sqlite3_column_int64(statement, 5),
+                    reasoningTokens: sqlite3_column_int64(statement, 6),
+                    requestCount: sqlite3_column_int64(statement, 7),
+                    authoritativeCostNanos: sqlite3_column_int64(statement, 8),
+                    standardInputTokens: sqlite3_column_int64(statement, 9),
+                    standardCachedTokens: sqlite3_column_int64(statement, 10),
+                    standardOutputTokens: sqlite3_column_int64(statement, 11),
+                    priorityInputTokens: sqlite3_column_int64(statement, 12),
+                    priorityCachedTokens: sqlite3_column_int64(statement, 13),
+                    priorityOutputTokens: sqlite3_column_int64(statement, 14),
+                    standardTokens: sqlite3_column_int64(statement, 15),
+                    priorityTokens: sqlite3_column_int64(statement, 16))))
+            result = sqlite3_step(statement)
+        }
+        guard result == SQLITE_DONE else { throw StoreError.sqlite(result) }
+        return values
+    }
+
     static func readFileDayAggregates(
         _ database: OpaquePointer,
         path: String?) throws -> [CostUsageStoreFileDayAggregate]

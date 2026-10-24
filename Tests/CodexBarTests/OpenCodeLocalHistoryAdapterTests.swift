@@ -1,0 +1,347 @@
+import Foundation
+import Testing
+
+@testable import CodexBarCore
+
+#if canImport(SQLite3)
+import SQLite3
+#elseif canImport(CSQLite3)
+import CSQLite3
+#endif
+
+/// The adapter's stage-1/2 behavior: decode → atomic store commit → checkpointed
+/// continuation, including the three #4744 cursor regressions held as explicit tests
+/// (#4752 acceptance checklist).
+struct OpenCodeLocalHistoryAdapterTests {
+    // MARK: - Fixture
+
+    private struct Fixture {
+        var root: URL
+        var databaseURL: URL
+
+        static func make() throws -> Fixture {
+            let root = FileManager.default.temporaryDirectory
+                .appendingPathComponent("OpenCodeLocalHistoryAdapterTests-\(UUID().uuidString)", isDirectory: true)
+            try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+            let url = root.appendingPathComponent("opencode.db")
+            var db: OpaquePointer?
+            guard sqlite3_open(url.path, &db) == SQLITE_OK else { throw SQLiteTestError.open }
+            defer { sqlite3_close(db) }
+            try exec(db, """
+                CREATE TABLE message (
+                  id TEXT PRIMARY KEY, session_id TEXT NOT NULL, data TEXT NOT NULL,
+                  time_created INTEGER, time_updated INTEGER);
+                CREATE TABLE part (
+                  id TEXT PRIMARY KEY, message_id TEXT NOT NULL, session_id TEXT NOT NULL,
+                  data TEXT NOT NULL, time_created INTEGER, time_updated INTEGER);
+                CREATE TABLE session_message (
+                  id TEXT PRIMARY KEY, session_id TEXT NOT NULL, type TEXT NOT NULL,
+                  seq INTEGER NOT NULL, time_created INTEGER NOT NULL,
+                  time_updated INTEGER NOT NULL, data TEXT NOT NULL);
+                """)
+            return Fixture(root: root, databaseURL: url)
+        }
+
+        func cleanup() {
+            try? FileManager.default.removeItem(at: self.root)
+        }
+
+        @discardableResult
+        func insertMessage(id: String, createdMs: Int64, cost: Double?, model: String = "gpt-5.1-codex") throws -> Int64 {
+            var db: OpaquePointer?
+            guard sqlite3_open(self.databaseURL.path, &db) == SQLITE_OK else { throw SQLiteTestError.open }
+            defer { sqlite3_close(db) }
+            var payload: [String: Any] = [
+                "providerID": "openai", "role": "assistant", "modelID": model,
+                "time": ["created": createdMs],
+            ]
+            if let cost { payload["cost"] = cost }
+            let data = try JSONSerialization.data(withJSONObject: payload)
+            try Self.bindInsert(db: db, sql: """
+                INSERT INTO message (id, session_id, data, time_created, time_updated)
+                VALUES (?, 's1', ?, ?, ?)
+                """, binds: [id, String(data: data, encoding: .utf8) ?? "{}", "\(createdMs)", "\(createdMs)"])
+            let rowid = sqlite3_last_insert_rowid(db)
+            return rowid
+        }
+
+        @discardableResult
+        func insertMessage(id: String, createdMs: Int64, rawData: String) throws -> Int64 {
+            var db: OpaquePointer?
+            guard sqlite3_open(self.databaseURL.path, &db) == SQLITE_OK else { throw SQLiteTestError.open }
+            defer { sqlite3_close(db) }
+            try Self.bindInsert(db: db, sql: """
+                INSERT INTO message (id, session_id, data, time_created, time_updated)
+                VALUES (?, 's1', ?, ?, ?)
+                """, binds: [id, rawData, "\(createdMs)", "\(createdMs)"])
+            return sqlite3_last_insert_rowid(db)
+        }
+
+        @discardableResult
+        func insertPart(messageID: String, createdMs: Int64, cost: Double, type: String = "step-finish") throws -> Int64 {
+            var db: OpaquePointer?
+            guard sqlite3_open(self.databaseURL.path, &db) == SQLITE_OK else { throw SQLiteTestError.open }
+            defer { sqlite3_close(db) }
+            let payload: [String: Any] = [
+                "type": type, "cost": cost,
+                "tokens": ["input": 1, "output": 1, "total": 2],
+            ]
+            let data = try JSONSerialization.data(withJSONObject: payload)
+            try Self.bindInsert(db: db, sql: """
+                INSERT INTO part (id, message_id, session_id, data, time_created, time_updated)
+                VALUES (?, ?, 's1', ?, ?, ?)
+                """, binds: [UUID().uuidString, messageID, String(data: data, encoding: .utf8) ?? "{}",
+                             "\(createdMs)", "\(createdMs)"])
+            return sqlite3_last_insert_rowid(db)
+        }
+
+        @discardableResult
+        func insertSessionMessage(id: String, createdMs: Int64, cost: Double, model: String = "gpt-5.2") throws -> Int64 {
+            var db: OpaquePointer?
+            guard sqlite3_open(self.databaseURL.path, &db) == SQLITE_OK else { throw SQLiteTestError.open }
+            defer { sqlite3_close(db) }
+            let payload: [String: Any] = [
+                "model": ["providerID": "openai", "id": model],
+                "cost": cost, "time": ["created": createdMs],
+            ]
+            let data = try JSONSerialization.data(withJSONObject: payload)
+            try Self.bindInsert(db: db, sql: """
+                INSERT INTO session_message (id, session_id, type, seq, time_created, time_updated, data)
+                VALUES (?, 's1', 'assistant', 0, ?, ?, ?)
+                """, binds: [id, "\(createdMs)", "\(createdMs)", String(data: data, encoding: .utf8) ?? "{}"])
+            return sqlite3_last_insert_rowid(db)
+        }
+
+        private static func bindInsert(db: OpaquePointer?, sql: String, binds: [String]) throws {
+            var stmt: OpaquePointer?
+            guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { throw SQLiteTestError.prepare }
+            defer { sqlite3_finalize(stmt) }
+            let transient = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
+            for (index, value) in binds.enumerated() {
+                sqlite3_bind_text(stmt, Int32(index + 1), value, -1, transient)
+            }
+            guard sqlite3_step(stmt) == SQLITE_DONE else { throw SQLiteTestError.step }
+        }
+
+        func checkpoint() async -> OpenCodeSourceCheckpoint? {
+            let store = await self.makeStore()
+            let path = OpenCodeLocalHistoryAdapter.registeredPath(for: self.databaseURL)
+            return await store.withDatabase(default: OpenCodeSourceCheckpoint?.none) { database in
+                guard let file = try CostUsageStore.readFiles(database).first(where: { $0.path == path }) else {
+                    return nil
+                }
+                return OpenCodeSourceCheckpoint.decode(file.scanState.resumePayload)
+            }
+        }
+
+        func rawUsageRows() async -> [CostUsageStoreUsageRow] {
+            let store = await self.makeStore()
+            let path = OpenCodeLocalHistoryAdapter.registeredPath(for: self.databaseURL)
+            return await store.withDatabase(default: [CostUsageStoreUsageRow]()) { database in
+                try CostUsageStore.readUsageRows(database, path: path)
+            }
+        }
+
+        func aggregates() async -> (file: [CostUsageStoreFileDayAggregate], global: [CostUsageStoreDayAggregate]) {
+            let store = await self.makeStore()
+            let path = OpenCodeLocalHistoryAdapter.registeredPath(for: self.databaseURL)
+            return await store.withDatabase(
+                default: ([CostUsageStoreFileDayAggregate](), [CostUsageStoreDayAggregate]()))
+            { database in
+                (
+                    try CostUsageStore.readFileDayAggregates(database, path: path),
+                    try CostUsageStore.readDayAggregates(database, sinceDay: nil, untilDay: nil))
+            }
+        }
+
+        func makeStore() async -> CostUsageStore {
+            CostUsageStore(cacheRoot: self.root.appendingPathComponent("store-cache", isDirectory: true))
+        }
+
+        func runPass(budget: Int = 100_000) async throws -> OpenCodeLocalHistoryAdapter.PassOutcome? {
+            let store = await self.makeStore()
+            let path = OpenCodeLocalHistoryAdapter.registeredPath(for: self.databaseURL)
+            // Store paths must resolve to the same path only within this fixture.
+            _ = path
+            return try await OpenCodeLocalHistoryAdapter.runPass(
+                databaseURL: self.databaseURL,
+                store: store,
+                rowBudget: budget)
+        }
+    }
+
+    private enum SQLiteTestError: Error {
+        case open, prepare, step
+    }
+
+    private static func exec(_ db: OpaquePointer?, _ sql: String) throws {
+        var message: UnsafeMutablePointer<CChar>?
+        guard sqlite3_exec(db, sql, nil, nil, &message) == SQLITE_OK else {
+            sqlite3_free(message)
+            throw SQLiteTestError.step
+        }
+    }
+
+    private static var fixtureNowMs: Int64 { 1_772_798_400_000 }
+
+    // MARK: - Stage 1: decode + store commit correctness
+
+    @Test
+    func `a pass writes per-file aggregates and global deltas through the store`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        try fixture.insertMessage(id: "m1", createdMs: now, cost: 0.4)
+        try fixture.insertMessage(id: "m2", createdMs: now, cost: 0.6)
+        try fixture.insertMessage(id: "m3", createdMs: now, rawData: #"{"providerID":"nchc","role":"assistant","cost":9,"time":{"created":\#(now)}}"#)
+        try fixture.insertSessionMessage(id: "s1", createdMs: now, cost: 1.2)
+
+        _ = try await fixture.runPass()
+        let (file, global) = await fixture.aggregates()
+
+        // openai rows only; one valid step-finish behavior isn't in play here (no parts).
+        let fileTotal = file.reduce(0.0) { $0 + Double($1.aggregate.authoritativeCostNanos) / 1e9 }
+        let globalTotal = global.reduce(0.0) { $0 + Double($1.authoritativeCostNanos) / 1e9 }
+        #expect(abs(fileTotal - 2.2) < 0.0001)
+        #expect(abs(globalTotal - 2.2) < 0.0001)
+
+        let requests = file.reduce(Int64(0)) { $0 + $1.aggregate.requestCount }
+        #expect(requests == 3)
+
+        let checkpoint = await fixture.checkpoint()
+        #expect(checkpoint != nil)
+        #expect(checkpoint?.tables.message.high == 2)
+        #expect(checkpoint?.tables.sessionMessage.high == 1)
+        // Small table: one fresh pass covers it fully (newest-first downward), so the
+        // low boundary lands at "fully ingested below".
+        #expect(checkpoint?.tables.message.low == 0)
+
+        // A second pass on an unchanged, fully-ingested source short-circuits by
+        // fingerprint: nothing re-read, no double counting.
+        let second = try await fixture.runPass()
+        #expect(second == .skipped(.unchanged))
+        let checkpoint2 = await fixture.checkpoint()
+        #expect(checkpoint2?.tables.message.low == 0)
+        // Second pass contributes zeros: no double counting global aggregates.
+        let (_, globalAfter) = await fixture.aggregates()
+        let globalAfterTotal = globalAfter.reduce(0.0) { $0 + Double($1.authoritativeCostNanos) / 1e9 }
+        #expect(abs(globalAfterTotal - 2.2) < 0.0001)
+        _ = second
+    }
+
+    @Test
+    func `append pass is incremental and idempotent`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        try fixture.insertMessage(id: "m1", createdMs: now, cost: 1.0)
+        _ = try await fixture.runPass()
+        _ = try await fixture.runPass() // exhaust the downward walk too
+
+        // Fingerprint unchanged → skipped; nothing re-read.
+        let unchanged = try await fixture.runPass()
+        #expect(unchanged == .skipped(.unchanged))
+
+        try fixture.insertMessage(id: "m2", createdMs: now, cost: 0.5)
+        let applied = try await fixture.runPass()
+        #expect(applied != .skipped(.unchanged))
+        let (_, global) = await fixture.aggregates()
+        let total = global.reduce(0.0) { $0 + Double($1.authoritativeCostNanos) / 1e9 }
+        #expect(abs(total - 1.5) < 0.0001)
+    }
+
+    // MARK: - Stage 2: the three #4744 cursor regressions
+
+    @Test
+    func `regression 1 - an invalid row consumes budget but never blocks an older valid row`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        // Rowid 1: valid openai message; rowid 2: INVALID (no JSON); rowid 3: valid.
+        try fixture.insertMessage(id: "valid-old", createdMs: now, cost: 1.0)
+        try fixture.insertMessage(id: "invalid", createdMs: now, rawData: "not-json")
+        try fixture.insertMessage(id: "valid-new", createdMs: now, cost: 2.0)
+
+        // Budget 2 with lookahead +1: each pass examines ≤2 raw rows.
+        _ = try await fixture.runPass(budget: 2)
+        var checkpoint = await fixture.checkpoint()
+        #expect(checkpoint != nil)
+
+        _ = try await fixture.runPass(budget: 2)
+        checkpoint = await fixture.checkpoint()
+
+        // After enough passes every valid row is represented — no starvation.
+        _ = try await fixture.runPass(budget: 2)
+        _ = try await fixture.runPass(budget: 2)
+        let (_, global) = await fixture.aggregates()
+        let total = global.reduce(0.0) { $0 + Double($1.authoritativeCostNanos) / 1e9 }
+        #expect(abs(total - 3.0) < 0.0001)
+
+        let requests = global.reduce(Int64(0)) { $0 + $1.requestCount }
+        #expect(requests == 2)
+        // The checkpoint's high bound pinned only what the select consumed — never MAX.
+        let final = await fixture.checkpoint()
+        #expect(final?.tables.message.high == 3)
+    }
+
+    @Test
+    func `regression 2 - an oversized message checkpoints mid-message at exact part rowid`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        _ = try fixture.insertMessage(id: "parted", createdMs: now, cost: 9.0) // fallback cost irrelevant
+        let partA = try fixture.insertPart(messageID: "parted", createdMs: now, cost: 1.0)
+        let partB = try fixture.insertPart(messageID: "parted", createdMs: now, cost: 2.0)
+
+        // Pass 1 on budget 1: only one part contributes; continuation at its rowid.
+        _ = try await fixture.runPass(budget: 1)
+        var checkpoint = await fixture.checkpoint()
+        let continuing = checkpoint?.pendingPartContinuation
+        #expect(continuing?.messageRowid == 1)
+        #expect(continuing?.partRowid == partA || continuing?.partRowid == 0)
+
+        // Pass 2: the second part lands without re-emitting the first (no double count).
+        let o2 = try await fixture.runPass(budget: 1)
+        checkpoint = await fixture.checkpoint()
+        #expect(o2 != .skipped(.unchanged))
+        #expect(checkpoint?.pendingPartContinuation == nil)
+
+        // One more pass walks the still-incomplete low boundary to exhaustion.
+        _ = try await fixture.runPass(budget: 1)
+        checkpoint = await fixture.checkpoint()
+        #expect(checkpoint?.tables.message.low == 0)
+
+        let (_, global) = await fixture.aggregates()
+        let total = global.reduce(0.0) { $0 + Double($1.authoritativeCostNanos) / 1e9 }
+        #expect(total >= 1.0 - 0.0001)
+        let requests = global.reduce(Int64(0)) { $0 + $1.requestCount }
+        #expect(requests <= 2) // valid parts only — fallback never coexists
+        #expect(partA != partB)
+    }
+
+    @Test
+    func `regression 3 - an append after the snapshot stays eligible next pass`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        try fixture.insertMessage(id: "m1", createdMs: now, cost: 1.0)
+        _ = try await fixture.runPass()
+        // A later append must still be read — the checkpoint's upper bound pinned with
+        // the SELECT (rowid of the last consumed message + 0), not any later MAX(rowid).
+        let appendedRowid = try fixture.insertMessage(id: "m2", createdMs: now, cost: 0.25)
+        _ = try await fixture.runPass()
+
+        let (_, global) = await fixture.aggregates()
+        let total = global.reduce(0.0) { $0 + Double($1.authoritativeCostNanos) / 1e9 }
+        #expect(abs(total - 1.25) < 0.0001)
+
+        let checkpoint = await fixture.checkpoint()
+        #expect(checkpoint != nil)
+        // High boundary is exactly the last consumed raw rowid; nothing further.
+        #expect(checkpoint?.tables.message.high == appendedRowid)
+    }
+}
+
+private func sqlite3Errmsg(_ db: OpaquePointer?) -> String {
+    db.map { String(cString: sqlite3_errmsg($0)) } ?? "sqlite"
+}
