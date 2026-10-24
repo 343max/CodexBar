@@ -203,7 +203,7 @@ struct ProviderArchitectureGatekeeperTests {
         #expect(Set(descriptors.filter(\.metadata.usesDetailBackedWindow).map(\.id)) == [
             .perplexity,
             .warp, .kilo, .mistral, .deepseek, .deepinfra, .qoder, .chutes, .longcat, .litellm, .bifrost, .manus,
-            .mimo, .neuralwatt, .abacus, .v0, .llmman, .aixy, .raycast, .workbuddy, .claudeplatform,
+            .mimo, .neuralwatt, .abacus, .v0, .llmman, .aixy, .raycast, .workbuddy, .claudeplatform, .abliteration,
         ])
         #if os(macOS)
         // Antigravity and Muse use bounded local usage readers.

@@ -69,6 +69,17 @@ struct AbliterationProviderTests {
         #expect(model.metrics.first?.resetText == nil)
         #expect(model.metrics.first?.pacePercent == nil)
         #expect(model.providerCost == nil)
+        #expect(AbliterationProviderDescriptor.descriptor.metadata.usesDetailBackedWindow)
+
+        // The CLI must show the spend summary as detail, never as "Resets $…" (found in the live test).
+        let text = CLIRenderer.renderText(
+            provider: .abliteration,
+            snapshot: snapshot,
+            credits: nil,
+            context: RenderContext(header: "abliteration.ai", status: nil, useColor: false, resetStyle: .countdown),
+            now: now)
+        #expect(text.contains("$60.00 / $50.00"))
+        #expect(!text.contains("Resets $"))
     }
 
     @Test

@@ -14,6 +14,7 @@ public enum AbliterationProviderDescriptor {
         displayName: "abliteration.ai",
         sessionLabel: "Credits",
         weeklyLabel: "Usage",
+        usesDetailBackedWindow: true,
         dashboardURL: "https://abliteration.ai",
         color: .init(hex: 0x1B1B1B),
         confetti: [0x1B1B1B, 0xECE8E6],
