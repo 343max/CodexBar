@@ -83,6 +83,9 @@ public enum CodexProviderDescriptor {
                 hintPlacement: .beforeRequestHistory,
                 chartEstimateDisclaimer: .localized("codex_api_estimate_hint")),
             pace: ProviderPaceCapability(
+                // Free plans report one fixed 30-day window (`limit_window_seconds: 2592000`). Pace it
+                // with that real duration; no `inferredMonthlyDuration`, which would swap in a calendar month.
+                resetWindowPace: .windowDuration(minutes: ProviderPaceCapability.monthlyWindowSentinelMinutes),
                 primary: .session(maximumMinutes: 300),
                 secondary: .weekly,
                 showsHeadroomHint: true,
