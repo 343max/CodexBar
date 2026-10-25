@@ -364,6 +364,7 @@ MOONSHOT_API_KEY=... codexbar --provider moonshot --source api --format json --p
 codexbar config validate --format json --pretty
 codexbar config dump --pretty
 printf '%s' "$OPENAI_ADMIN_KEY" | codexbar config set-api-key --provider openai --stdin
+pbpaste | codexbar config set-cookie --provider claude --stdin
 codexbar config enable --provider grok
 codexbar config set-source --provider claude --source cli
 codexbar config set-source --provider claude --source auto

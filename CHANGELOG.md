@@ -2,6 +2,10 @@
 
 ## 0.81.1 — Unreleased
 
+### Added
+
+- CLI: store a provider's manual Cookie header with `config set-cookie`, the CLI counterpart to pasting a cookie in Settings, so cookie providers can be configured without the app (for example on Linux).
+
 ## 0.81.0 — 2026-10-24
 
 ### Highlights
