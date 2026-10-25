@@ -1547,6 +1547,13 @@ enum CostUsageStoreAccess {
             .syncLoadCodexReadView(calendar: calendar, purpose: purpose)
     }
 
+    /// The scanner's shared store actor, for sibling writers that must commit through the
+    /// same persistence owner (e.g. the OpenCode local history adapter, #4752). Do not
+    /// construct a separate store against the same database: this registry is the writer.
+    static func sharedScanStore(cacheRoot: URL?) -> CostUsageStore {
+        self.sharedScanStores.store(cacheRoot: cacheRoot)
+    }
+
     static func load(cacheRoot: URL?, calendar: Calendar) -> CostUsageStoreLoad {
         #if DEBUG
         if let store = CostUsageStoreTestHooks.current.scanStoreOverride,

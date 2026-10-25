@@ -427,6 +427,106 @@ struct OpenCodeLocalHistoryAdapterTests {
         #expect(abs(total - 3.0) < 0.0001)
         #expect(global.reduce(Int64(0)) { $0 + $1.requestCount } == 1)
     }
+
+    // MARK: - Stage 4: read-view provenance and recorded-zero costs (#4752 points 2–3)
+
+    @Test
+    func `report entries carry source-recorded provenance and recorded zero cost survives`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        // OpenCode records $0 cost for subscription usage — presence is the signal.
+        _ = try fixture.insertMessage(id: "zero", createdMs: now, cost: 0.0)
+        _ = try fixture.insertMessage(id: "paid", createdMs: now, cost: 0.75)
+        _ = try await fixture.runPass()
+
+        let store = await fixture.makeStore()
+        let path = OpenCodeLocalHistoryAdapter.registeredPath(for: fixture.databaseURL)
+        let aggregates = await OpenCodeLocalHistoryAdapter.windowedAggregates(
+            store: store,
+            path: path,
+            sinceDay: "2000-01-01",
+            untilDay: "2999-12-31")
+        let entries = OpenCodeLocalHistoryAdapter.reportEntries(from: aggregates)
+        #expect(entries.count == 1)
+        let entry = try #require(entries.first)
+        // Recorded $0 is a PRESENT zero, not a missing cost (#4752 point 3).
+        #expect(entry.costUSD != nil)
+        #expect(abs((entry.costUSD ?? -1) - 0.75) < 0.0001)
+        #expect(entry.requestCount == 2)
+        let breakdowns = try #require(entry.modelBreakdowns)
+        #expect(breakdowns.allSatisfy { $0.sourceRecorded == true })
+        #expect(breakdowns.count == 1) // same model folds within the source itself
+        #expect(breakdowns.first?.requestCount == 2)
+    }
+
+    @Test
+    func `merged reports keep recorded and priced breakdowns of one model apart`() async throws {
+        let fixture = try Fixture.make()
+        defer { fixture.cleanup() }
+        let now = Self.fixtureNowMs
+        _ = try fixture.insertMessage(id: "sub", createdMs: now, cost: 0.0)
+        _ = try await fixture.runPass()
+
+        let store = await fixture.makeStore()
+        let path = OpenCodeLocalHistoryAdapter.registeredPath(for: fixture.databaseURL)
+        let aggregates = await OpenCodeLocalHistoryAdapter.windowedAggregates(
+            store: store, path: path, sinceDay: "2000-01-01", untilDay: "2999-12-31")
+        let entries = OpenCodeLocalHistoryAdapter.reportEntries(from: aggregates)
+        let sourcedReport = CostUsageDailyReport(data: entries, summary: nil)
+
+        // Same model, priced at $1.25 by CodexBar's native estimate.
+        let day = entries.first?.date ?? ""
+        let priced = CostUsageDailyReport(data: [
+            CostUsageDailyReport.Entry(
+                date: day,
+                inputTokens: 10,
+                outputTokens: 10,
+                totalTokens: 20,
+                requestCount: 1,
+                costUSD: 1.25,
+                modelsUsed: ["gpt-5.1-codex"],
+                modelBreakdowns: [
+                    CostUsageDailyReport.ModelBreakdown(
+                        modelName: "gpt-5.1-codex",
+                        costUSD: 1.25,
+                        totalTokens: 20,
+                        requestCount: 1,
+                        inputTokens: 10,
+                        outputTokens: 10),
+                ])
+        ], summary: nil)
+
+        let merged = priced.merged(with: sourcedReport)
+        #expect(merged.data.count == 1)
+        let mergedDay = try #require(merged.data.first)
+        #expect(mergedDay.modelBreakdowns?.count == 2) // recorded and priced stay apart
+        #expect(mergedDay.modelBreakdowns?.contains { $0.sourceRecorded == true && $0.costUSD == 0.0 } == true)
+        #expect(mergedDay.modelBreakdowns?.contains {
+            ($0.sourceRecorded ?? false) == false && abs(($0.costUSD ?? 0) - 1.25) < 0.0001
+        } == true)
+    }
+
+    @Test
+    func `ambient gate excludes scoped and managed histories`() {
+        #expect(CostUsageFetcher.codexLocalHistoryIsAmbient(
+            codexSessionsRoot: nil,
+            environment: [:]) == true)
+        #expect(CostUsageFetcher.codexLocalHistoryIsAmbient(
+            codexSessionsRoot: nil,
+            environment: ["CODEX_HOME": "   "]) == true)
+        #expect(CostUsageFetcher.codexLocalHistoryIsAmbient(
+            codexSessionsRoot: nil,
+            environment: ["CODEX_HOME": "/tmp/alt-home"]) == false)
+        #expect(CostUsageFetcher.codexLocalHistoryIsAmbient(
+            codexSessionsRoot: URL(fileURLWithPath: "/tmp/custom"),
+            environment: [:]) == false)
+    }
+
+    @Test
+    func `the opt-in stays default-off`() {
+        #expect(CostUsageScanner.Options().includeOpenCodeLocalHistory == false)
+    }
 }
 
 private func sqlite3Errmsg(_ db: OpaquePointer?) -> String {

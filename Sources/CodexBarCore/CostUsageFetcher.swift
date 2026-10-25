@@ -252,6 +252,7 @@ public struct CostUsageFetcher: Sendable {
         allowPricingRefresh: Bool = true,
         refreshPricingInBackground: Bool = true,
         includePiSessions: Bool = true,
+        includeOpenCodeLocalHistory: Bool = false,
         piWorkingDirectories: [URL] = [],
         piSessionProcessContexts: [PiSessionProcessContext] = [],
         bypassScannerDebounce: Bool,
@@ -259,6 +260,10 @@ public struct CostUsageFetcher: Sendable {
         reportContext: CostUsageReportContext = .regular) async throws -> CostUsageTokenResult
     {
         var options = self.scannerOptions(calendar: calendar)
+        if includeOpenCodeLocalHistory {
+            options = options ?? CostUsageScanner.Options()
+            options?.includeOpenCodeLocalHistory = true
+        }
         // Provider-specific by design: explicit account roots never include ambient or swap history.
         if provider == .claude, let claudeConfigDirectory {
             let roots = ClaudeConfigPaths.costProjectsRoots(
@@ -763,6 +768,7 @@ public struct CostUsageFetcher: Sendable {
             allowVertexClaudeFallback: allowVertexClaudeFallback,
             includePiSessions: includePiSessions,
             shouldMergePiUsage: shouldMergePiUsage,
+            includeOpenCodeLocalHistory: scanOptions.includeOpenCodeLocalHistory,
             scanOptions: scanOptions,
             environment: environment,
             piOptions: piOptions,
@@ -857,6 +863,7 @@ public struct CostUsageFetcher: Sendable {
         let allowVertexClaudeFallback: Bool
         let includePiSessions: Bool
         let shouldMergePiUsage: Bool
+        let includeOpenCodeLocalHistory: Bool
         let scanOptions: CostUsageScanner.Options
         @ProcessEnvironment private(set) var environment: [String: String]
         let piOptions: PiSessionCostScanner.Options
@@ -887,7 +894,7 @@ public struct CostUsageFetcher: Sendable {
         // Claude/Vertex share the transcript scanner with mutually exclusive filters.
         // These synchronous scans can run for minutes on large archives. The dedicated queue keeps
         // them off the cooperative pool and bridges task cancellation into scanner-level checks.
-        return try await CostUsageScanExecutor.run { checkCancellation in
+        let result = try await CostUsageScanExecutor.run { checkCancellation in
             var daily = try CostUsageScanner.loadDailyReportCancellable(
                 provider: provider,
                 since: since,
@@ -1003,6 +1010,78 @@ public struct CostUsageFetcher: Sendable {
                 native: native,
                 piScope: piScope)
         }
+        // OpenCode local history (#4752): an opt-in sibling pass driven beside the Codex
+        // scan, writing and reading through the scanner's own shared store. The source
+        // runs inside short read-only transactions; the merge here is windowed and
+        // source-I/O-free, and every merged breakdown stays provenance-labelled.
+        if provider == .codex, options.includeOpenCodeLocalHistory,
+           Self.codexLocalHistoryIsAmbient(
+               codexSessionsRoot: options.scanOptions.codexSessionsRoot,
+               environment: options.environment)
+        {
+            return await self.mergingOpenCodeLocalHistory(
+                into: result,
+                since: since,
+                until: now,
+                options: options)
+        }
+        return result
+    }
+
+    /// Ambient gate for the OpenCode opt-in (#3273 contract): the adapter contributes
+    /// only beside the user's real default `~/.codex` history — an explicit
+    /// `codexSessionsRoot` or a `CODEX_HOME` override means a scoped/managed environment
+    /// where sourced rows must never appear.
+    package static func codexLocalHistoryIsAmbient(
+        codexSessionsRoot: URL?,
+        environment: [String: String]) -> Bool
+    {
+        guard codexSessionsRoot == nil else { return false }
+        let home = environment["CODEX_HOME"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return home.isEmpty
+    }
+
+    /// Merges the windowed OpenCode day aggregates into the codex reports. The adapter
+    /// pass is a no-op when the source is missing or unchanged, so the merged surface is
+    /// deterministic whether the pass applied or skipped.
+    private static func mergingOpenCodeLocalHistory(
+        into result: LocalTokenScanResult,
+        since: Date,
+        until: Date,
+        options: LocalTokenScanOptions) async -> LocalTokenScanResult
+    {
+        let databaseURL = OpenCodeLocalHistoryAdapter.resolvedDatabaseURL(
+            environment: options.environment)
+        let path = OpenCodeLocalHistoryAdapter.registeredPath(for: databaseURL)
+        let store = CostUsageStoreAccess.sharedScanStore(cacheRoot: options.scanOptions.cacheRoot)
+        _ = try? await OpenCodeLocalHistoryAdapter.runPass(
+            databaseURL: databaseURL,
+            store: store,
+            checkCancellation: { try Task.checkCancellation() })
+        let range = CostUsageScanner.CostUsageDayRange(
+            since: since, until: until, calendar: options.scanOptions.calendar)
+        let aggregates = await OpenCodeLocalHistoryAdapter.windowedAggregates(
+            store: store,
+            path: path,
+            sinceDay: range.sinceKey,
+            untilDay: range.untilKey)
+        guard !aggregates.isEmpty else { return result }
+        let entries = OpenCodeLocalHistoryAdapter.reportEntries(from: aggregates)
+        let sourced = CostUsageDailyReport(data: entries, summary: nil)
+        let calendar = options.scanOptions.calendar
+        func merging(_ report: LocalTokenScanReport) -> LocalTokenScanReport {
+            LocalTokenScanReport(
+                daily: report.daily.merged(with: sourced, calendar: calendar),
+                projects: report.projects,
+                sessions: report.sessions,
+                staleSnapshotUpdatedAt: report.staleSnapshotUpdatedAt,
+                historyCoverageIsEstablished: report.historyCoverageIsEstablished,
+                detailsAreComplete: report.detailsAreComplete)
+        }
+        return LocalTokenScanResult(
+            inclusive: merging(result.inclusive),
+            native: merging(result.native),
+            piScope: result.piScope)
     }
 
     /// Refresh presentation metadata once per database, without changing the cached accounting.

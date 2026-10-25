@@ -351,6 +351,68 @@ extension OpenCodeLocalHistoryAdapter {
 
     // MARK: - Read-side: bounded publication
 
+    /// Converts this file's windowed aggregates into daily-report entries (#4752 point
+    /// 2–3): costs surface the price the source itself recorded — including `$0` for
+    /// OpenCode subscription usage, where presence is the signal — and every model
+    /// breakdown carries `sourceRecorded` so the merge can never fold them with a
+    /// same-named priced estimate.
+    static func reportEntries(
+        from aggregates: [CostUsageStoreFileDayAggregate]) -> [CostUsageDailyReport.Entry]
+    {
+        var byDay: [String: [CostUsageStoreFileDayAggregate]] = [:]
+        for aggregate in aggregates {
+            byDay[aggregate.aggregate.day, default: []].append(aggregate)
+        }
+        return byDay.keys.sorted().map { day in
+            let rows = byDay[day, default: []]
+            var breakdowns: [CostUsageDailyReport.ModelBreakdown] = []
+            var input = 0
+            var cached = 0
+            var output = 0
+            var reasoning = 0
+            var requests: Int64 = 0
+            var costNanos: Int64 = 0
+            for row in rows {
+                let aggregate = row.aggregate
+                input += Int(aggregate.inputTokens)
+                cached += Int(aggregate.cachedTokens)
+                output += Int(aggregate.outputTokens)
+                reasoning += Int(aggregate.reasoningTokens)
+                requests += aggregate.requestCount
+                costNanos += aggregate.authoritativeCostNanos
+                breakdowns.append(CostUsageDailyReport.ModelBreakdown(
+                    modelName: aggregate.model,
+                    costUSD: Double(aggregate.authoritativeCostNanos) / 1e9,
+                    totalTokens: Int(aggregate.inputTokens + aggregate.cachedTokens
+                        + aggregate.outputTokens + aggregate.reasoningTokens),
+                    requestCount: Int(aggregate.requestCount),
+                    inputTokens: Int(aggregate.inputTokens),
+                    outputTokens: Int(aggregate.outputTokens),
+                    reasoningTokens: Int(aggregate.reasoningTokens),
+                    sourceRecorded: true))
+            }
+            return CostUsageDailyReport.Entry(
+                date: day,
+                inputTokens: input,
+                outputTokens: output,
+                cacheReadTokens: cached,
+                cacheCreationTokens: 0,
+                reasoningTokens: reasoning,
+                totalTokens: input + cached + output + reasoning,
+                requestCount: Int(requests),
+                costUSD: Double(costNanos) / 1e9,
+                modelsUsed: breakdowns.isEmpty ? nil : breakdowns.map(\.modelName).sorted(),
+                modelBreakdowns: breakdowns.isEmpty
+                    ? nil
+                    : CostUsageDailyReport.sortedModelBreakdowns(breakdowns),
+                unpricedRequestCount: nil,
+                unmeteredRequestCount: nil,
+                estimatedRequestCount: nil,
+                pricedRequestCount: Int(requests))
+        }
+    }
+
+
     /// This file's day aggregates inside the reporting window — the source summary the
     /// read view carries (#4752 point 2). Produced entirely from the store (no source
     /// I/O), bounded by the window, and carrying `file_id` provenance by construction.

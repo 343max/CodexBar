@@ -180,6 +180,11 @@ extension UsageStore {
         let shouldDiscoverPiSessionProcessContexts = provider == .pi ||
             (effectiveIncludePiSessions &&
                 (provider == .claude || (provider == .codex && scopedCodexHomePath?.isEmpty != false)))
+        // #3273 opt-in: OpenCode local history folds into ambient Codex scans only —
+        // scoped CODEX_HOME scans stay exclusion-dry by construction.
+        let includeOpenCodeLocalHistory = provider == .codex
+            && self.settings.openCodeLocalHistoryEnabled
+            && scopedCodexHomePath?.isEmpty != false
         let piSessionProcessContexts: [PiSessionProcessContext] = if shouldDiscoverPiSessionProcessContexts {
             await LocalAgentSessionScanner().piSessionProcessContexts(environment: environment)
         } else {
@@ -200,6 +205,7 @@ extension UsageStore {
                     cursorCookieHeaderOverride: cursorCookieHeaderOverride,
                     allowPricingRefresh: allowPricingRefresh,
                     includePiSessions: effectiveIncludePiSessions,
+                    includeOpenCodeLocalHistory: includeOpenCodeLocalHistory,
                     piSessionProcessContexts: piSessionProcessContexts,
                     bypassScannerDebounce: true,
                     calendar: self.settings.costUsageBucketCalendar,
