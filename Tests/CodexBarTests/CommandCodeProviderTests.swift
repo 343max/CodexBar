@@ -59,6 +59,22 @@ struct CommandCodeProviderTests {
         #expect(descriptor.fetchPlan.sourceModes == [.auto, .api, .web])
     }
 
+    @Test
+    func `selected session accounts force web usage even when an API key is configured`() throws {
+        let account = ProviderTokenAccount(
+            id: UUID(), label: "fixture", token: "session-token", addedAt: 0, lastUsed: nil)
+        let credentials = try #require(
+            ProviderDescriptorRegistry.descriptor(for: .commandcode).credentials)
+
+        #expect(credentials.selectedAccountSourceMode(
+            base: .auto,
+            account: account,
+            config: ProviderConfig(id: .commandcode, apiKey: "configured-key")) == .web)
+        #expect(TokenAccountSupportCatalog.normalizedCookieHeader(
+            for: .commandcode,
+            token: "session-token") == "__Secure-commandcode_prod_.session_token=session-token")
+    }
+
     @Test(arguments: [false, true])
     func `automatic source prefers a configured key and otherwise uses cookies`(hasKey: Bool) async {
         let detection = BrowserDetection(cacheTTL: 0)

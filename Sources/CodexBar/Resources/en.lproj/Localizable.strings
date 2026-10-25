@@ -120,6 +120,7 @@
 "Cookie: \\u{2026}\\\n\\\nor paste the __Secure-next-auth.session-token value" = "Cookie: \\u{2026}\\\n\\\nor paste the __Secure-next-auth.session-token value";
 "Cookie: \\u{2026}\\\n\\\nor paste the kimi-auth token value" = "Cookie: \\u{2026}\\\n\\\nor paste the kimi-auth token value";
 "Cookie: …" = "Cookie: …";
+"Cookie: … or session token" = "Cookie: … or session token";
 "CopilotDeviceFlow" = "CopilotDeviceFlow";
 "Cost" = "Cost";
 "Token history" = "Token history";
@@ -332,6 +333,7 @@
 "Store multiple Abacus AI Cookie headers." = "Store multiple Abacus AI Cookie headers.";
 "Store multiple Augment Cookie headers." = "Store multiple Augment Cookie headers.";
 "Store multiple Cursor Cookie headers." = "Store multiple Cursor Cookie headers.";
+"Store multiple Command Code subscription sessions." = "Store multiple Command Code subscription sessions.";
 "Store multiple Factory Cookie headers." = "Store multiple Factory Cookie headers.";
 "Store multiple MiniMax Cookie headers." = "Store multiple MiniMax Cookie headers.";
 "Store multiple Mistral Cookie headers." = "Store multiple Mistral Cookie headers.";

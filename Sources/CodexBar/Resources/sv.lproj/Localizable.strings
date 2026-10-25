@@ -2750,3 +2750,5 @@
 "abliteration.ai request failed. Try refreshing later." = "abliteration.ai-förfrågan misslyckades. Försök uppdatera senare.";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai returnerade ett okänt svar. Uppdatera CodexBar och försök igen.";
 "Check your API key in Settings." = "Kontrollera din API-nyckel i Inställningar.";
+"Cookie: … or session token" = "Cookie: … or session token";
+"Store multiple Command Code subscription sessions." = "Store multiple Command Code subscription sessions.";

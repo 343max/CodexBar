@@ -2753,3 +2753,5 @@
 "abliteration.ai request failed. Try refreshing later." = "Permintaan abliteration.ai gagal. Coba segarkan lagi nanti.";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai mengembalikan respons yang tidak dikenali. Perbarui CodexBar dan coba lagi.";
 "Check your API key in Settings." = "Periksa kunci API Anda di Pengaturan.";
+"Cookie: … or session token" = "Cookie: … or session token";
+"Store multiple Command Code subscription sessions." = "Store multiple Command Code subscription sessions.";

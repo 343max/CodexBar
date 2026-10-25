@@ -4,7 +4,23 @@ public enum CommandCodeProviderDescriptor {
     public static let descriptor: ProviderDescriptor = Self.makeDescriptor()
     private static let credentials = ProviderCredentialAdapter.apiKey(
         environmentKey: CommandCodeSettingsReader.apiKeyEnvironmentKey,
-        resolve: CommandCodeSettingsReader.apiKey)
+        resolve: CommandCodeSettingsReader.apiKey,
+        tokenAccountSupport: TokenAccountSupport(
+            title: "Session tokens",
+            subtitle: "Store multiple Command Code subscription sessions.",
+            placeholder: "Cookie: … or session token",
+            injection: .cookieHeader,
+            requiresManualCookieSource: true,
+            cookieName: nil,
+            selectedAccountRequiresManualCookieSource: true,
+            passiveSourceModes: [.api],
+            cookieHeaderNormalizer: { token in
+                CommandCodeCookieHeader.override(from: token)?.headerValue
+                    ?? token.trimmingCharacters(in: .whitespacesAndNewlines)
+            }),
+        selectedAccountSourceModeResolver: { base, account, _ in
+            account == nil ? base : .web
+        })
 
     static func makeDescriptor() -> ProviderDescriptor {
         ProviderDescriptor(

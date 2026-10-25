@@ -2719,3 +2719,5 @@
 "abliteration.ai request failed. Try refreshing later." = "abliteration.ai 요청에 실패했습니다. 나중에 다시 새로 고침하세요.";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai가 알 수 없는 응답을 반환했습니다. CodexBar를 업데이트하고 다시 시도하세요.";
 "Check your API key in Settings." = "설정에서 API 키를 확인하세요.";
+"Cookie: … or session token" = "Cookie: … or session token";
+"Store multiple Command Code subscription sessions." = "Store multiple Command Code subscription sessions.";

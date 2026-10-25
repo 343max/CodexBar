@@ -2755,3 +2755,5 @@
 "abliteration.ai request failed. Try refreshing later." = "La richiesta a abliteration.ai non è riuscita. Riprova ad aggiornare più tardi.";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai ha restituito una risposta sconosciuta. Aggiorna CodexBar e riprova.";
 "Check your API key in Settings." = "Controlla la chiave API nelle Impostazioni.";
+"Cookie: … or session token" = "Cookie: … or session token";
+"Store multiple Command Code subscription sessions." = "Store multiple Command Code subscription sessions.";

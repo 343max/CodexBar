@@ -74,6 +74,34 @@ struct ProviderSettingsDescriptorTests {
     }
 
     @Test
+    func `Command Code can manage subscription session accounts`() throws {
+        let fixture = try self.makeSettingsFixture(suite: "ProviderSettingsDescriptorTests-commandcode-accounts")
+        let implementation = CommandCodeProviderImplementation()
+        let support = try #require(TokenAccountSupportCatalog.support(for: .commandcode))
+
+        #expect(support.requiresManualCookieSource)
+        #expect(support.selectedAccountRequiresManualCookieSource)
+        #expect(implementation.tokenAccountsVisibility(
+            context: fixture.settingsContext(provider: .commandcode), support: support) == false)
+
+        fixture.settings.addTokenAccount(
+            provider: .commandcode,
+            label: "Personal",
+            token: "session-token")
+
+        #expect(fixture.settings.commandcodeCookieSource == .manual)
+        #expect(implementation.tokenAccountsVisibility(
+            context: fixture.settingsContext(provider: .commandcode), support: support))
+
+        let contribution = try #require(implementation.settingsSnapshot(context: .init(
+            settings: fixture.settings, tokenOverride: nil)))
+        let snapshot = ProviderSettingsSnapshot(contributions: [contribution])
+        #expect(snapshot.commandcode?.cookieSource == .manual)
+        #expect(snapshot.commandcode?.manualCookieHeader ==
+            "__Secure-commandcode_prod_.session_token=session-token")
+    }
+
+    @Test
     func `Hyper exposes session controls and an independent API key`() throws {
         let fixture = try self.makeSettingsFixture(suite: "ProviderSettingsDescriptorTests-hyper")
         let context = fixture.settingsContext(provider: .hyper)
