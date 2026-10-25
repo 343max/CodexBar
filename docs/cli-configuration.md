@@ -124,6 +124,21 @@ Like `set-api-key`, it trims the value, enables the provider unless you pass `--
 for one-off scripts. The header must be a single line; see [Manual cookies](configuration.md#manual-cookies) for how to
 copy it. Only providers whose fetchers read a manual config cookie accept this command; output never includes the cookie.
 
+## Clearing credentials
+
+Remove a stored API key and manual cookie, like emptying those fields in Settings:
+
+```bash
+codexbar config clear-credential --provider claude
+codexbar config clear-credential --provider claude --cookie
+codexbar config clear-credential --provider openrouter --api-key
+```
+
+Without flags both `apiKey` and `cookieHeader` are removed; `--api-key` or `--cookie` limits it to one. Clearing a
+cookie also resets a `manual` `cookieSource` to the provider default. Provider enablement, `source`, token accounts,
+and other fields are unchanged. JSON output lists the removed fields in `cleared` (`apiKey`, `cookieHeader`); when
+nothing was stored, `cleared` is empty and the config file is not written.
+
 ## Isolated config files
 
 For tests, demos, and CI, point CodexBar at a temporary config file:

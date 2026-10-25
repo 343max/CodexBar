@@ -318,6 +318,8 @@ extension CodexBarCLI {
                                     [--format text|json] [--json] [--json-only] [--pretty]
           codexbar config set-cookie --provider <name> (--cookie <header>|--stdin) [--no-enable]
                                    [--format text|json] [--json] [--json-only] [--pretty]
+          codexbar config clear-credential --provider <name> [--api-key] [--cookie]
+                                         [--format text|json] [--json] [--json-only] [--pretty]
 
         Description:
           Validate or print the CodexBar config file (default: validate).
@@ -333,6 +335,8 @@ extension CodexBarCLI {
           the key as a token account instead of a provider-level personal key.
           set-cookie stores a manual Cookie header and sets the provider's cookie source to manual, like pasting
           a cookie in Settings; it enables that provider by default and rejects providers that do not read one.
+          clear-credential removes the stored API key and manual cookie (a manual cookie source reverts to default);
+          pass --api-key or --cookie to clear only one. Enablement, sources, and token accounts are unchanged.
 
         Examples:
           codexbar config validate --format json --pretty
@@ -345,6 +349,7 @@ extension CodexBarCLI {
           printf '%s' "$Z_AI_API_KEY" | codexbar config set-api-key --provider zai --stdin \\
             --label Team --usage-scope team --organization-id org_... --workspace-id proj_...
           pbpaste | codexbar config set-cookie --provider claude --stdin
+          codexbar config clear-credential --provider claude --cookie
         """
     }
 
@@ -541,6 +546,7 @@ extension CodexBarCLI {
           codexbar config set-api-key --provider zai --stdin --usage-scope team
                                    --organization-id <org> --workspace-id <project>
           codexbar config set-cookie --provider <name> (--cookie <header>|--stdin)
+          codexbar config clear-credential --provider <name> [--api-key] [--cookie]
           codexbar hooks <list|enable|disable> [--format text|json] [--pretty]
           codexbar hooks test <event> --provider <name>
           codexbar plugins <list|fetch <id>> [--json] [--pretty]
