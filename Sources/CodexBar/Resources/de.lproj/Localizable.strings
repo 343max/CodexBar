@@ -2750,3 +2750,4 @@
 "abliteration.ai request failed. Try refreshing later." = "Die Anfrage an abliteration.ai ist fehlgeschlagen. Versuche es später erneut.";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai hat eine unbekannte Antwort zurückgegeben. Aktualisiere CodexBar und versuche es erneut.";
 "Check your API key in Settings." = "Prüfe deinen API-Schlüssel in den Einstellungen.";
+"Kimi Code" = "Kimi Code";

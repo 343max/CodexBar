@@ -96,6 +96,32 @@ struct KimiMonthlyBreakdownTests {
         #expect(rows.map { $0["value"] as? String } == ["4% used", "53% used"])
     }
 
+    @Test
+    func `malformed optional Code share preserves the valid monthly quota`() throws {
+        let usage = try Self.parse("""
+        {"usages":{"limit_5h":{"used_ratio":0.25},
+          "limit_month_total":{"used_ratio":0.5},"limit_month_code":{"used_ratio":"malformed"}}}
+        """)
+        #expect(usage.secondary?.usedPercent == 25)
+        #expect(usage.extraRateWindows?.first?.window.usedPercent == 50)
+        #expect(usage.details.isEmpty)
+    }
+
+    @Test
+    func `monthly breakdown uses the app language while CLI values stay canonical`() throws {
+        let usage = try Self.parse("""
+        {"usages":{"limit_month_total":{"used_ratio":0.5761},"limit_month_code":{"used_ratio":0.0426}}}
+        """)
+        try CodexBarLocalizationOverride.$appLanguage.withValue("fr") {
+            let model = try KimiMonthlyBlockingTests.model(usage)
+            let rows = try #require(model.providerDetails.first).rows
+            let expected = [L("%@ used", "4%"), L("%@ used", "53%")]
+            #expect(expected != ["4% used", "53% used"])
+            #expect(rows.map(\.value) == expected)
+        }
+        #expect(try Self.breakdownRows(usage).map(\.value) == ["4% used", "53% used"])
+    }
+
     private static func parse(_ json: String) throws -> UsageSnapshot {
         try KimiUsageFetcher.parseCodeAPIUsage(from: Data(json.utf8)).toUsageSnapshot()
     }

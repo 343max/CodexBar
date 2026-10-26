@@ -4,7 +4,7 @@
 
 ### Added
 
-- Kimi: break the monthly Total usage pool down into Kimi Code and other features in menu and CLI details.
+- Kimi: break the monthly Total usage pool down into Kimi Code and other features in menu and CLI details (#4759). Thanks @Redwinam!
 - Plugins: allow detail progress bars to display native pace markers, respecting Show pace (#4776). Thanks @KLIEBHAN!
 
 ## 0.81.0 — 2026-10-24

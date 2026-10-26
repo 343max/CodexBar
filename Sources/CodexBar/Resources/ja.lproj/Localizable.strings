@@ -2752,3 +2752,4 @@
 "abliteration.ai request failed. Try refreshing later." = "abliteration.ai へのリクエストに失敗しました。後でもう一度更新してください。";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai から認識できない応答が返されました。CodexBar を更新して、もう一度お試しください。";
 "Check your API key in Settings." = "設定でAPIキーを確認してください。";
+"Kimi Code" = "Kimi Code";

@@ -2754,3 +2754,4 @@
 "abliteration.ai request failed. Try refreshing later." = "คำขอ abliteration.ai ล้มเหลว ลองรีเฟรชอีกครั้งในภายหลัง";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai ส่งการตอบกลับที่ไม่รู้จัก โปรดอัปเดต CodexBar แล้วลองอีกครั้ง";
 "Check your API key in Settings." = "ตรวจสอบคีย์ API ของคุณในการตั้งค่า";
+"Kimi Code" = "Kimi Code";

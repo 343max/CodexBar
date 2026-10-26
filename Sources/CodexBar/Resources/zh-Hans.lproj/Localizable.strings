@@ -2744,3 +2744,4 @@
 "abliteration.ai request failed. Try refreshing later." = "abliteration.ai 请求失败。请稍后尝试刷新。";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai 返回了无法识别的响应。请更新 CodexBar 后重试。";
 "Check your API key in Settings." = "请在设置中检查你的 API 密钥。";
+"Kimi Code" = "Kimi Code";
