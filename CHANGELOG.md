@@ -8,6 +8,7 @@
 ### Fixed
 
 - Trae CN: distinguish the Usage meter from the Credits details in Visible usage items while preserving hidden choices (#4764, #4780). Thanks @LeoLin990405 and @liuyuplus!
+- Codex: calculate pace for explicitly reported fixed 30-day usage windows using their actual duration (#4766). Thanks @johan456789!
 - WorkBuddy: use the official mascot instead of the placeholder letter icon (#4768). Thanks @codertesla!
 - WorkBuddy: keep resets on the paid subscription cycle instead of an earlier trial or reward expiry (#4767). Thanks @codertesla!
 ### Added

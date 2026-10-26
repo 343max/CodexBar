@@ -1,6 +1,7 @@
-import CodexBarCore
 import Foundation
 import Testing
+@testable import CodexBarCLI
+@testable import CodexBarCore
 
 struct ProviderPaceCapabilityTests {
     private static let weeklyWindowMinutes = 7 * 24 * 60
@@ -122,6 +123,29 @@ struct ProviderPaceCapabilityTests {
             now: now,
             defaultWindowMinutes: Self.monthlyWindowSentinelMinutes))
         #expect(abs(pace.expectedUsedPercent - 100.0 / 3.0) < 0.001)
+    }
+
+    @Test
+    func `reported fixed monthly OAuth window reaches CLI pace without calendar inference`() throws {
+        // A March reset makes accidental February calendar-month inference observable.
+        let reset = try #require(ISO8601DateParser.parse("2026-03-01T16:08:45Z"))
+        let now = reset.addingTimeInterval(-20 * 24 * 60 * 60)
+        let response = """
+        {"plan_type":"free","rate_limit":{"primary_window":{
+          "used_percent":11,"reset_at":\(Int(reset.timeIntervalSince1970)),
+          "limit_window_seconds":2592000},"secondary_window":null}}
+        """
+        let credentials = CodexOAuthCredentials(
+            accessToken: "fixture", refreshToken: "fixture", idToken: nil, accountId: nil, lastRefresh: now)
+        let snapshot = try #require(try CodexOAuthFetchStrategy._mapUsageForTesting(
+            Data(response.utf8), credentials: credentials))
+
+        #expect(snapshot.primary?.windowMinutes == 43200)
+        let pace = try #require(CLIRenderer.providerPacePayload(provider: .codex, snapshot: snapshot, now: now)?
+            .primary)
+        #expect(pace.expectedUsedPercent == 33)
+        #expect(pace.deltaPercent == -22)
+        #expect(pace.willLastToReset)
     }
 
     @Test
