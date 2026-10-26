@@ -2762,3 +2762,5 @@
 "OpenCode local history" = "سجل OpenCode المحلي";
 
 "Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "اعرض استخدام OpenCode المسجّل على جهاز Mac هذا في سجل Codex. معطّل افتراضيًا؛ تُستثنى دائمًا مواقع CODEX_HOME محددة النطاق أو البديلة.";
+"Other features" = "ميزات أخرى";
+"Kimi Code" = "Kimi Code";
