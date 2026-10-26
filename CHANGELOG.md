@@ -2,6 +2,9 @@
 
 ## 0.81.1 — Unreleased
 
+### Changed
+
+- Settings: fade the provider reorder Undo banner after inactivity, pausing while hovered or focused and respecting Reduce Motion (#4760). Thanks @elijahfriedman!
 ### Fixed
 
 - Trae CN: distinguish the Usage meter from the Credits details in Visible usage items while preserving hidden choices (#4764, #4780). Thanks @LeoLin990405 and @liuyuplus!
@@ -14,11 +17,9 @@
 - Codex: optionally include this device's recorded OpenCode usage in local cost history, preserving recorded $0 costs and keeping scoped accounts and Usage & Spend excluded (#4757, #4752). Thanks @Danielweng0902!
 - Plugins: choose which reported quota window drives the menu-bar percentage and switcher gauge, with automatic fallback when that window is unavailable (#4781). Thanks @coygeek!
 
-### Fixed
 
 - OpenCode Go: use the active CLI login for server quotas when no configured key or usable browser session is available, preserving account selection and local cost history (#4771). Thanks @sreejithraman!
 
-### Fixed
 
 - Settings: hide the Version row for web-only Cursor and Raycast providers instead of showing "not detected" for a detection they do not support (#4769, #4779). Thanks @LeoLin990405!
 
