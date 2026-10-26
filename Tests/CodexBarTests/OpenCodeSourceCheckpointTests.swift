@@ -1,6 +1,5 @@
 import Foundation
 import Testing
-
 @testable import CodexBarCore
 
 /// The source discriminator and the OpenCode adapter checkpoint must round-trip through
@@ -9,10 +8,19 @@ import Testing
 /// native Codex so existing stores upgrade without a table rebuild.
 struct OpenCodeSourceCheckpointTests {
     @Test
+    func `in memory OpenCode selection never resolves to a disk source`() {
+        #expect(OpenCodeLocalHistoryAdapter.resolvedDatabaseURL(
+            homeDirectory: URL(fileURLWithPath: "/synthetic"),
+            environment: ["OPENCODE_DB": ":memory:"]) == nil)
+    }
+
+    @Test
     func `legacy scan state without a source decodes as native codex`() throws {
         // Written by any build before the source seam: no `source` key at all.
         let legacyJSON = Data(#"{"isComplete":true,"targetSize":1200}"#.utf8)
-        let decoded = try JSONDecoder().decode(CostUsageStoreScanState.self, from: legacyJSON)
+        let decoded = try JSONDecoder().decode(
+            CostUsageStoreScanState.self,
+            from: legacyJSON)
         #expect(decoded.source == nil)
         #expect(decoded.resolvedSource == .nativeCodexSessionLogs)
         #expect(decoded.isComplete)
@@ -26,7 +34,9 @@ struct OpenCodeSourceCheckpointTests {
 
         state.source = .opencodeLocalHistory
         let data = try JSONEncoder().encode(state)
-        let decoded = try JSONDecoder().decode(CostUsageStoreScanState.self, from: data)
+        let decoded = try JSONDecoder().decode(
+            CostUsageStoreScanState.self,
+            from: data)
         #expect(decoded.source == .opencodeLocalHistory)
         #expect(decoded.resolvedSource == .opencodeLocalHistory)
     }
@@ -39,28 +49,27 @@ struct OpenCodeSourceCheckpointTests {
             modifiedUnixMs: 1_772_798_400_000,
             walSize: 1024,
             walModifiedUnixMs: 1_772_798_500_000)
-        var tables = OpenCodeSourceCheckpoint.TableWindows.empty
-        tables.message = .init(low: 0, high: 42)
-        tables.partUpdatedMs = 1_772_798_100_000
-        let checkpoint = OpenCodeSourceCheckpoint(
-            version: 1,
+        var checkpoint = OpenCodeSourceCheckpoint.fresh(
             sourcePath: "/data/opencode.db",
-            fingerprint: fingerprint,
-            tables: tables,
-            pendingPartContinuation: .init(messageRowid: 41, partRowid: 150),
-            reconciliation: .init(table: "message", verifiedUpToRowid: 33))
-
+            fingerprint: fingerprint)
+        checkpoint.phase = .reconciliation
+        checkpoint.position = .init(
+            timestamp: 1_772_798_100_000,
+            rowID: 42)
+        checkpoint.pendingParentCheck = .init(
+            rowIndex: 33,
+            parentID: "parent")
         let data = try JSONEncoder().encode(checkpoint)
         let decoded = try #require(OpenCodeSourceCheckpoint.decode(data))
         #expect(decoded == checkpoint)
-        #expect(decoded.pendingPartContinuation?.messageRowid == 41)
-        #expect(decoded.reconciliation?.verifiedUpToRowid == 33)
+        #expect(decoded.position.rowID == 42)
+        #expect(decoded.pendingParentCheck?.rowIndex == 33)
 
         // A checkpoint written by a newer build is never mistaken for progress this build
         // can trust (the adapter simply starts a fresh, honest pass).
         var future = checkpoint
         future.version = OpenCodeSourceCheckpoint.currentVersion + 1
-        #expect(OpenCodeSourceCheckpoint.decode(try JSONEncoder().encode(future)) == nil)
+        #expect(try OpenCodeSourceCheckpoint.decode(JSONEncoder().encode(future)) == nil)
         // Absent payload (e.g. a native Codex record's JSONL resume state shape) never
         // decodes as adapter progress.
         #expect(OpenCodeSourceCheckpoint.decode(nil) == nil)
@@ -69,8 +78,12 @@ struct OpenCodeSourceCheckpointTests {
     @Test
     func `discriminated file survives a store round trip`() async throws {
         let cacheRoot = FileManager.default.temporaryDirectory
-            .appendingPathComponent("OpenCodeSourceCheckpointTests-\(UUID().uuidString)", isDirectory: true)
-        try FileManager.default.createDirectory(at: cacheRoot, withIntermediateDirectories: true)
+            .appendingPathComponent(
+                "OpenCodeSourceCheckpointTests-\(UUID().uuidString)",
+                isDirectory: true)
+        try FileManager.default.createDirectory(
+            at: cacheRoot,
+            withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: cacheRoot) }
 
         let checkpoint = OpenCodeSourceCheckpoint.fresh(

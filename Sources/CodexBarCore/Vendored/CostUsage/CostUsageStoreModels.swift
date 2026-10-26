@@ -31,7 +31,7 @@ struct CostUsageStoreScanState: Codable, Equatable, Sendable {
     /// Source discriminator; `nil` on records persisted before the source seam. The
     /// default keeps the synthesized memberwise initializer source-compatible with every
     /// existing call site.
-    var source: CostUsageStoreSource? = nil
+    var source: CostUsageStoreSource?
     var targetSize: Int64?
     var isComplete: Bool
     var resumePayload: Data?

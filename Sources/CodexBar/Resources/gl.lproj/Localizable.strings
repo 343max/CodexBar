@@ -2742,3 +2742,15 @@
 "Chatbox AI is rate limiting requests. Try again later." = "Chatbox AI está a limitar as solicitudes. Téntao de novo máis tarde.";
 "Chatbox AI request failed. Try refreshing later." = "Fallou a solicitude a Chatbox AI. Tenta actualizar máis tarde.";
 "Chatbox AI returned an unrecognized response. Update CodexBar and try again." = "Chatbox AI devolveu unha resposta descoñecida. Actualiza CodexBar e téntao de novo.";
+
+/* abliteration.ai */
+"abliteration.ai" = "abliteration.ai";
+"Show abliteration.ai usage" = "Mostrar o uso de abliteration.ai";
+"abliteration.ai is rate limiting requests. Try again later." = "abliteration.ai está a limitar as solicitudes. Téntao de novo máis tarde.";
+"abliteration.ai request failed. Try refreshing later." = "Fallou a solicitude a abliteration.ai. Tenta actualizar máis tarde.";
+"abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai devolveu unha resposta descoñecida. Actualiza CodexBar e téntao de novo.";
+"Check your API key in Settings." = "Comproba a túa clave API en Configuración.";
+
+"OpenCode local history" = "Historial local de OpenCode";
+
+"Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "Mostra o uso de OpenCode rexistrado neste Mac no historial de Codex. Desactivado de forma predeterminada; as rutas de CODEX_HOME con ámbito restrinxido ou alternativas quedan sempre excluídas.";

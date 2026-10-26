@@ -2721,3 +2721,15 @@
 "Chatbox AI is rate limiting requests. Try again later." = "Chatbox AI 正在限制請求頻率。請稍後再試。";
 "Chatbox AI request failed. Try refreshing later." = "Chatbox AI 請求失敗。請稍後嘗試重新整理。";
 "Chatbox AI returned an unrecognized response. Update CodexBar and try again." = "Chatbox AI 傳回了無法辨識的回應。請更新 CodexBar 後再試。";
+
+/* abliteration.ai */
+"abliteration.ai" = "abliteration.ai";
+"Show abliteration.ai usage" = "顯示 abliteration.ai 用量";
+"abliteration.ai is rate limiting requests. Try again later." = "abliteration.ai 正在限制請求頻率。請稍後再試。";
+"abliteration.ai request failed. Try refreshing later." = "abliteration.ai 請求失敗。請稍後嘗試重新整理。";
+"abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai 傳回了無法辨識的回應。請更新 CodexBar 後再試。";
+"Check your API key in Settings." = "請在設定中檢查你的 API 金鑰。";
+
+"OpenCode local history" = "OpenCode 本機歷史記錄";
+
+"Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "在 Codex 歷史記錄中顯示此 Mac 上記錄的 OpenCode 用量。預設關閉；一律排除限定範圍或其他 CODEX_HOME 位置。";

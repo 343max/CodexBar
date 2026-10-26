@@ -156,9 +156,9 @@ struct ProviderArchitectureGatekeeperTests {
             Self.hash(descriptor.branding.burnDownWidgetColor, into: &burnDownFingerprint)
         }
 
-        // Chatbox extends the audited palette without changing existing provider colors.
-        #expect(widgetFingerprint == 1_520_460_381_527_728_538)
-        #expect(burnDownFingerprint == 7_988_322_199_986_601_411)
+        // abliteration.ai extends the audited palette without changing existing provider colors.
+        #expect(widgetFingerprint == 15_607_976_071_525_726_946)
+        #expect(burnDownFingerprint == 15_045_926_470_290_336_419)
     }
 
     @Test
@@ -203,7 +203,7 @@ struct ProviderArchitectureGatekeeperTests {
         #expect(Set(descriptors.filter(\.metadata.usesDetailBackedWindow).map(\.id)) == [
             .perplexity,
             .warp, .kilo, .mistral, .deepseek, .deepinfra, .qoder, .chutes, .longcat, .litellm, .bifrost, .manus,
-            .mimo, .neuralwatt, .abacus, .v0, .llmman, .aixy, .raycast, .workbuddy, .claudeplatform,
+            .mimo, .neuralwatt, .abacus, .v0, .llmman, .aixy, .raycast, .workbuddy, .claudeplatform, .abliteration,
         ])
         #if os(macOS)
         // Antigravity and Muse use bounded local usage readers.
@@ -3118,16 +3118,16 @@ struct ProviderArchitectureGatekeeperTests {
             expectedProviderIDs: ["antigravity", "claude", "codex", "vertexai"],
             expectedReferenceCount: 6,
             expectedReferenceFingerprint: [
-                "codex@0", "antigravity@5", "claude@10", "vertexai@13", "claude@14", "codex@16",
+                "codex@0", "antigravity@10", "claude@15", "vertexai@18", "claude@19", "codex@21",
             ],
             reason: "History scopes include Antigravity homes, mapped Claude roots, Vertex fallback, and Codex ownership."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/UsageStore+TokenCost.swift",
             anchor: "guard provider == .cursor else {",
-            expectedProviderIDs: ["cursor"],
-            expectedReferenceCount: 1,
-            expectedReferenceFingerprint: ["cursor@0"],
-            reason: "This exact app-runtime bridge coordinates provider-owned state through the shared controller."),
+            expectedProviderIDs: ["codex", "cursor"],
+            expectedReferenceCount: 2,
+            expectedReferenceFingerprint: ["codex@0", "cursor@11"],
+            reason: "Scope signatures isolate the opted-in ambient Codex source and Cursor credentials."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/UsageStore+TokenCost.swift",
             anchor: "if provider == .cursor,",

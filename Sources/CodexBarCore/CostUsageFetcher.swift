@@ -57,7 +57,7 @@ public struct CostUsageFetcher: Sendable {
         package let completedFiles: Int
         package let totalFiles: Int
         package let staleSnapshotUpdatedAt: Date?
-        package let completionIsConfirmed: Bool
+        package var completionIsConfirmed: Bool
         package var yieldedBeforeFileAttempt: Bool
 
         var historyCoverageIsEstablished: Bool {
@@ -129,6 +129,7 @@ public struct CostUsageFetcher: Sendable {
         codexHomePath: String? = nil,
         historyDays: Int = 30,
         includePiSessions: Bool = true,
+        includeOpenCodeLocalHistory: Bool = false,
         calendar: Calendar? = nil,
         requireCompleteHistory: Bool = false,
         environment: [String: String] = ProcessInfo.processInfo.environment) async -> CachedCodexTokenSnapshotResult?
@@ -140,7 +141,9 @@ public struct CostUsageFetcher: Sendable {
             allowScopedCodexHome: requireCompleteHistory,
             includePiSessions: includePiSessions,
             requireCompleteHistory: requireCompleteHistory,
-            scannerOptions: self.scannerOptions(calendar: calendar),
+            scannerOptions: self.scannerOptions(
+                calendar: calendar,
+                includeOpenCodeLocalHistory: includeOpenCodeLocalHistory),
             environment: environment)
     }
 
@@ -259,11 +262,7 @@ public struct CostUsageFetcher: Sendable {
         calendar: Calendar? = nil,
         reportContext: CostUsageReportContext = .regular) async throws -> CostUsageTokenResult
     {
-        var options = self.scannerOptions(calendar: calendar)
-        if includeOpenCodeLocalHistory {
-            options = options ?? CostUsageScanner.Options()
-            options?.includeOpenCodeLocalHistory = true
-        }
+        var options = self.scannerOptions(calendar: calendar, includeOpenCodeLocalHistory: includeOpenCodeLocalHistory)
         // Provider-specific by design: explicit account roots never include ambient or swap history.
         if provider == .claude, let claudeConfigDirectory {
             let roots = ClaudeConfigPaths.costProjectsRoots(
@@ -319,9 +318,12 @@ public struct CostUsageFetcher: Sendable {
             refreshPricingInBackground: refreshPricingInBackground)
     }
 
-    private func scannerOptions(calendar: Calendar?) -> CostUsageScanner.Options? {
-        guard calendar != nil || self.scannerOptions != nil else { return self.scannerOptions }
+    private func scannerOptions(
+        calendar: Calendar?, includeOpenCodeLocalHistory: Bool = false) -> CostUsageScanner.Options?
+    {
+        guard calendar != nil || self.scannerOptions != nil || includeOpenCodeLocalHistory else { return nil }
         var options = self.scannerOptions ?? CostUsageScanner.Options()
+        options.includeOpenCodeLocalHistory = includeOpenCodeLocalHistory
         if let calendar {
             options.calendar = calendar
         }
@@ -332,16 +334,19 @@ public struct CostUsageFetcher: Sendable {
         codexHomePath: String? = nil,
         calendar: Calendar? = nil,
         historyDays: Int? = nil,
-        now: Date = Date()) async -> CodexScanCatchUpStatus
+        now: Date = Date(),
+        includeOpenCodeLocalHistory: Bool = false,
+        environment: [String: String] = ProcessInfo.processInfo.environment) async -> CodexScanCatchUpStatus
     {
         // Provider-specific by design: Codex exposes bounded background catch-up for its incremental JSONL scanner.
         let options = Self.resolvedScannerOptions(
-            self.scannerOptions(calendar: calendar),
+            self.scannerOptions(calendar: calendar, includeOpenCodeLocalHistory: includeOpenCodeLocalHistory),
             provider: .codex,
             codexHomePath: codexHomePath)
         return await (try? CostUsageScanExecutor.run { checkCancellation in
             try checkCancellation()
-            return Self.codexScanCatchUpStatus(options: options, historyDays: historyDays, now: now)
+            return Self.codexScanCatchUpStatus(
+                options: options, historyDays: historyDays, now: now, environment: environment)
         }) ?? CodexScanCatchUpStatus(pending: false, progressKey: "unavailable")
     }
 
@@ -350,10 +355,13 @@ public struct CostUsageFetcher: Sendable {
         codexHomePath: String? = nil,
         historyDays: Int = 30,
         scanDurationPerRefresh: TimeInterval? = nil,
-        calendar: Calendar? = nil) async throws -> CostUsageScanExecutor.TimedResult<CodexScanCatchUpStatus>
+        calendar: Calendar? = nil,
+        includeOpenCodeLocalHistory: Bool = false,
+        environment: [String: String] = ProcessInfo.processInfo.environment)
+        async throws -> CostUsageScanExecutor.TimedResult<CodexScanCatchUpStatus>
     {
         var options = Self.resolvedScannerOptions(
-            self.scannerOptions(calendar: calendar),
+            self.scannerOptions(calendar: calendar, includeOpenCodeLocalHistory: includeOpenCodeLocalHistory),
             provider: .codex, // Provider-specific by design: this catch-up operation is owned by Codex's ledger.
             codexHomePath: codexHomePath)
         options.forceRescan = false
@@ -364,8 +372,14 @@ public struct CostUsageFetcher: Sendable {
         let since = CostReportingPeriod.rolling(days: clampedHistoryDays)
             .bounds(now: now, calendar: options.calendar).lowerBound
         let scanOptions = options
+        let range = CostUsageScanner.CostUsageDayRange(since: since, until: now, calendar: options.calendar)
+        let scope = OpenCodeLocalHistoryAdapter.readScope(options: options, environment: environment, range: range)
+        let sourceStart = Date()
+        let sourceRefreshSucceeded = try await OpenCodeLocalHistoryAdapter.refresh(
+            scope: scope, cacheRoot: options.cacheRoot, calendar: options.calendar)
+        let sourceDuration = scope == nil ? 0 : Date().timeIntervalSince(sourceStart)
         // Provider-specific by design: this catch-up step advances only the Codex incremental scanner.
-        return try await CostUsageScanExecutor.runTimed { checkCancellation in
+        let result = try await CostUsageScanExecutor.runTimed { checkCancellation in
             var options = scanOptions
             let yieldedBeforeAttempt = CostUsageScanExecutor.LockedState(false)
             options.codexScanDidYieldBeforeFileAttempt = { value in yieldedBeforeAttempt.withLock { $0 = value } }
@@ -377,23 +391,23 @@ public struct CostUsageFetcher: Sendable {
                 options: options,
                 checkCancellation: checkCancellation)
             try checkCancellation()
-            var status = Self.codexScanCatchUpStatus(options: options)
+            var status = Self.codexScanCatchUpStatus(
+                options: options, historyDays: historyDays, now: now, environment: environment)
+            status.completionIsConfirmed = status.completionIsConfirmed && sourceRefreshSucceeded
             status.yieldedBeforeFileAttempt = yieldedBeforeAttempt.withLock { $0 }
             return status
         }
+        return .init(value: result.value, activeDuration: result.activeDuration + sourceDuration)
     }
 
     private static func codexScanCatchUpStatus(
         options: CostUsageScanner.Options,
         historyDays: Int? = nil,
-        now: Date = Date()) -> CodexScanCatchUpStatus
+        now: Date = Date(),
+        environment: [String: String] = ProcessInfo.processInfo.environment) -> CodexScanCatchUpStatus
     {
         let roots = CostUsageScanner.codexSessionsRoots(options: options)
         let rootsFingerprint = CostUsageScanner.codexRootsFingerprint(options: options)
-        let view = CostUsageStoreAccess.readView(
-            cacheRoot: options.cacheRoot,
-            calendar: options.calendar,
-            purpose: .status)
         let requiredRange = historyDays.map { days in
             CostUsageScanner.CostUsageDayRange(
                 since: CostReportingPeriod.rolling(days: max(1, days))
@@ -401,6 +415,13 @@ public struct CostUsageFetcher: Sendable {
                 until: now,
                 calendar: options.calendar)
         }
+        let sourceScope = OpenCodeLocalHistoryAdapter.readScope(
+            options: options, environment: environment, range: requiredRange)
+        let view = CostUsageStoreAccess.readView(
+            cacheRoot: options.cacheRoot,
+            calendar: options.calendar,
+            purpose: .status,
+            sourceScope: sourceScope)
         return view.catchUpStatus(roots: roots, rootsFingerprint: rootsFingerprint, requiredRange: requiredRange)
     }
 
@@ -768,7 +789,6 @@ public struct CostUsageFetcher: Sendable {
             allowVertexClaudeFallback: allowVertexClaudeFallback,
             includePiSessions: includePiSessions,
             shouldMergePiUsage: shouldMergePiUsage,
-            includeOpenCodeLocalHistory: scanOptions.includeOpenCodeLocalHistory,
             scanOptions: scanOptions,
             environment: environment,
             piOptions: piOptions,
@@ -863,7 +883,6 @@ public struct CostUsageFetcher: Sendable {
         let allowVertexClaudeFallback: Bool
         let includePiSessions: Bool
         let shouldMergePiUsage: Bool
-        let includeOpenCodeLocalHistory: Bool
         let scanOptions: CostUsageScanner.Options
         @ProcessEnvironment private(set) var environment: [String: String]
         let piOptions: PiSessionCostScanner.Options
@@ -890,11 +909,21 @@ public struct CostUsageFetcher: Sendable {
         options: LocalTokenScanOptions) async throws -> LocalTokenScanResult
     {
         try Task.checkCancellation()
+        let range = CostUsageScanner.CostUsageDayRange(since: since, until: now, calendar: options.scanOptions.calendar)
+        // Provider-specific by design: OpenCode is an opt-in source of the ambient Codex ledger only.
+        let sourceScope = provider == .codex ? OpenCodeLocalHistoryAdapter.readScope(
+            options: options.scanOptions,
+            environment: options.environment,
+            reportContext: options.reportContext,
+            range: range) : nil
+        let sourceRefreshSucceeded = try await OpenCodeLocalHistoryAdapter.refresh(
+            scope: sourceScope, cacheRoot: options.scanOptions.cacheRoot, calendar: options.scanOptions.calendar)
+
         // Provider-specific by design: Codex owns project/session attribution and optional Pi merge state, while
         // Claude/Vertex share the transcript scanner with mutually exclusive filters.
         // These synchronous scans can run for minutes on large archives. The dedicated queue keeps
         // them off the cooperative pool and bridges task cancellation into scanner-level checks.
-        let result = try await CostUsageScanExecutor.run { checkCancellation in
+        return try await CostUsageScanExecutor.run { checkCancellation in
             var daily = try CostUsageScanner.loadDailyReportCancellable(
                 provider: provider,
                 since: since,
@@ -934,16 +963,17 @@ public struct CostUsageFetcher: Sendable {
                 let rootsFingerprint = CostUsageScanner.codexRootsFingerprint(options: options.scanOptions)
                 let range = CostUsageScanner.CostUsageDayRange(
                     since: since, until: now, calendar: options.scanOptions.calendar)
-                let view = Self.codexReportView(options: options.scanOptions, range: range)
+                let view = Self.codexReportView(options: options.scanOptions, range: range, sourceScope: sourceScope)
                 historyCoverageIsEstablished = view.historyCoverageIsEstablished(
                     range: range,
-                    rootsFingerprint: rootsFingerprint)
+                    rootsFingerprint: rootsFingerprint) && sourceRefreshSucceeded
                 detailsAreComplete = historyCoverageIsEstablished &&
                     (view.days.isEmpty || view.projectMetadataVersion == CostUsageScanner.codexProjectMetadataVersion)
                 if !historyCoverageIsEstablished,
                    let previous = view.previousReport(range: range, rootsFingerprint: rootsFingerprint)
                 {
                     staleSnapshotUpdatedAt = previous.updatedAt
+                    daily = view.mergingSource(into: previous.report, range: range)
                 } else {
                     let reports = view.reports(range: range, cacheRoot: options.scanOptions.cacheRoot, roots: roots)
                     daily = reports.daily
@@ -1010,78 +1040,6 @@ public struct CostUsageFetcher: Sendable {
                 native: native,
                 piScope: piScope)
         }
-        // OpenCode local history (#4752): an opt-in sibling pass driven beside the Codex
-        // scan, writing and reading through the scanner's own shared store. The source
-        // runs inside short read-only transactions; the merge here is windowed and
-        // source-I/O-free, and every merged breakdown stays provenance-labelled.
-        if provider == .codex, options.includeOpenCodeLocalHistory,
-           Self.codexLocalHistoryIsAmbient(
-               codexSessionsRoot: options.scanOptions.codexSessionsRoot,
-               environment: options.environment)
-        {
-            return await self.mergingOpenCodeLocalHistory(
-                into: result,
-                since: since,
-                until: now,
-                options: options)
-        }
-        return result
-    }
-
-    /// Ambient gate for the OpenCode opt-in (#3273 contract): the adapter contributes
-    /// only beside the user's real default `~/.codex` history — an explicit
-    /// `codexSessionsRoot` or a `CODEX_HOME` override means a scoped/managed environment
-    /// where sourced rows must never appear.
-    package static func codexLocalHistoryIsAmbient(
-        codexSessionsRoot: URL?,
-        environment: [String: String]) -> Bool
-    {
-        guard codexSessionsRoot == nil else { return false }
-        let home = environment["CODEX_HOME"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        return home.isEmpty
-    }
-
-    /// Merges the windowed OpenCode day aggregates into the codex reports. The adapter
-    /// pass is a no-op when the source is missing or unchanged, so the merged surface is
-    /// deterministic whether the pass applied or skipped.
-    private static func mergingOpenCodeLocalHistory(
-        into result: LocalTokenScanResult,
-        since: Date,
-        until: Date,
-        options: LocalTokenScanOptions) async -> LocalTokenScanResult
-    {
-        let databaseURL = OpenCodeLocalHistoryAdapter.resolvedDatabaseURL(
-            environment: options.environment)
-        let path = OpenCodeLocalHistoryAdapter.registeredPath(for: databaseURL)
-        let store = CostUsageStoreAccess.sharedScanStore(cacheRoot: options.scanOptions.cacheRoot)
-        _ = try? await OpenCodeLocalHistoryAdapter.runPass(
-            databaseURL: databaseURL,
-            store: store,
-            checkCancellation: { try Task.checkCancellation() })
-        let range = CostUsageScanner.CostUsageDayRange(
-            since: since, until: until, calendar: options.scanOptions.calendar)
-        let aggregates = await OpenCodeLocalHistoryAdapter.windowedAggregates(
-            store: store,
-            path: path,
-            sinceDay: range.sinceKey,
-            untilDay: range.untilKey)
-        guard !aggregates.isEmpty else { return result }
-        let entries = OpenCodeLocalHistoryAdapter.reportEntries(from: aggregates)
-        let sourced = CostUsageDailyReport(data: entries, summary: nil)
-        let calendar = options.scanOptions.calendar
-        func merging(_ report: LocalTokenScanReport) -> LocalTokenScanReport {
-            LocalTokenScanReport(
-                daily: report.daily.merged(with: sourced, calendar: calendar),
-                projects: report.projects,
-                sessions: report.sessions,
-                staleSnapshotUpdatedAt: report.staleSnapshotUpdatedAt,
-                historyCoverageIsEstablished: report.historyCoverageIsEstablished,
-                detailsAreComplete: report.detailsAreComplete)
-        }
-        return LocalTokenScanResult(
-            inclusive: merging(result.inclusive),
-            native: merging(result.native),
-            piScope: result.piScope)
     }
 
     /// Refresh presentation metadata once per database, without changing the cached accounting.
@@ -1184,19 +1142,19 @@ public struct CostUsageFetcher: Sendable {
 
     private static func codexReportView(
         options: CostUsageScanner.Options,
-        range: CostUsageScanner.CostUsageDayRange) -> CostUsageStoreReadView
+        range: CostUsageScanner.CostUsageDayRange,
+        sourceScope: OpenCodeLocalHistoryAdapter.ReadScope? = nil) -> CostUsageStoreReadView
     {
         let roots = CostUsageScanner.codexSessionsRoots(options: options)
         let rootsFingerprint = CostUsageScanner.codexRootsFingerprint(options: options)
-        // Keep a fallback detail read on the same validated connection.
         let store = CostUsageStore(cacheRoot: options.cacheRoot)
-        var view = store.syncLoadCodexReadView(calendar: options.calendar, purpose: .status).scoped(to: roots)
-        if view.hasPendingScan {
-            view = store.syncLoadCodexReadView(calendar: options.calendar, purpose: .activity).scoped(to: roots)
+        func read(_ purpose: CostUsageStoreReadPurpose) -> CostUsageStoreReadView {
+            store.syncLoadCodexReadView(calendar: options.calendar, purpose: purpose, sourceScope: sourceScope)
+                .scoped(to: roots)
         }
-        if view.previousReport(range: range, rootsFingerprint: rootsFingerprint) == nil {
-            view = store.syncLoadCodexReadView(calendar: options.calendar, purpose: .report).scoped(to: roots)
-        }
+        var view = read(sourceScope == nil ? .status : .activity)
+        if view.hasPendingScan { view = read(.activity) }
+        if view.previousReport(range: range, rootsFingerprint: rootsFingerprint) == nil { view = read(.report) }
         return view
     }
 
@@ -1485,7 +1443,9 @@ public struct CostUsageFetcher: Sendable {
                 calendar: options.calendar)
             let roots = CostUsageScanner.codexSessionsRoots(options: options)
             let rootsFingerprint = CostUsageScanner.codexRootsFingerprint(options: options)
-            let cache = Self.codexReportView(options: options, range: range)
+            let sourceScope = OpenCodeLocalHistoryAdapter.readScope(
+                options: options, environment: environment, range: range)
+            let cache = Self.codexReportView(options: options, range: range, sourceScope: sourceScope)
             var reports: [CostUsageDailyReport] = []
             var projects: [CostUsageProjectBreakdown] = []
             var sessions: [CostUsageSessionBreakdown] = []
@@ -1506,13 +1466,13 @@ public struct CostUsageFetcher: Sendable {
                    range: range,
                    rootsFingerprint: rootsFingerprint)
             {
-                reports.append(previous.report)
+                reports.append(cache.mergingSource(into: previous.report, range: range))
                 staleSnapshotUpdatedAt = previous.updatedAt
                 if let updatedAt = previous.updatedAt {
                     scanTimes.append(updatedAt)
                 }
             } else if cache.timeZoneIdentifier == range.calendar.timeZone.identifier,
-                      !cache.days.isEmpty,
+                      cache.hasHistory,
                       cache.roots == rootsFingerprint,
                       !cache.windowExpandsCache(range)
             {

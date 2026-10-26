@@ -74,6 +74,9 @@ WorkBuddy uses this shared cookie host for its billing-only plugin. Its descript
 version because the website binds sessions to the browser User-Agent; cookie values stay opaque to the script.
 See [WorkBuddy](workbuddy.md) for the request contract, bounded optional reset lookup, and account coverage.
 
+[abliteration.ai](abliteration.md) uses a fixed-origin bearer request to read prepaid USD credits. It reuses the
+standard API-key field and classified errors, with no browser access or inferred reset schedule.
+
 [X API](xapi.md) uses the same cookie host with a bundled `ct0` header echo for account discovery and developer-console
 credits. Its script preserves dollar balances and debt without receiving cookie values or adding a native fetcher.
 
@@ -398,6 +401,11 @@ Named extra windows accept an optional `usageKnown` boolean (default `true`). Se
 the window remains visible as **Unavailable**, and its placeholder `usedPercent` is not presented as measured usage.
 Detail rows accept optional `progress` (a finite consumed fraction from 0 through 1) and `usageValue` (finite raw usage).
 The host maps the fraction to native progress with `used: progress, total: 1`; `usageValue` is preserved independently.
+An optional `pace` (a finite expected consumed fraction from 0 through 1) marks even consumption, for example elapsed
+time divided by the window length. The bar uses the native pace tip: green while `progress` is at or below `pace`,
+red once it runs ahead. Row `severity` controls the fill independently and does not change this comparison.
+Omit `pace` to hide the tip. The app's existing **Show pace** preference also hides detail pace markers.
+`pace` is ignored on rows without `progress`; invalid values fail the fetch.
 An optional row `severity: "normal" | "warning" | "critical"` uses the system green, orange, or red accent;
 warning and critical rows also show a labeled warning symbol. The plugin computes its own thresholds independently
 of `progress`. Omit `severity` (or pass null) to keep the existing provider tint. Invalid values fail the fetch.

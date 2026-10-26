@@ -2743,3 +2743,15 @@
 "Chatbox AI is rate limiting requests. Try again later." = "Chatbox AI がリクエストの頻度を制限しています。後でもう一度お試しください。";
 "Chatbox AI request failed. Try refreshing later." = "Chatbox AI へのリクエストに失敗しました。後でもう一度更新してください。";
 "Chatbox AI returned an unrecognized response. Update CodexBar and try again." = "Chatbox AI から認識できない応答が返されました。CodexBar を更新して、もう一度お試しください。";
+
+/* abliteration.ai */
+"abliteration.ai" = "abliteration.ai";
+"Show abliteration.ai usage" = "abliteration.ai の使用状況を表示";
+"abliteration.ai is rate limiting requests. Try again later." = "abliteration.ai がリクエストの頻度を制限しています。後でもう一度お試しください。";
+"abliteration.ai request failed. Try refreshing later." = "abliteration.ai へのリクエストに失敗しました。後でもう一度更新してください。";
+"abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai から認識できない応答が返されました。CodexBar を更新して、もう一度お試しください。";
+"Check your API key in Settings." = "設定でAPIキーを確認してください。";
+
+"OpenCode local history" = "OpenCode のローカル履歴";
+
+"Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "この Mac に記録された OpenCode の使用状況を Codex の履歴に表示します。デフォルトではオフです。スコープが限定された場所や代替の CODEX_HOME の場所は常に除外されます。";

@@ -562,7 +562,7 @@ extension SettingsStore {
     var openCodeLocalHistoryEnabled: Bool {
         get { self.defaultsState.openCodeLocalHistoryEnabled }
         set {
-            self.setDefault(\.openCodeLocalHistoryEnabled, newValue, key: "openCodeLocalHistoryEnabled")
+            self.setCostDefault(\.openCodeLocalHistoryEnabled, newValue, key: "openCodeLocalHistoryEnabled")
             self.noteBackgroundWorkSettingsChanged()
         }
     }
