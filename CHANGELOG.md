@@ -17,6 +17,7 @@
 ### Added
 
 - Updates: separate automatic checks from automatic installs, preserve saved choices across relaunches and Settings visits, and retain the existing default-on behavior (#4777, #4778). Thanks @harveyrandall!
+- Kimi: break the monthly Total usage pool down into Kimi Code and other features in menu and CLI details (#4759). Thanks @Redwinam!
 - CLI: add `config set-cookie` and `config clear-credential` for stored manual cookies and API keys, preserving saved accounts and unrelated provider settings (#4765). Thanks @johan456789!
 - Command Code: manage multiple saved subscription sessions in Settings and select them from the CLI (#4774). Thanks @JavaGT!
 - Plugins: allow detail progress bars to display native pace markers, respecting Show pace (#4776). Thanks @KLIEBHAN!
