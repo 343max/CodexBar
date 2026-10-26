@@ -722,6 +722,8 @@
 "acknowledgements_authors" = "Autores";
 "acknowledgements_license" = "Licencia";
 "check_updates_auto" = "Buscar actualizaciones automáticamente";
+"install_updates_auto" = "Descargar e instalar actualizaciones automáticamente";
+"install_updates_auto_subtitle" = "Si está desactivado, se te preguntará antes de instalar una nueva versión.";
 "update_channel" = "Canal de actualizaciones";
 "check_for_updates" = "Buscar actualizaciones…";
 "updates_unavailable" = "Actualizaciones no disponibles en esta compilación.";

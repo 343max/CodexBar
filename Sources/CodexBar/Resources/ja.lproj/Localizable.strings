@@ -731,6 +731,8 @@
 "acknowledgements_authors" = "作者";
 "acknowledgements_license" = "ライセンス";
 "check_updates_auto" = "アップデートを自動的に確認";
+"install_updates_auto" = "アップデートを自動的にダウンロードしてインストール";
+"install_updates_auto_subtitle" = "オフの場合、新しいバージョンをインストールする前に確認します。";
 "update_channel" = "アップデートチャンネル";
 "check_for_updates" = "アップデートを確認…";
 "updates_unavailable" = "このビルドではアップデートを利用できません。";

@@ -740,6 +740,8 @@
 "acknowledgements_authors" = "ผู้เขียน";
 "acknowledgements_license" = "สัญญาอนุญาต";
 "check_updates_auto" = "ตรวจสอบการอัปเดตโดยอัตโนมัติ";
+"install_updates_auto" = "ดาวน์โหลดและติดตั้งการอัปเดตโดยอัตโนมัติ";
+"install_updates_auto_subtitle" = "เมื่อปิดไว้ ระบบจะถามคุณก่อนติดตั้งเวอร์ชันใหม่";
 "update_channel" = "อัปเดตช่อง";
 "check_for_updates" = "ตรวจสอบการอัปเดต...";
 "updates_unavailable" = "การอัปเดตไม่พร้อมใช้งานในรุ่นนี้";

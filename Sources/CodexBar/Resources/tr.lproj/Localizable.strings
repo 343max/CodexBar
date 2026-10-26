@@ -740,6 +740,8 @@
 "acknowledgements_authors" = "Yazarlar";
 "acknowledgements_license" = "Lisans";
 "check_updates_auto" = "Güncellemeleri otomatik denetle";
+"install_updates_auto" = "Güncellemeleri otomatik indir ve yükle";
+"install_updates_auto_subtitle" = "Kapalıyken, yeni bir sürüm yüklenmeden önce size sorulur.";
 "update_channel" = "Güncelleme kanalı";
 "check_for_updates" = "Güncellemeleri denetle…";
 "updates_unavailable" = "Bu derlemede güncellemeler kullanılamıyor.";

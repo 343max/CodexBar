@@ -708,6 +708,8 @@
 "acknowledgements_authors" = "Autores";
 "acknowledgements_license" = "Licenza";
 "check_updates_auto" = "Buscar actualizacións automaticamente";
+"install_updates_auto" = "Descargar e instalar actualizacións automaticamente";
+"install_updates_auto_subtitle" = "Se está desactivado, preguntaráseche antes de instalar unha nova versión.";
 "update_channel" = "Canle de actualizacións";
 "check_for_updates" = "Buscar actualizacións…";
 "updates_unavailable" = "Actualizacións non dispoñibles nesta compilación.";

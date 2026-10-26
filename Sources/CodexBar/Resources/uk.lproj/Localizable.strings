@@ -734,6 +734,8 @@
 "acknowledgements_authors" = "Автори";
 "acknowledgements_license" = "Ліцензія";
 "check_updates_auto" = "Автоматично перевіряти наявність оновлень";
+"install_updates_auto" = "Автоматично завантажувати та встановлювати оновлення";
+"install_updates_auto_subtitle" = "Якщо вимкнено, перед встановленням нової версії буде запит на підтвердження.";
 "update_channel" = "Канал оновлень";
 "check_for_updates" = "Перевірити наявність оновлень…";
 "updates_unavailable" = "Оновлення недоступні в цій збірці.";

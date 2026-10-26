@@ -730,6 +730,8 @@
 "acknowledgements_authors" = "作者";
 "acknowledgements_license" = "授權條款";
 "check_updates_auto" = "自動檢查更新";
+"install_updates_auto" = "自動下載並安裝更新";
+"install_updates_auto_subtitle" = "關閉時，安裝新版本前會先徵求你的確認。";
 "update_channel" = "更新頻道";
 "check_for_updates" = "檢查更新…";
 "updates_unavailable" = "此建置無法使用更新功能。";

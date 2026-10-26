@@ -700,6 +700,8 @@
 "acknowledgements_authors" = "作者";
 "acknowledgements_license" = "许可证";
 "check_updates_auto" = "自动检查更新";
+"install_updates_auto" = "自动下载并安装更新";
+"install_updates_auto_subtitle" = "关闭时，安装新版本前会先征求你的确认。";
 "update_channel" = "更新频道";
 "check_for_updates" = "检查更新…";
 "updates_unavailable" = "此构建中更新不可用。";

@@ -720,6 +720,8 @@
 "acknowledgements_authors" = "작성자";
 "acknowledgements_license" = "라이선스";
 "check_updates_auto" = "자동으로 업데이트 확인";
+"install_updates_auto" = "업데이트 자동 다운로드 및 설치";
+"install_updates_auto_subtitle" = "끄면 새 버전을 설치하기 전에 확인합니다.";
 "update_channel" = "업데이트 채널";
 "check_for_updates" = "업데이트 확인…";
 "updates_unavailable" = "이 빌드에서는 업데이트를 사용할 수 없습니다.";
