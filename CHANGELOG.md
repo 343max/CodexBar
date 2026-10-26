@@ -9,6 +9,7 @@
 - WorkBuddy: keep resets on the paid subscription cycle instead of an earlier trial or reward expiry (#4767). Thanks @codertesla!
 ### Added
 
+- Command Code: manage multiple saved subscription sessions in Settings and select them from the CLI (#4774). Thanks @JavaGT!
 - Plugins: allow detail progress bars to display native pace markers, respecting Show pace (#4776). Thanks @KLIEBHAN!
 - Plugins: choose which reported quota window drives the menu-bar percentage and switcher gauge, with automatic fallback when that window is unavailable (#4781). Thanks @coygeek!
 

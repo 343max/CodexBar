@@ -8,16 +8,12 @@ public enum CommandCodeProviderDescriptor {
         tokenAccountSupport: TokenAccountSupport(
             title: "Session tokens",
             subtitle: "Store multiple Command Code subscription sessions.",
-            placeholder: "Cookie: … or session token",
+            placeholder: "Cookie: …",
             injection: .cookieHeader,
             requiresManualCookieSource: true,
             cookieName: nil,
             selectedAccountRequiresManualCookieSource: true,
-            passiveSourceModes: [.api],
-            cookieHeaderNormalizer: { token in
-                CommandCodeCookieHeader.override(from: token)?.headerValue
-                    ?? token.trimmingCharacters(in: .whitespacesAndNewlines)
-            }),
+            passiveSourceModes: [.api]),
         selectedAccountSourceModeResolver: { base, account, _ in
             account == nil ? base : .web
         })
@@ -135,7 +131,10 @@ struct CommandCodeWebFetchStrategy: ProviderFetchStrategy {
     }
 
     func fetch(_ context: ProviderFetchContext) async throws -> ProviderFetchResult {
-        if let manual = Self.manualCookieHeader(from: context) {
+        if context.settings?.commandcode?.cookieSource == .manual {
+            guard let manual = Self.manualCookieHeader(from: context) else {
+                throw CommandCodeUsageError.missingCredentials
+            }
             let snapshot = try await self.usageLoader(manual)
             return self.makeResult(usage: snapshot.toUsageSnapshot(), sourceLabel: "manual")
         }

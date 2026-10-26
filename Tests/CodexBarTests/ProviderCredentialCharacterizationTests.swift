@@ -266,7 +266,7 @@ struct ProviderCredentialCharacterizationTests {
             .replicate: "account-token",
             .typesafe: "account-token",
             .kimi: "kimi-auth=account-token",
-            .commandcode: "__Secure-commandcode_prod_.session_token=account-token",
+            .commandcode: "account-token",
         ]
         for provider in cookieProviders {
             #expect(TokenAccountSupportCatalog.normalizedCookieHeader(

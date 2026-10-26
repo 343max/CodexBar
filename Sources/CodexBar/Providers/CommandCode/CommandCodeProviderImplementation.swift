@@ -37,7 +37,7 @@ struct CommandCodeProviderImplementation: ProviderImplementation {
             ProviderSettingsPickerDescriptor(
                 id: "commandcode-usage-source",
                 title: "Usage source",
-                subtitle: "Auto uses an API key when configured, otherwise browser cookies.",
+                subtitle: "Auto uses the active saved session, otherwise an API key or browser cookies.",
                 binding: context.rawValueBinding(\.commandcodeUsageDataSource, fallback: .auto),
                 options: [
                     ProviderSettingsPickerOption(id: ProviderSourceMode.auto.rawValue, title: "Auto"),
