@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- WorkBuddy: use the official mascot instead of the placeholder letter icon (#4768). Thanks @codertesla!
 - WorkBuddy: keep resets on the paid subscription cycle instead of an earlier trial or reward expiry (#4767). Thanks @codertesla!
 ### Added
 

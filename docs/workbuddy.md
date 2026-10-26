@@ -97,3 +97,9 @@ Amounts use CodexBar's shared number formatting, including thousands separators.
 - CodeBuddy accounts share the billing system, but signing in on `www.codebuddy.cn` is not verified to authorize the
   `www.workbuddy.cn` origin.
 - Local WorkBuddy session history (`~/.workbuddy/projects/`) is not read.
+
+## Brand mark
+
+The app, website, and CLI dashboard use a monochrome version of the mascot from WorkBuddy’s
+[official logo](https://assets.workbuddy.cn/web/workbuddy/a5b2fb510f0e7b156f19d072fae0cd12ae1f2f19/assets/logo.svg).
+The template follows the system tint; the existing `#0DC8A6` provider accent is unchanged.
