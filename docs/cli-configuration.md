@@ -134,10 +134,12 @@ codexbar config clear-credential --provider claude --cookie
 codexbar config clear-credential --provider openrouter --api-key
 ```
 
-Without flags both `apiKey` and `cookieHeader` are removed; `--api-key` or `--cookie` limits it to one. Clearing a
-cookie also resets a `manual` `cookieSource` to the provider default. Provider enablement, `source`, token accounts,
-and other fields are unchanged. JSON output lists the removed fields in `cleared` (`apiKey`, `cookieHeader`); when
-nothing was stored, `cleared` is empty and the config file is not written.
+Without flags both `apiKey` and `cookieHeader` are removed; `--api-key` or `--cookie` limits it to one. Provider
+enablement, `source`, `cookieSource`, token accounts, and other fields are unchanged. Manual cookie mode stays
+selected after its header is cleared. To request browser discovery, choose Automatic explicitly in Settings.
+Saved accounts and environment credentials are not removed.
+JSON output lists the removed fields in `cleared` (`apiKey`, `cookieHeader`); when nothing was stored, `cleared`
+is empty and the config file is not written.
 
 ## Isolated config files
 

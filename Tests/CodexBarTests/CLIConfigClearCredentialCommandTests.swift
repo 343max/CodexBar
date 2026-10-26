@@ -22,7 +22,7 @@ struct CLIConfigClearCredentialCommandTests {
     }
 
     @Test
-    func `clear credential removes only the selected credentials`() throws {
+    func `clear credential preserves Manual source while removing selected credentials`() throws {
         let config = try CodexBarConfig.decode(from: Data(Self.fixture.utf8))
 
         let (cookieOnly, cookieCleared) = CodexBarCLI.configClearingCredential(
@@ -30,7 +30,7 @@ struct CLIConfigClearCredentialCommandTests {
         #expect(cookieCleared == [.cookieHeader])
         let cookieEntry = try #require(cookieOnly.providerConfig(for: .claude))
         #expect(cookieEntry.cookieHeader == nil)
-        #expect(cookieEntry.cookieSource == nil)
+        #expect(cookieEntry.cookieSource == .manual)
         #expect(cookieEntry.apiKey == "fixture-api-key")
 
         let (both, bothCleared) = CodexBarCLI.configClearingCredential(
@@ -39,6 +39,7 @@ struct CLIConfigClearCredentialCommandTests {
         let entry = try #require(both.providerConfig(for: .claude))
         #expect(entry.apiKey == nil)
         #expect(entry.cookieHeader == nil)
+        #expect(entry.cookieSource == .manual)
         #expect(entry.enabled == true)
         #expect(entry.source == .web)
         #expect(entry.tokenAccounts?.accounts.first?.token == "fixture-account-token")
@@ -103,12 +104,14 @@ struct CLIConfigClearCredentialCommandTests {
         #expect(json["configPath"] as? String == url.path)
         #expect(!cookie.contains("fixture"))
         #expect(try store.load()?.providerConfig(for: .claude)?.apiKey == "fixture-api-key")
+        #expect(try store.load()?.providerConfig(for: .claude)?.cookieSource == .manual)
 
         let text = try await Self.run(root: root, arguments: ["--provider", "claude"])
         #expect(text == "Config: cleared API key for Claude\n")
         let entry = try #require(try store.load()?.providerConfig(for: .claude))
         #expect(entry.apiKey == nil)
         #expect(entry.cookieHeader == nil)
+        #expect(entry.cookieSource == .manual)
         #expect(entry.tokenAccounts?.accounts.first?.token == "fixture-account-token")
 
         let before = try Data(contentsOf: url)

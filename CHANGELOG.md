@@ -13,8 +13,7 @@
 ### Added
 
 - Updates: separate automatic checks from automatic installs, preserve saved choices across relaunches and Settings visits, and retain the existing default-on behavior (#4777, #4778). Thanks @harveyrandall!
-- CLI: store a provider's manual Cookie header with `config set-cookie`, the CLI counterpart to pasting a cookie in Settings, so cookie providers can be configured without the app (for example on Linux).
-- CLI: remove a stored API key and/or manual cookie with `config clear-credential`, leaving enablement, sources, and token accounts untouched.
+- CLI: add `config set-cookie` and `config clear-credential` for stored manual cookies and API keys, preserving saved accounts and unrelated provider settings (#4765). Thanks @johan456789!
 - Plugins: allow detail progress bars to display native pace markers, respecting Show pace (#4776). Thanks @KLIEBHAN!
 - Codex: optionally include this device's recorded OpenCode usage in local cost history, preserving recorded $0 costs and keeping scoped accounts and Usage & Spend excluded (#4757, #4752). Thanks @Danielweng0902!
 - Plugins: choose which reported quota window drives the menu-bar percentage and switcher gauge, with automatic fallback when that window is unavailable (#4781). Thanks @coygeek!

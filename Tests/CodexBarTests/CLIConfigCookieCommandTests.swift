@@ -12,11 +12,11 @@ struct CLIConfigCookieCommandTests {
         #expect(CodexBarCLI.readsConfigCookieHeader(.cursor))
         #expect(CodexBarCLI.readsConfigCookieHeader(.codex))
         #expect(CodexBarCLI.readsConfigCookieHeader(.deepseek))
-        for provider in UsageProvider.allCases
-            where ProviderDescriptorRegistry.descriptor(for: provider).fetchPlan.sourceModes.contains(.web)
-        {
+        for provider in [UsageProvider.augment, .muse, .qoder, .devin, .windsurf] {
             #expect(CodexBarCLI.readsConfigCookieHeader(provider))
         }
+        #expect(!CodexBarCLI.readsConfigCookieHeader(.langdock))
+        #expect(!CodexBarCLI.readsConfigCookieHeader(.groq))
         #expect(!CodexBarCLI.readsConfigCookieHeader(.elevenlabs))
         #expect(!CodexBarCLI.readsConfigCookieHeader(.openrouter))
         for provider in [nil, "unknown", "elevenlabs"] {
@@ -135,6 +135,8 @@ struct CLIConfigCookieCommandTests {
         for (arguments, message) in [
             (["--cookie", "a=1"], "Unknown or missing provider"),
             (["--provider", "elevenlabs", "--cookie", "a=1"], "elevenlabs does not support config cookies"),
+            (["--provider", "langdock", "--cookie", "a=1"], "langdock does not support config cookies"),
+            (["--provider", "groq", "--cookie", "a=1"], "groq does not support config cookies"),
             (["--provider", "claude"], "Missing cookie"),
             (["--provider", "claude", "--cookie", "a=1", "--stdin"], "Use either --cookie or --stdin"),
         ] {
@@ -147,6 +149,46 @@ struct CLIConfigCookieCommandTests {
             }
             #expect(try Data(contentsOf: url) == before)
         }
+    }
+
+    @Test(arguments: [UsageProvider.augment, .muse])
+    func `real CLI stores cookies for providers whose source picker omits web`(provider: UsageProvider) async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("config-cookie-typed-\(UUID())")
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let output = try await Self.run(
+            root: root,
+            arguments: ["--provider", provider.rawValue, "--stdin", "--json"],
+            stdin: "session=fixture-secret\n")
+        #expect(!output.contains("fixture-secret"))
+        let store = CodexBarConfigStore(fileURL: root.appendingPathComponent("config.json"))
+        let entry = try #require(try store.load()?.providerConfig(for: provider.instanceID))
+        let contribution = try #require(ProviderDescriptorRegistry.descriptor(for: provider).settingsSection
+            .credentialContribution(context: .init(config: entry, account: nil)))
+        let snapshot = ProviderSettingsSnapshot(contributions: [contribution])
+        let cookies = try #require(ProviderDescriptorRegistry.descriptor(for: provider).settingsSection
+            .cookieSettings(from: snapshot))
+        #expect(cookies.cookieSource == .manual)
+        #expect(cookies.manualCookieHeader == "session=fixture-secret")
+        let attributes = try FileManager.default.attributesOfItem(atPath: store.fileURL.path)
+        #expect((attributes[.posixPermissions] as? NSNumber)?.intValue == 0o600)
+    }
+
+    @Test
+    func `Windsurf config cookies reach the CLI settings snapshot`() throws {
+        let config = CodexBarCLI.configSettingCookie(
+            CodexBarConfig(providers: []),
+            provider: .windsurf,
+            cookieHeader: "session=fixture-secret",
+            enableProvider: true)
+        let context = try TokenAccountCLIContext(
+            selection: .init(label: nil, index: nil, allAccounts: false),
+            config: config,
+            verbose: false,
+            baseEnvironment: [:])
+        let settings = try #require(context.settingsSnapshot(for: .windsurf, account: nil)?.windsurf)
+        #expect(settings.cookieSource == .manual)
+        #expect(settings.manualCookieHeader == "session=fixture-secret")
     }
 
     private static func run(root: URL, arguments: [String], stdin: String = "") async throws -> String {

@@ -79,10 +79,6 @@ extension CodexBarCLI {
         }
         if fields.contains(.cookieHeader), providerConfig.cookieHeader != nil {
             providerConfig.cookieHeader = nil
-            // A manual source without a header has nothing to send; fall back to the default source.
-            if providerConfig.cookieSource == .manual {
-                providerConfig.cookieSource = nil
-            }
             cleared.append(.cookieHeader)
         }
         guard !cleared.isEmpty else { return (updated, []) }

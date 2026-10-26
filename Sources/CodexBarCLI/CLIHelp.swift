@@ -335,8 +335,8 @@ extension CodexBarCLI {
           the key as a token account instead of a provider-level personal key.
           set-cookie stores a manual Cookie header and sets the provider's cookie source to manual, like pasting
           a cookie in Settings; it enables that provider by default and rejects providers that do not read one.
-          clear-credential removes the stored API key and manual cookie (a manual cookie source reverts to default);
-          pass --api-key or --cookie to clear only one. Enablement, sources, and token accounts are unchanged.
+          clear-credential removes the stored API key and manual cookie; pass --api-key or --cookie to clear only one.
+          Enablement, data and cookie sources, and token accounts are unchanged.
 
         Examples:
           codexbar config validate --format json --pretty

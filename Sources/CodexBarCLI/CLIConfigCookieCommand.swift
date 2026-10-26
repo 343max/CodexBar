@@ -53,10 +53,9 @@ extension CodexBarCLI {
         return provider
     }
 
-    /// A manual cookie is only read by providers with a web source, or by providers whose credentials project
-    /// the config cookie into their fetch environment (for example a platform token stored as `cookieHeader`).
+    /// Config cookies need a registered consumer; a web source may only support selected browser profiles.
     static func readsConfigCookieHeader(_ provider: UsageProvider) -> Bool {
-        if ProviderDescriptorRegistry.descriptor(for: provider).fetchPlan.sourceModes.contains(.web) {
+        if ProviderDescriptorRegistry.descriptor(for: provider).settingsSection.supportsConfigCookieHeader {
             return true
         }
         let probe = "codexbar-probe=1"
