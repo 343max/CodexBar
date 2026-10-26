@@ -2752,3 +2752,7 @@
 "abliteration.ai request failed. Try refreshing later." = "Fallou a solicitude a abliteration.ai. Tenta actualizar máis tarde.";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai devolveu unha resposta descoñecida. Actualiza CodexBar e téntao de novo.";
 "Check your API key in Settings." = "Comproba a túa clave API en Configuración.";
+
+"OpenCode local history" = "Historial local de OpenCode";
+
+"Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "Mostra o uso de OpenCode rexistrado neste Mac no historial de Codex. Desactivado de forma predeterminada; as rutas de CODEX_HOME con ámbito restrinxido ou alternativas quedan sempre excluídas.";

@@ -2758,3 +2758,7 @@
 "abliteration.ai request failed. Try refreshing later." = "abliteration.ai request failed. Try refreshing later.";
 "abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai returned an unrecognized response. Update CodexBar and try again.";
 "Check your API key in Settings." = "Check your API key in Settings.";
+
+"OpenCode local history" = "OpenCode local history";
+
+"Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded.";
