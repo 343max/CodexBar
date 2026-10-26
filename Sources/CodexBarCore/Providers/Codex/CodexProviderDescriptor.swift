@@ -26,7 +26,7 @@ public enum CodexProviderDescriptor {
             id: .codex,
             menuBarMetrics: ProviderMenuBarMetricCapabilities(
                 supported: [.automatic, .primary, .secondary, .primaryAndSecondary, .extraUsage]),
-            settingsSection: .init(CodexProviderSettingsKey.self),
+            settingsSection: .init(CodexProviderSettingsKey.self, supportsConfigCookieHeader: true),
             // PAT lives in Codex CLI `auth.json`, not ProviderConfig.apiKey.
             credentials: ProviderCredentialAdapter(requiresAPIKeyForAPISource: false),
             metadata: ProviderMetadata(
