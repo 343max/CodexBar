@@ -734,6 +734,8 @@
 "acknowledgements_authors" = "Auteurs";
 "acknowledgements_license" = "Licentie";
 "check_updates_auto" = "Automatisch controleren op updates";
+"install_updates_auto" = "Updates automatisch downloaden en installeren";
+"install_updates_auto_subtitle" = "Als dit uit staat, word je gevraagd voordat een nieuwe versie wordt geïnstalleerd.";
 "update_channel" = "Kanaal bijwerken";
 "check_for_updates" = "Controleer op updates…";
 "updates_unavailable" = "Updates zijn niet beschikbaar in deze build.";

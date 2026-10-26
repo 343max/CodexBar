@@ -734,6 +734,8 @@
 "acknowledgements_authors" = "Autoren";
 "acknowledgements_license" = "Lizenz";
 "check_updates_auto" = "Suchen Sie automatisch nach Updates";
+"install_updates_auto" = "Updates automatisch laden und installieren";
+"install_updates_auto_subtitle" = "Wenn deaktiviert, werden Sie vor der Installation einer neuen Version gefragt.";
 "update_channel" = "Kanal aktualisieren";
 "check_for_updates" = "Nach Updates suchen…";
 "updates_unavailable" = "Updates sind in diesem Build nicht verfügbar.";

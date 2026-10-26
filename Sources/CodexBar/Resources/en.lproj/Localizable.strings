@@ -724,6 +724,8 @@
 "acknowledgements_authors" = "Authors";
 "acknowledgements_license" = "License";
 "check_updates_auto" = "Check for updates automatically";
+"install_updates_auto" = "Download and install updates automatically";
+"install_updates_auto_subtitle" = "When off, you're asked before a new version is installed.";
 "update_channel" = "Update channel";
 "check_for_updates" = "Check for Updates…";
 "updates_unavailable" = "Updates unavailable in this build.";

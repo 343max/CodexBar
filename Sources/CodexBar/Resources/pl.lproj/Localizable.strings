@@ -742,6 +742,8 @@
 "acknowledgements_authors" = "Autorzy";
 "acknowledgements_license" = "Licencja";
 "check_updates_auto" = "Sprawdzaj aktualizacje automatycznie";
+"install_updates_auto" = "Pobieraj i instaluj aktualizacje automatycznie";
+"install_updates_auto_subtitle" = "Gdy wyłączone, przed instalacją nowej wersji pojawi się pytanie.";
 "update_channel" = "Kanał aktualizacji";
 "check_for_updates" = "Sprawdź aktualizacje…";
 "updates_unavailable" = "Aktualizacje niedostępne w tej wersji.";

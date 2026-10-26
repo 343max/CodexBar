@@ -740,6 +740,8 @@
 "acknowledgements_authors" = "المؤلفون";
 "acknowledgements_license" = "الترخيص";
 "check_updates_auto" = "تحقق تلقائيا من التحديثات";
+"install_updates_auto" = "تنزيل التحديثات وتثبيتها تلقائيًا";
+"install_updates_auto_subtitle" = "عند إيقافه، سيُطلب منك التأكيد قبل تثبيت إصدار جديد.";
 "update_channel" = "قناة التحديث";
 "check_for_updates" = "تحقق من التحديثات...";
 "updates_unavailable" = "التحديثات غير متوفرة في هذا الإصدار.";

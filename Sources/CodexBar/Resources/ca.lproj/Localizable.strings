@@ -717,6 +717,8 @@
 "acknowledgements_authors" = "Autors";
 "acknowledgements_license" = "Llicència";
 "check_updates_auto" = "Cerca actualitzacions automàticament";
+"install_updates_auto" = "Baixa i instal·la les actualitzacions automàticament";
+"install_updates_auto_subtitle" = "Si està desactivat, se't demanarà abans d'instal·lar una versió nova.";
 "update_channel" = "Canal d'actualitzacions";
 "check_for_updates" = "Cerca actualitzacions…";
 "updates_unavailable" = "Actualitzacions no disponibles en aquesta compilació.";

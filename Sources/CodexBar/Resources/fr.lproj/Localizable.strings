@@ -734,6 +734,8 @@
 "acknowledgements_authors" = "Auteurs";
 "acknowledgements_license" = "Licence";
 "check_updates_auto" = "Rechercher automatiquement les mises à jour";
+"install_updates_auto" = "Télécharger et installer automatiquement les mises à jour";
+"install_updates_auto_subtitle" = "Si désactivé, votre accord est demandé avant l'installation d'une nouvelle version.";
 "update_channel" = "Mettre à jour la chaîne";
 "check_for_updates" = "Rechercher les mises à jour…";
 "updates_unavailable" = "Mises à jour non disponibles dans cette version.";

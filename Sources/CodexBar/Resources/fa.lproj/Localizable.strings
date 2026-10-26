@@ -740,6 +740,8 @@
 "acknowledgements_authors" = "نویسندگان";
 "acknowledgements_license" = "مجوز";
 "check_updates_auto" = "به طور خودکار به روزرسانی ها را بررسی کنید";
+"install_updates_auto" = "دانلود و نصب خودکار به‌روزرسانی‌ها";
+"install_updates_auto_subtitle" = "در صورت خاموش بودن، پیش از نصب نسخه جدید از شما پرسیده می‌شود.";
 "update_channel" = "به روزرسانی کانال";
 "check_for_updates" = "به روزرسانی ها را بررسی کنید...";
 "updates_unavailable" = "به روزرسانی ها در این نسخه در دسترس نیستند.";

@@ -742,6 +742,8 @@
 "acknowledgements_authors" = "Penulis";
 "acknowledgements_license" = "Lisensi";
 "check_updates_auto" = "Periksa pembaruan secara otomatis";
+"install_updates_auto" = "Unduh dan instal pembaruan secara otomatis";
+"install_updates_auto_subtitle" = "Jika nonaktif, Anda akan ditanya sebelum versi baru diinstal.";
 "update_channel" = "Saluran Pembaruan";
 "check_for_updates" = "Periksa Pembaruan…";
 "updates_unavailable" = "Pembaruan tidak tersedia di build ini.";
