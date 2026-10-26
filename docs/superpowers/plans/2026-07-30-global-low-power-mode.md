@@ -196,7 +196,7 @@ Expected: automatic cooldowns clamp and explicit refreshes remain immediate.
 ### Task 5: Apply global saver to OpenAI Web and expose UI
 
 **Files:**
-- Modify: `Sources/CodexBar/UsageStore+OpenAIWeb.swift`
+- Modify: `Sources/CodexBar/Providers/Codex/UsageStore+OpenAIWeb.swift`
 - Modify: `Sources/CodexBar/UsageStore+RefreshEnrichment.swift`
 - Modify: `Sources/CodexBar/UsageStore+Logging.swift`
 - Modify: `Sources/CodexBar/PreferencesGeneralPane.swift`

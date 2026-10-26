@@ -88,7 +88,7 @@ struct UserFacingLocalizationCoverageTests {
                 "                \"Alternatively, set a custom path in Settings.\",",
                 "title: \"No JetBrains IDE detected\"",
             ],
-            "Sources/CodexBar/PreferencesCodexAccountsSection.swift": [
+            "Sources/CodexBar/Providers/Codex/PreferencesCodexAccountsSection.swift": [
                 "?? \"No system account\"",
                 "return \"Adding Account…\"",
                 "return \"Add Account\"",
