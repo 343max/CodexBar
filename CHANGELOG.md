@@ -2,6 +2,10 @@
 
 ## 0.82.1 — Unreleased
 
+### Fixed
+
+- OpenCodex: reduce temporary memory use when importing large usage logs (#4803).
+
 ## 0.82.0 — 2026-10-26
 
 ### Highlights
