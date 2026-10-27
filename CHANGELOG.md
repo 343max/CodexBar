@@ -2,6 +2,10 @@
 
 ## 0.82.1 — Unreleased
 
+### Fixed
+
+- Cursor: explain when the Cursor app session has expired and no browser session works, with steps to sign in again (#4804). Thanks @julianpinedayyz!
+
 ## 0.82.0 — 2026-10-26
 
 ### Highlights
