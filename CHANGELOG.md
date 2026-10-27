@@ -2,6 +2,10 @@
 
 ## 0.82.1 — Unreleased
 
+### Changed
+
+- Menu bar: make neutral pace percentages with font-scaled green/red state bars the default, preserving saved color choices (#4714, #4791). Thanks @arnodirlam!
+
 ## 0.82.0 — 2026-10-26
 
 ### Highlights
