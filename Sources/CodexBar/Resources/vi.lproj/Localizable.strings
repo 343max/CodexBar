@@ -1346,11 +1346,11 @@
 "Share Stats…" = "Chia sẻ số liệu…";
 "Stats copied" = "Đã sao chép số liệu";
 "DeepSeek this month token usage trend" = "Xu hướng sử dụng token DeepSeek trong tháng này";
-"Chrome profile" = "Hồ sơ Chrome";
+"Browser profile" = "Hồ sơ trình duyệt";
 "Choose which signed-in DeepSeek Platform session supplies detailed usage." = "Chọn phiên DeepSeek Platform đã đăng nhập để cung cấp thông tin sử dụng chi tiết.";
 "Detailed usage unavailable." = "Không có thông tin sử dụng chi tiết.";
-"Sign in to DeepSeek Platform in Chrome for detailed usage." = "Đăng nhập vào DeepSeek Platform trong Chrome để xem thông tin sử dụng chi tiết.";
-"Select a DeepSeek Chrome profile in Settings." = "Chọn một hồ sơ Chrome cho DeepSeek trong Cài đặt.";
+"Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage." = "Đăng nhập vào DeepSeek Platform trong trình duyệt dựa trên Chromium để xem thông tin sử dụng chi tiết.";
+"Select a DeepSeek browser profile in Settings." = "Chọn một hồ sơ trình duyệt cho DeepSeek trong Cài đặt.";
 "Select profile…" = "Chọn hồ sơ…";
 
 "%@: %@" = "%@: %@";

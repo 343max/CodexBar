@@ -918,10 +918,10 @@
 "Today cash" = "Efectiu d'avui";
 "DeepSeek 30 day token usage trend" = "Tendència d'ús de tokens de 30 dies de DeepSeek";
 "Detailed usage unavailable." = "L'ús detallat no està disponible.";
-"Sign in to DeepSeek Platform in Chrome for detailed usage." = "Inicieu la sessió a DeepSeek Platform al Chrome per veure l'ús detallat.";
-"Select a DeepSeek Chrome profile in Settings." = "Seleccioneu un perfil de Chrome de DeepSeek a Configuració.";
+"Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage." = "Inicieu la sessió a DeepSeek Platform en un navegador basat en Chromium per veure l'ús detallat.";
+"Select a DeepSeek browser profile in Settings." = "Seleccioneu un perfil de navegador de DeepSeek a Configuració.";
 "DeepSeek this month token usage trend" = "Tendència d'ús de tokens de DeepSeek aquest mes";
-"Chrome profile" = "Perfil de Chrome";
+"Browser profile" = "Perfil de navegador";
 "Choose which signed-in DeepSeek Platform session supplies detailed usage." = "Tria quina sessió iniciada de DeepSeek Platform proporciona l'ús detallat.";
 "Select profile…" = "Selecciona un perfil…";
 "cache-hit input" = "entrada amb encert de memòria cau";

@@ -30,6 +30,9 @@ public enum DeepSeekProviderDescriptor {
         },
         missingCredentialMessage: { _ in DeepSeekUsageError.missingCredentials.errorDescription })
 
+    static let webSessionRequiredNote = ["Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage."]
+    static let profileSelectionRequiredNote = ["Select a DeepSeek browser profile in Settings."]
+
     private static let optionalResolutionJoinGrace: Duration = .seconds(5)
     private static let platformResolutionJoinGrace: Duration = .seconds(20)
 
@@ -113,10 +116,10 @@ public enum DeepSeekProviderDescriptor {
                         let state = context.snapshot?.deepseekDetailedUsageState
                         if context.snapshot?.primary == nil {
                             if state == .webSessionRequired {
-                                return .localized(["Sign in to DeepSeek Platform in Chrome for detailed usage."])
+                                return .localized(self.webSessionRequiredNote)
                             }
                             if state == .profileSelectionRequired {
-                                return .localized(["Select a DeepSeek Chrome profile in Settings."])
+                                return .localized(self.profileSelectionRequiredNote)
                             }
                         }
                         guard context.costSummaryInlineEnabled, context.showOptionalUsage else {
@@ -124,10 +127,10 @@ public enum DeepSeekProviderDescriptor {
                         }
                         guard context.snapshot?.details.isEmpty == false else {
                             if state == .webSessionRequired {
-                                return .localized(["Sign in to DeepSeek Platform in Chrome for detailed usage."])
+                                return .localized(self.webSessionRequiredNote)
                             }
                             if state == .profileSelectionRequired {
-                                return .localized(["Select a DeepSeek Chrome profile in Settings."])
+                                return .localized(self.profileSelectionRequiredNote)
                             }
                             return .localized(["Detailed usage unavailable."])
                         }
@@ -308,7 +311,7 @@ public enum DeepSeekProviderDescriptor {
         case let .value(value):
             resolution = value
         case .timedOut:
-            let timeout = DeepSeekUsageError.networkError("Chrome session resolution timed out")
+            let timeout = DeepSeekUsageError.networkError("Browser session resolution timed out")
             if let transport = DeepSeekPlatformTransportError(
                 owner: nil,
                 underlyingError: URLError(.timedOut),
@@ -323,7 +326,7 @@ public enum DeepSeekProviderDescriptor {
         try Task.checkCancellation()
         if resolution.selectedBalance == nil, resolution.detailedUsageState == .unavailable {
             if let error = resolution.selectedTransportError { throw error }
-            throw DeepSeekUsageError.networkError("Chrome session resolution unavailable")
+            throw DeepSeekUsageError.networkError("Browser session resolution unavailable")
         }
         let balance = resolution.selectedBalance ?? DeepSeekUsageSnapshot(
             hasBalance: false,

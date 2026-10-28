@@ -1,4 +1,7 @@
 import Foundation
+#if os(macOS)
+import SweetCookieKit
+#endif
 
 enum DeepSeekPlatformTokenImporter {
     struct TokenInfo: Sendable, Equatable {
@@ -102,6 +105,20 @@ enum DeepSeekPlatformTokenImporter {
     }
 
     #if os(macOS)
+    /// Every Chromium-family store is plain leveldb, so widening this list costs no Keychain access.
+    static let localStorageBrowsers: [Browser] = [
+        .chrome,
+        .chromeBeta,
+        .chromeCanary,
+        .arc,
+        .arcBeta,
+        .arcCanary,
+        .dia,
+        .chatgptAtlas,
+        .chromium,
+        .helium,
+    ]
+
     static func importTokens(
         browserDetection: BrowserDetection,
         logger: (@Sendable (String) -> Void)? = nil,
@@ -110,7 +127,7 @@ enum DeepSeekPlatformTokenImporter {
         let log: @Sendable (String) -> Void = { message in logger?("[deepseek-storage] \(message)") }
         let profiles = localStorage.profiles(
             for: "https://platform.deepseek.com",
-            browsers: [.chrome],
+            browsers: self.localStorageBrowsers,
             using: browserDetection,
             logger: log)
 
@@ -129,7 +146,7 @@ enum DeepSeekPlatformTokenImporter {
         }
 
         if results.isEmpty {
-            log("No DeepSeek userToken found in Chrome local storage")
+            log("No DeepSeek userToken found in browser local storage")
         }
         return results
     }

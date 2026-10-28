@@ -1346,11 +1346,11 @@
 "Share Stats…" = "Поділитися статистикою…";
 "Stats copied" = "Статистику скопійовано";
 "DeepSeek this month token usage trend" = "Тенденція використання токенів DeepSeek цього місяця";
-"Chrome profile" = "Профіль Chrome";
+"Browser profile" = "Профіль браузера";
 "Choose which signed-in DeepSeek Platform session supplies detailed usage." = "Виберіть сеанс DeepSeek Platform із виконаним входом, який надаватиме докладні дані про використання.";
 "Detailed usage unavailable." = "Докладні дані про використання недоступні.";
-"Sign in to DeepSeek Platform in Chrome for detailed usage." = "Увійдіть у DeepSeek Platform у Chrome, щоб переглянути докладні дані про використання.";
-"Select a DeepSeek Chrome profile in Settings." = "Виберіть профіль Chrome для DeepSeek у налаштуваннях.";
+"Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage." = "Увійдіть у DeepSeek Platform у браузері на базі Chromium, щоб переглянути докладні дані про використання.";
+"Select a DeepSeek browser profile in Settings." = "Виберіть профіль браузера для DeepSeek у налаштуваннях.";
 "Select profile…" = "Вибрати профіль…";
 
 "%@: %@" = "%@: %@";

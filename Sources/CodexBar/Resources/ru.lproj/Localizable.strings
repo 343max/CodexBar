@@ -1352,11 +1352,11 @@
 "Share Stats…" = "Поделиться статистикой…";
 "Stats copied" = "Статистика скопирована";
 "DeepSeek this month token usage trend" = "Динамика использования токенов DeepSeek в этом месяце";
-"Chrome profile" = "Профиль Chrome";
+"Browser profile" = "Профиль браузера";
 "Choose which signed-in DeepSeek Platform session supplies detailed usage." = "Выберите активный сеанс DeepSeek Platform для получения подробных данных об использовании.";
 "Detailed usage unavailable." = "Подробные данные об использовании недоступны.";
-"Sign in to DeepSeek Platform in Chrome for detailed usage." = "Войдите в DeepSeek Platform через Chrome, чтобы получить подробные данные об использовании.";
-"Select a DeepSeek Chrome profile in Settings." = "Выберите профиль Chrome для DeepSeek в настройках.";
+"Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage." = "Войдите в DeepSeek Platform через браузер на основе Chromium, чтобы получить подробные данные об использовании.";
+"Select a DeepSeek browser profile in Settings." = "Выберите профиль браузера для DeepSeek в настройках.";
 "Select profile…" = "Выбрать профиль…";
 
 "Choose a supported browser so CodexBar can read the matching account." = "Выберите поддерживаемый браузер, чтобы CodexBar мог прочитать соответствующую учетную запись.";

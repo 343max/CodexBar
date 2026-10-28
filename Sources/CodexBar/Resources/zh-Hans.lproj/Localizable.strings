@@ -1329,11 +1329,11 @@
 "Share Stats…" = "分享统计数据…";
 "Stats copied" = "统计数据已复制";
 "DeepSeek this month token usage trend" = "DeepSeek 本月 token 用量趋势";
-"Chrome profile" = "Chrome 配置文件";
+"Browser profile" = "浏览器配置文件";
 "Choose which signed-in DeepSeek Platform session supplies detailed usage." = "选择要提供详细用量的已登录 DeepSeek Platform 会话。";
 "Detailed usage unavailable." = "详细用量不可用。";
-"Sign in to DeepSeek Platform in Chrome for detailed usage." = "请在 Chrome 中登录 DeepSeek Platform 以查看详细用量。";
-"Select a DeepSeek Chrome profile in Settings." = "请在“设置”中选择 DeepSeek Chrome 配置文件。";
+"Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage." = "请在基于 Chromium 的浏览器中登录 DeepSeek Platform 以查看详细用量。";
+"Select a DeepSeek browser profile in Settings." = "请在“设置”中选择 DeepSeek 浏览器配置文件。";
 "Select profile…" = "选择配置文件…";
 
 "%@: %@" = "%@：%@";

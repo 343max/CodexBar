@@ -2,6 +2,10 @@
 
 ## 0.82.1 — Unreleased
 
+### Fixed
+
+- DeepSeek: import the Platform session from every Chromium-family browser (Chrome Beta/Canary, Chromium, Helium, Arc, Dia, ChatGPT Atlas) instead of Chrome only, so the profile picker and detailed usage work without Google Chrome installed (#4821). Thanks @343max!
+
 ## 0.82.0 — 2026-10-26
 
 ### Highlights

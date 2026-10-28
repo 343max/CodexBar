@@ -1347,11 +1347,11 @@
 "Share Stats…" = "Statistiken teilen…";
 "Stats copied" = "Statistiken kopiert";
 "DeepSeek this month token usage trend" = "Trend der DeepSeek-Token-Nutzung in diesem Monat";
-"Chrome profile" = "Chrome-Profil";
+"Browser profile" = "Browserprofil";
 "Choose which signed-in DeepSeek Platform session supplies detailed usage." = "Wähle aus, welche angemeldete DeepSeek-Platform-Sitzung detaillierte Nutzungsdaten liefert.";
 "Detailed usage unavailable." = "Detaillierte Nutzung nicht verfügbar.";
-"Sign in to DeepSeek Platform in Chrome for detailed usage." = "Melde dich für detaillierte Nutzungsdaten in Chrome bei DeepSeek Platform an.";
-"Select a DeepSeek Chrome profile in Settings." = "Wähle in den Einstellungen ein DeepSeek-Chrome-Profil aus.";
+"Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage." = "Melde dich für detaillierte Nutzungsdaten in einem Chromium-basierten Browser bei DeepSeek Platform an.";
+"Select a DeepSeek browser profile in Settings." = "Wähle in den Einstellungen ein DeepSeek-Browserprofil aus.";
 "Select profile…" = "Profil auswählen…";
 
 "%@: %@" = "%@: %@";

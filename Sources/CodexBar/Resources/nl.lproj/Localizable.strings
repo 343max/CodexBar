@@ -1345,11 +1345,11 @@
 "Share Stats…" = "Statistieken delen…";
 "Stats copied" = "Statistieken gekopieerd";
 "DeepSeek this month token usage trend" = "Trend van DeepSeek-tokengebruik deze maand";
-"Chrome profile" = "Chrome-profiel";
+"Browser profile" = "Browserprofiel";
 "Choose which signed-in DeepSeek Platform session supplies detailed usage." = "Kies welke aangemelde DeepSeek Platform-sessie gedetailleerd gebruik levert.";
 "Detailed usage unavailable." = "Gedetailleerd gebruik niet beschikbaar.";
-"Sign in to DeepSeek Platform in Chrome for detailed usage." = "Meld je in Chrome aan bij DeepSeek Platform voor gedetailleerd gebruik.";
-"Select a DeepSeek Chrome profile in Settings." = "Selecteer een DeepSeek Chrome-profiel in Instellingen.";
+"Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage." = "Meld je in een op Chromium gebaseerde browser aan bij DeepSeek Platform voor gedetailleerd gebruik.";
+"Select a DeepSeek browser profile in Settings." = "Selecteer een DeepSeek-browserprofiel in Instellingen.";
 "Select profile…" = "Profiel selecteren…";
 
 "%@: %@" = "%@: %@";

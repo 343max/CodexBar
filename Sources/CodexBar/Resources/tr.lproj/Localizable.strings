@@ -1058,11 +1058,11 @@
 "Today cash" = "Bugünkü nakit";
 "DeepSeek 30 day token usage trend" = "DeepSeek 30 günlük token kullanım trendi";
 "DeepSeek this month token usage trend" = "DeepSeek bu ayki token kullanım trendi";
-"Chrome profile" = "Chrome profili";
+"Browser profile" = "Tarayıcı profili";
 "Choose which signed-in DeepSeek Platform session supplies detailed usage." = "Ayrıntılı kullanımı sağlayacak oturum açılmış DeepSeek Platform hesabını seçin.";
 "Detailed usage unavailable." = "Ayrıntılı kullanım kullanılamıyor.";
-"Sign in to DeepSeek Platform in Chrome for detailed usage." = "Ayrıntılı kullanım için Chrome'da DeepSeek Platform'a giriş yapın.";
-"Select a DeepSeek Chrome profile in Settings." = "Ayarlarda bir DeepSeek Chrome profili seçin.";
+"Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage." = "Ayrıntılı kullanım için Chromium tabanlı bir tarayıcıda DeepSeek Platform'a giriş yapın.";
+"Select a DeepSeek browser profile in Settings." = "Ayarlarda bir DeepSeek tarayıcı profili seçin.";
 "Select profile…" = "Profil seç…";
 "cache-hit input" = "önbellekten alınan girdi";
 "cache-miss input" = "önbellekte bulunmayan girdi";

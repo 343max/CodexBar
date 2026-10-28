@@ -1381,11 +1381,11 @@
 "Share Stats…" = "分享統計資料…";
 "Stats copied" = "已拷貝統計資料";
 "DeepSeek this month token usage trend" = "DeepSeek 本月 token 使用量趨勢";
-"Chrome profile" = "Chrome 設定檔";
+"Browser profile" = "瀏覽器設定檔";
 "Choose which signed-in DeepSeek Platform session supplies detailed usage." = "選擇要提供詳細使用量的已登入 DeepSeek Platform 工作階段。";
 "Detailed usage unavailable." = "無法取得詳細使用量。";
-"Sign in to DeepSeek Platform in Chrome for detailed usage." = "請在 Chrome 中登入 DeepSeek Platform 以查看詳細使用量。";
-"Select a DeepSeek Chrome profile in Settings." = "請在「設定」中選擇 DeepSeek Chrome 設定檔。";
+"Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage." = "請在 Chromium 架構的瀏覽器中登入 DeepSeek Platform 以查看詳細使用量。";
+"Select a DeepSeek browser profile in Settings." = "請在「設定」中選擇 DeepSeek 瀏覽器設定檔。";
 "Select profile…" = "選擇設定檔…";
 
 "Choose a supported browser so CodexBar can read the matching account." = "選擇一個支援的瀏覽器，讓 CodexBar 可以讀取對應帳號。";
