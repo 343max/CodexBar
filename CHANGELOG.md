@@ -2,6 +2,9 @@
 
 ## 0.82.1 — Unreleased
 
+### Fixed
+
+- Cursor: explain when the Cursor app session has expired and no browser session works, with steps to sign in again (#4804). Thanks @julianpinedayyz!
 ### Changed
 
 - Updates: refresh Sparkle to improve update installation, download progress, and release-note handling.
