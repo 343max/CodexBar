@@ -2,6 +2,10 @@
 
 ## 0.82.1 — Unreleased
 
+### Changed
+
+- Updates: refresh Sparkle to improve update installation, download progress, and release-note handling.
+
 ## 0.82.0 — 2026-10-26
 
 ### Highlights
