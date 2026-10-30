@@ -30,9 +30,6 @@ public enum DeepSeekProviderDescriptor {
         },
         missingCredentialMessage: { _ in DeepSeekUsageError.missingCredentials.errorDescription })
 
-    static let webSessionRequiredNote = ["Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage."]
-    static let profileSelectionRequiredNote = ["Select a DeepSeek browser profile in Settings."]
-
     private static let optionalResolutionJoinGrace: Duration = .seconds(5)
     private static let platformResolutionJoinGrace: Duration = .seconds(20)
 
@@ -113,26 +110,21 @@ public enum DeepSeekProviderDescriptor {
                         if context.isRefreshing {
                             return .localized([])
                         }
-                        let state = context.snapshot?.deepseekDetailedUsageState
-                        if context.snapshot?.primary == nil {
-                            if state == .webSessionRequired {
-                                return .localized(self.webSessionRequiredNote)
-                            }
-                            if state == .profileSelectionRequired {
-                                return .localized(self.profileSelectionRequiredNote)
-                            }
+                        let credentialNote: [String]? = switch context.snapshot?.deepseekDetailedUsageState {
+                        case .webSessionRequired:
+                            ["Sign in to DeepSeek Platform in a Chromium-based browser for detailed usage."]
+                        case .profileSelectionRequired:
+                            ["Select a DeepSeek browser profile in Settings."]
+                        default: nil
+                        }
+                        if context.snapshot?.primary == nil, let credentialNote {
+                            return .localized(credentialNote)
                         }
                         guard context.costSummaryInlineEnabled, context.showOptionalUsage else {
                             return .unhandled
                         }
                         guard context.snapshot?.details.isEmpty == false else {
-                            if state == .webSessionRequired {
-                                return .localized(self.webSessionRequiredNote)
-                            }
-                            if state == .profileSelectionRequired {
-                                return .localized(self.profileSelectionRequiredNote)
-                            }
-                            return .localized(["Detailed usage unavailable."])
+                            return .localized(credentialNote ?? ["Detailed usage unavailable."])
                         }
                         return .unhandled
                     },

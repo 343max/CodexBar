@@ -39,6 +39,21 @@ struct DeepSeekPlatformTokenImporterTests {
 
     #if os(macOS)
     @Test
+    func `discovers a Chromium session without Chrome`() {
+        let localStorage = BrowserLocalStorageAPI { _, browsers, _, _ in
+            guard browsers.contains(where: { $0.rawValue == "chromium" }) else { return [] }
+            return [.init(
+                id: "chromium:Default",
+                label: "Chromium Default",
+                entries: [.init(key: "userToken", value: "synthetic-chromium-platform-token")])]
+        }
+        let tokens = DeepSeekPlatformTokenImporter.importTokens(
+            browserDetection: BrowserDetection(homeDirectory: "/nonexistent/deepseek-test", cacheTTL: 0),
+            localStorage: localStorage)
+        #expect(tokens.map(\.id) == ["chromium:Default"])
+    }
+
+    @Test
     func `imports platform token through browser local storage host API`() {
         let localStorage = BrowserLocalStorageAPI { _, _, _, _ in
             [
@@ -61,21 +76,6 @@ struct DeepSeekPlatformTokenImporterTests {
         #expect(tokens.map(\.sourceLabel) == ["Chrome — Work"])
     }
 
-    @Test(arguments: [Browser.chrome, .chromium, .helium])
-    func `imports the platform session from every supported Chromium family browser`(browser: Browser) throws {
-        let home = FileManager.default.temporaryDirectory.appendingPathComponent("deepseek-storage-\(UUID())")
-        defer { try? FileManager.default.removeItem(at: home) }
-        let root = try #require(ChromiumProfileLocator.roots(for: [browser], homeDirectories: [home]).first)
-        try Self.seedUserToken(in: root.url)
-
-        let tokens = DeepSeekPlatformTokenImporter.importTokens(
-            browserDetection: BrowserDetection(homeDirectory: home.path, cacheTTL: 0),
-            localStorage: Self.storageAPI(home: home))
-
-        #expect(tokens.map(\.id) == ["\(browser.rawValue):Default"])
-        #expect(tokens.map(\.token) == [Self.fixtureToken])
-    }
-
     @Test
     func `imports Chromium and Helium sessions without Google Chrome installed`() throws {
         let home = FileManager.default.temporaryDirectory.appendingPathComponent("deepseek-storage-\(UUID())")
@@ -90,7 +90,7 @@ struct DeepSeekPlatformTokenImporterTests {
             localStorage: Self.storageAPI(home: home))
 
         #expect(tokens.map(\.id) == ["chromium:Default", "helium:Default"])
-        #expect(Set(DeepSeekPlatformTokenImporter.localStorageBrowsers)
+        #expect(Set(ChromiumLocalStorageDiscovery.defaultBrowsers)
             .isSuperset(of: [Browser.chrome, .chromium, .helium]))
     }
 

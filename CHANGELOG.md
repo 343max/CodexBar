@@ -4,7 +4,14 @@
 
 ### Fixed
 
-- DeepSeek: import the Platform session from every Chromium-family browser (Chrome Beta/Canary, Chromium, Helium, Arc, Dia, ChatGPT Atlas) instead of Chrome only, so the profile picker and detailed usage work without Google Chrome installed (#4821). Thanks @343max!
+- DeepSeek: import Platform sessions from supported Chromium browsers using the shared browser catalog, preserving saved Chrome profile selections (#4821). Thanks @343max!
+
+- OpenCodex: reduce temporary memory use when importing large usage logs (#4803).
+- Cursor: explain when the Cursor app session has expired and no browser session works, with steps to sign in again (#4804). Thanks @julianpinedayyz!
+### Changed
+
+- Menu bar: make neutral pace percentages with font-scaled green/red state bars the default, preserving saved color choices (#4714, #4791). Thanks @arnodirlam!
+- Updates: refresh Sparkle to improve update installation, download progress, and release-note handling.
 
 ## 0.82.0 — 2026-10-26
 

@@ -45,8 +45,8 @@ CodexBar resolves the Platform `userToken` in this order:
 1. An explicitly supplied `DEEPSEEK_PLATFORM_TOKEN` / `DEEPSEEK_USER_TOKEN` or a legacy
    `providers[].cookieHeader` value preserved from an existing config.
 2. A prompt-free read of `userToken` from the `https://platform.deepseek.com` local-storage origin in a
-   Chromium-family browser: Chrome (Stable/Beta/Canary), Chromium, Helium, Arc, Dia, and ChatGPT Atlas. Local storage
-   is plain leveldb, so no Safe Storage keychain access is involved.
+   supported Chromium-family browser, using the shared browser catalog order. Local storage is plain LevelDB,
+   so no Safe Storage Keychain access is involved.
 
 The legacy config value remains a compatibility fallback so upgrading cannot silently erase a working browser-only
 session. An unscoped legacy or environment token is never combined with an API-key balance; API enrichment requires
