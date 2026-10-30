@@ -2766,3 +2766,7 @@
 "OpenCode local history" = "OpenCode local history";
 
 "Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded.";
+
+/* WorkBuddy reward credits */
+"Rewards" = "Rewards";
+"Reward expiry" = "Reward expiry";

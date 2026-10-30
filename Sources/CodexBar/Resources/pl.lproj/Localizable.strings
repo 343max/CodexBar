@@ -2764,3 +2764,7 @@
 "Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "Pokazuje użycie OpenCode zapisane na tym Macu w historii Codex. Domyślnie wyłączone; lokalizacje CODEX_HOME o ograniczonym zakresie lub alternatywne są zawsze wykluczone.";
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "Tryb automatyczny używa aktywnej zapisanej sesji, a w przeciwnym razie klucza API lub plików cookie przeglądarki.";
 "Store multiple Command Code subscription sessions." = "Przechowuj wiele sesji subskrypcji Command Code.";
+
+/* WorkBuddy reward credits */
+"Rewards" = "Nagrody";
+"Reward expiry" = "Wygaśnięcie nagród";
