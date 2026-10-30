@@ -2760,6 +2760,10 @@
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "Auto usa la sesión guardada activa; de lo contrario, una clave API o las cookies del navegador.";
 "Store multiple Command Code subscription sessions." = "Almacena varias sesiones de suscripción de Command Code.";
 
-/* WorkBuddy reward credits */
+// Codex account names
+"Rename" = "Cambiar nombre";
+"Rename account" = "Cambiar nombre de la cuenta";
+"Account name" = "Nombre de la cuenta";
+"Leave blank to use the default name." = "Deja este campo vacío para usar el nombre predeterminado.";
 "Rewards" = "Recompensas";
 "Reward expiry" = "Vencimiento de las recompensas";

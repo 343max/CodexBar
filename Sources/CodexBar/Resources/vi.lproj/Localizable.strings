@@ -2763,6 +2763,10 @@
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "Tự động sử dụng phiên đã lưu đang hoạt động, nếu không thì sử dụng khóa API hoặc cookie trình duyệt.";
 "Store multiple Command Code subscription sessions." = "Lưu trữ nhiều phiên đăng ký Command Code.";
 
-/* WorkBuddy reward credits */
+// Codex account names
+"Rename" = "Đổi tên";
+"Rename account" = "Đổi tên tài khoản";
+"Account name" = "Tên tài khoản";
+"Leave blank to use the default name." = "Để trống để dùng tên mặc định.";
 "Rewards" = "Phần thưởng";
 "Reward expiry" = "Ngày hết hạn phần thưởng";

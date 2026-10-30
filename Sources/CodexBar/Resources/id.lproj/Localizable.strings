@@ -2764,6 +2764,10 @@
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "Otomatis menggunakan sesi tersimpan yang aktif, atau kunci API atau cookie browser jika tidak ada sesi yang aktif.";
 "Store multiple Command Code subscription sessions." = "Simpan beberapa sesi langganan Command Code.";
 
-/* WorkBuddy reward credits */
+// Codex account names
+"Rename" = "Ubah nama";
+"Rename account" = "Ubah nama akun";
+"Account name" = "Nama akun";
+"Leave blank to use the default name." = "Biarkan kosong untuk menggunakan nama bawaan.";
 "Rewards" = "Hadiah";
 "Reward expiry" = "Kedaluwarsa hadiah";

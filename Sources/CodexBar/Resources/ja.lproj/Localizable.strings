@@ -2762,6 +2762,10 @@
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "自動では使用中の保存済みセッションを使用し、それ以外の場合は API キーまたはブラウザの Cookie を使用します。";
 "Store multiple Command Code subscription sessions." = "Command Code サブスクリプションのセッションを複数保存します。";
 
-/* WorkBuddy reward credits */
+// Codex account names
+"Rename" = "名前を変更";
+"Rename account" = "アカウント名を変更";
+"Account name" = "アカウント名";
+"Leave blank to use the default name." = "空欄にするとデフォルトの名前を使用します。";
 "Rewards" = "報酬";
 "Reward expiry" = "報酬の有効期限";

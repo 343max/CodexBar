@@ -2766,6 +2766,10 @@
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "حالت خودکار از نشست ذخیره‌شدهٔ فعال استفاده می‌کند؛ در غیر این صورت از کلید API یا کوکی‌های مرورگر استفاده می‌کند.";
 "Store multiple Command Code subscription sessions." = "چندین نشست اشتراک Command Code را ذخیره کنید.";
 
-/* WorkBuddy reward credits */
+// Codex account names
+"Rename" = "تغییر نام";
+"Rename account" = "تغییر نام حساب";
+"Account name" = "نام حساب";
+"Leave blank to use the default name." = "برای استفاده از نام پیش‌فرض، این قسمت را خالی بگذارید.";
 "Rewards" = "پاداش‌ها";
 "Reward expiry" = "انقضای پاداش‌ها";

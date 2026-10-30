@@ -2766,6 +2766,10 @@
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "يستخدم الوضع التلقائي الجلسة المحفوظة النشطة، وإلا فيستخدم مفتاح API أو ملفات تعريف ارتباط المتصفح.";
 "Store multiple Command Code subscription sessions." = "احفظ عدة جلسات اشتراك في Command Code.";
 
-/* WorkBuddy reward credits */
+// Codex account names
+"Rename" = "إعادة تسمية";
+"Rename account" = "إعادة تسمية الحساب";
+"Account name" = "اسم الحساب";
+"Leave blank to use the default name." = "اتركه فارغًا لاستخدام الاسم الافتراضي.";
 "Rewards" = "المكافآت";
 "Reward expiry" = "انتهاء صلاحية المكافآت";

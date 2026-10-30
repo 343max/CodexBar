@@ -2763,6 +2763,10 @@
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "Автоматический режим использует активный сохранённый сеанс, иначе — ключ API или файлы cookie браузера.";
 "Store multiple Command Code subscription sessions." = "Хранить несколько сеансов подписки Command Code.";
 
-/* WorkBuddy reward credits */
+// Codex account names
+"Rename" = "Переименовать";
+"Rename account" = "Переименовать аккаунт";
+"Account name" = "Имя аккаунта";
+"Leave blank to use the default name." = "Оставьте поле пустым, чтобы использовать имя по умолчанию.";
 "Rewards" = "Награды";
 "Reward expiry" = "Срок действия наград";

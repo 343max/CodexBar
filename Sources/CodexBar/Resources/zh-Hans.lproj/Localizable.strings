@@ -2754,6 +2754,10 @@
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "自动使用当前启用的已保存会话，否则使用 API 密钥或浏览器 Cookie。";
 "Store multiple Command Code subscription sessions." = "存储多个 Command Code 订阅会话。";
 
-/* WorkBuddy reward credits */
+// Codex account names
+"Rename" = "重命名";
+"Rename account" = "重命名账户";
+"Account name" = "账户名称";
+"Leave blank to use the default name." = "留空以使用默认名称。";
 "Rewards" = "奖励";
 "Reward expiry" = "奖励到期日期";
