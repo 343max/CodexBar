@@ -11,6 +11,8 @@
 
 ### Fixed
 
+- Trae CN: align Used, Total, and Remaining credits to two decimal places when any amount is fractional (#4819). Thanks @liuyuplus!
+
 - MiniMax: discover China web sessions and read the current console's quota percentages, boosted limits, and unlimited windows. (#4831, #4832) Thanks @tangwz!
 - Localization: correctly validate reordered plural arguments after ordinary placeholders. (#4817) Thanks @xuancao1953-1!
 - Codex: preserve established local cost coverage and catch-up progress when switching Codex homes (#4770, #4773). Thanks @harjothkhara!
