@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- OpenCodex: reduce temporary memory use when importing large usage logs (#4803).
 - Cursor: explain when the Cursor app session has expired and no browser session works, with steps to sign in again (#4804). Thanks @julianpinedayyz!
 ### Changed
 
